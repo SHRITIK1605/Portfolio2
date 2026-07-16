@@ -1,4 +1,4 @@
-import type { Project as DbProject } from "@portfolio/database";
+import type { Project as DbProject } from "@prisma/client";
 import type { Project } from "@/types";
 
 export function parseTags(tags: unknown): string[] {
