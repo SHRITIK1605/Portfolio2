@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DocumentScope {
+  GLOBAL
+  PROJECT
+}
+
+enum DocumentType {
+  RESUME
+  PROJECT_PDF
+  CASE_STUDY
+  RESEARCH
+  OTHER
+}
+
+enum AnalyticsEventType {
+  PROJECT_VIEW
+  RESUME_DOWNLOAD
+  CHAT_SESSION
+  CHAT_QUESTION
+  PDF_VIEW
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Project {
+  id               String    @id @default(cuid())
+  title            String
+  slug             String    @unique
+  shortDescription String
+  longDescription  String    @db.Text
+  aiContext        String?   @db.Text
+  coverImageUrl    String?
+  pdfUrl           String?
+  pdfFileName      String?
+  tags             String[]
+  githubUrl        String?
+  figmaUrl         String?
+  priority         Int       @default(0)
+  published        Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  documents        Document[]
+  embeddings       Embedding[]
+  analyticsEvents  AnalyticsEvent[]
+}
+
+model Document {
+  id            String        @id @default(cuid())
+  title         String
+  type          DocumentType
+  scope         DocumentScope @default(GLOBAL)
+  fileUrl       String
+  fileName      String
+  mimeType      String        @default("application/pdf")
+  extractedText String?       @db.Text
+  projectId     String?
+  project       Project?      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  embeddings    Embedding[]
+}
+
+model Embedding {
+  id         String   @id @default(cuid())
+  content    String   @db.Text
+  chunkIndex Int
+  metadata   Json?
+  vector     Json?
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  projectId  String?
+  project    Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@index([documentId])
+  @@index([projectId])
+}
+
+model Chat {
+  id        String    @id @default(cuid())
+  sessionId String    @unique @default(cuid())
+  projectId String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  role      String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([chatId])
+}
+
+model PromptSettings {
+  id            String   @id @default("default")
+  systemPrompt  String   @db.Text
+  projectPrompt String?  @db.Text
+  updatedAt     DateTime @updatedAt
+}
+
+model SuggestedQuestion {
+  id        String   @id @default(cuid())
+  text      String
+  category  String   @default("general")
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HomepageSettings {
+  id           String   @id @default("homepage")
+  heroHeading  String   @default("Hi, I'm Shritik.")
+  heroSubtitle String   @default("I build products by questioning what everyone else accepts as given.")
+  aboutMe      String?  @db.Text
+  resumeUrl    String?
+  socialLinks  Json?
+  updatedAt    DateTime @updatedAt
+}
+
+model AnalyticsEvent {
+  id        String             @id @default(cuid())
+  type      AnalyticsEventType
+  projectId String?
+  project   Project?           @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  metadata  Json?
+  createdAt DateTime           @default(now())
+
+  @@index([type])
+  @@index([projectId])
+  @@index([createdAt])
+}

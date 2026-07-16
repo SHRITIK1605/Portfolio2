@@ -1,0 +1,82 @@
+import Navbar from "@/components/layout/Navbar";
+import Hero from "@/components/home/Hero";
+import ProjectCards from "@/components/home/ProjectCards";
+import ChatPanel from "@/components/chat/ChatPanel";
+import { getHomepageSettings, getPublishedProjects } from "@/lib/data";
+import { DEMO_PROJECTS } from "@/lib/demo-data";
+import type { HomepageSettings, Project } from "@/types";
+
+export const dynamic = "force-dynamic";
+
+const DEFAULT_HOMEPAGE: HomepageSettings = {
+  heroHeading: "Hi, I'm Shritik.",
+  heroSubtitle:
+    "I build products by questioning what everyone else accepts as given.",
+  aboutMe: null,
+  resumeUrl: null,
+  socialLinks: null,
+};
+
+function demoProjectsAsDb(): Project[] {
+  return DEMO_PROJECTS.map((project, index) => ({
+    id: project.id,
+    title: project.name,
+    slug: project.slug,
+    shortDescription: project.overview[0] ?? "",
+    longDescription: project.overview.join(" "),
+    aiContext: null,
+    coverImageUrl: null,
+    pdfUrl: project.pdfUrl,
+    pdfFileName: null,
+    tags: project.tags,
+    githubUrl: null,
+    figmaUrl: null,
+    priority: DEMO_PROJECTS.length - index,
+    published: true,
+  }));
+}
+
+export default async function HomePage() {
+  let homepage = null;
+  let projects: Project[] = [];
+
+  try {
+    [homepage, projects] = await Promise.all([
+      getHomepageSettings(),
+      getPublishedProjects(),
+    ]);
+  } catch (error) {
+    console.error("Homepage DB error, using demo fallback:", error);
+    projects = demoProjectsAsDb();
+  }
+
+  const settings: HomepageSettings = homepage
+    ? {
+        heroHeading: homepage.heroHeading,
+        heroSubtitle: homepage.heroSubtitle,
+        aboutMe: homepage.aboutMe,
+        resumeUrl: homepage.resumeUrl,
+        socialLinks: homepage.socialLinks as Record<string, string> | null,
+      }
+    : DEFAULT_HOMEPAGE;
+
+  if (projects.length === 0) {
+    projects = demoProjectsAsDb();
+  }
+
+  return (
+    <div className="min-h-screen bg-cream">
+      <Navbar homepage={settings} />
+      <main>
+        <Hero homepage={settings} />
+        <section className="mx-auto max-w-[1100px] px-[48px] pb-[96px]">
+          <h2 className="m-0 mb-[32px] text-[26px] font-bold leading-tight tracking-[-0.02em] text-forest">
+            Welcome to my creations!
+          </h2>
+          <ProjectCards projects={projects} />
+        </section>
+      </main>
+      <ChatPanel />
+    </div>
+  );
+}

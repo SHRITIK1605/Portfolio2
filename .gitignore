@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+dist/
+build/
+.next/
+uploads/
+packages/database/prisma/dev.db
+packages/database/prisma/dev.db-journal
+.DS_Store
+.vscode/
+packages/database/prisma/prisma/dev.db
