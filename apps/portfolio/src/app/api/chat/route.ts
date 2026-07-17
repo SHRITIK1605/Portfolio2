@@ -3,6 +3,9 @@ import { generateChatResponse, saveAssistantMessage } from "@portfolio/ai";
 
 function describeAiError(err: unknown): string {
   const message = err instanceof Error ? err.message : String(err);
+  if (/DATABASE_URL|PrismaClientInitialization/i.test(message)) {
+    return "The database is not configured on the server (missing DATABASE_URL).";
+  }
   if (/429|rate.?limit|quota/i.test(message)) {
     return "The AI service is rate-limited right now. Please wait a minute and try again.";
   }

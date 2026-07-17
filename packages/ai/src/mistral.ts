@@ -9,6 +9,10 @@ export const MISTRAL_EMBED_MODEL =
 let client: Mistral | null = null;
 
 export function getMistralClient() {
+  if (!process.env.MISTRAL_API_KEY?.trim() && process.env.MISTRAL_AI?.trim()) {
+    process.env.MISTRAL_API_KEY = process.env.MISTRAL_AI.trim();
+  }
+
   if (!client) {
     const apiKey = process.env.MISTRAL_API_KEY?.trim();
     if (!apiKey) {

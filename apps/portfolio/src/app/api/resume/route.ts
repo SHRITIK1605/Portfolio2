@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@portfolio/database";
+import { getResumeUrlFromEnv } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,7 @@ export async function GET(req: Request) {
     .findUnique({ where: { id: "homepage" } })
     .catch(() => null);
 
-  const resumeUrl = settings?.resumeUrl?.trim();
+  const resumeUrl = settings?.resumeUrl?.trim() || getResumeUrlFromEnv();
   if (!resumeUrl) {
     return NextResponse.json({ error: "No resume configured" }, { status: 404 });
   }

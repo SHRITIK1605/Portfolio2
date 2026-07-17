@@ -3,6 +3,7 @@ import Hero from "@/components/home/Hero";
 import ProjectCards from "@/components/home/ProjectCards";
 import ChatPanel from "@/components/chat/ChatPanel";
 import { getHomepageSettings, getPublishedProjects } from "@/lib/data";
+import { getResumeUrlFromEnv } from "@/lib/env";
 import { DEMO_PROJECTS } from "@/lib/demo-data";
 import type { HomepageSettings, Project } from "@/types";
 
@@ -55,7 +56,7 @@ export default async function HomePage() {
         heroHeading: homepage.heroHeading,
         heroSubtitle: homepage.heroSubtitle,
         aboutMe: homepage.aboutMe,
-        resumeUrl: homepage.resumeUrl,
+        resumeUrl: homepage.resumeUrl ?? getResumeUrlFromEnv(),
         socialLinks: homepage.socialLinks as Record<string, string> | null,
       }
     : DEFAULT_HOMEPAGE;

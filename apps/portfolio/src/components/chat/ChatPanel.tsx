@@ -219,7 +219,18 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
           }),
         });
 
-        if (!res.ok || !res.body) {
+        if (!res.ok) {
+          let serverError = "Chat request failed";
+          try {
+            const data = (await res.json()) as { error?: string };
+            if (data.error) serverError = data.error;
+          } catch {
+            // Response wasn't JSON — keep generic message.
+          }
+          throw new Error(serverError);
+        }
+
+        if (!res.body) {
           throw new Error("Chat request failed");
         }
 
@@ -256,13 +267,16 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
             return next;
           });
         }
-      } catch {
+      } catch (err) {
+        const detail =
+          err instanceof Error && err.message !== "Chat request failed"
+            ? err.message
+            : "Sorry, I couldn't reach the AI assistant right now. Please try again in a moment.";
         setMessages((prev) => [
           ...prev.filter((msg, i) => !(i === prev.length - 1 && msg.role === "assistant" && !msg.content)),
           {
             role: "assistant",
-            content:
-              "⚠️ Sorry, I couldn't reach the AI assistant right now. Please try again in a moment.",
+            content: `⚠️ ${detail}`,
           },
         ]);
       } finally {
