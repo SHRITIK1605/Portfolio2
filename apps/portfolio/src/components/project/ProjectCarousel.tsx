@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Project } from "@/types";
 import { projectPath } from "@/lib/slug";
 
@@ -13,24 +13,54 @@ interface ProjectCarouselProps {
   onNavigate?: (slug: string) => void;
 }
 
+const SCROLL_STEP = 260;
+
 export default function ProjectCarousel({
   projects,
   activeSlug,
   onNavigate,
 }: ProjectCarouselProps) {
-  const currentIndex = projects.findIndex((p) => p.slug === activeSlug);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const prev = currentIndex > 0 ? projects[currentIndex - 1] : null;
-  const next =
-    currentIndex >= 0 && currentIndex < projects.length - 1
-      ? projects[currentIndex + 1]
-      : null;
+  const updateScrollState = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    setCanScrollLeft(track.scrollLeft > 2);
+    setCanScrollRight(track.scrollLeft < maxScroll - 2);
+  }, []);
 
-  const goTo = (slug: string) => {
-    if (onNavigate) {
-      onNavigate(slug);
-      return;
-    }
+  useEffect(() => {
+    updateScrollState();
+    const track = trackRef.current;
+    if (!track) return;
+    track.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+    return () => {
+      track.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [updateScrollState]);
+
+  // Keep the active pill visible when the project changes.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const active = track.querySelector<HTMLElement>("[data-active='true']");
+    active?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [activeSlug]);
+
+  const scrollBy = (direction: -1 | 1) => {
+    trackRef.current?.scrollBy({
+      left: direction * SCROLL_STEP,
+      behavior: "smooth",
+    });
   };
 
   const pillClass = (slug: string) =>
@@ -42,34 +72,32 @@ export default function ProjectCarousel({
 
   return (
     <div className="mx-auto mt-[48px] max-w-[1100px] rounded-full border border-forest/[0.1] bg-white/80 px-[16px] py-[12px] shadow-[0_1px_8px_rgba(0,75,64,0.05)] backdrop-blur-sm">
-      <div className="flex items-center gap-[12px] overflow-x-auto">
+      <div className="flex items-center gap-[12px]">
         <span className="shrink-0 pl-[4px] text-[14px] font-medium text-forest/60">
           View more
         </span>
 
-        {onNavigate ? (
-          <button
-            type="button"
-            disabled={!prev}
-            onClick={() => prev && goTo(prev.slug)}
-            className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full border border-forest/20 disabled:opacity-30"
-            aria-label="Previous project"
-          >
-            <ChevronLeft className="h-[16px] w-[16px]" />
-          </button>
-        ) : (
-          <NavArrow href={prev ? projectPath(prev.slug) : undefined} label="Previous project">
-            <ChevronLeft className="h-[16px] w-[16px]" />
-          </NavArrow>
-        )}
+        <button
+          type="button"
+          disabled={!canScrollLeft}
+          onClick={() => scrollBy(-1)}
+          className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full border border-forest/20 transition disabled:opacity-30"
+          aria-label="Scroll projects left"
+        >
+          <ChevronLeft className="h-[16px] w-[16px]" />
+        </button>
 
-        <div className="flex flex-1 items-center gap-[8px] overflow-x-auto">
+        <div
+          ref={trackRef}
+          className="flex flex-1 items-center gap-[8px] overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {projects.map((project) =>
             onNavigate ? (
               <button
                 key={project.id}
                 type="button"
-                onClick={() => goTo(project.slug)}
+                data-active={project.slug === activeSlug}
+                onClick={() => onNavigate(project.slug)}
                 className={pillClass(project.slug)}
               >
                 {project.title}
@@ -80,6 +108,7 @@ export default function ProjectCarousel({
                 href={projectPath(project.slug)}
                 prefetch
                 scroll={false}
+                data-active={project.slug === activeSlug}
                 className={pillClass(project.slug)}
               >
                 {project.title}
@@ -88,55 +117,16 @@ export default function ProjectCarousel({
           )}
         </div>
 
-        {onNavigate ? (
-          <button
-            type="button"
-            disabled={!next}
-            onClick={() => next && goTo(next.slug)}
-            className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full border border-forest/20 disabled:opacity-30"
-            aria-label="Next project"
-          >
-            <ChevronRight className="h-[16px] w-[16px]" />
-          </button>
-        ) : (
-          <NavArrow href={next ? projectPath(next.slug) : undefined} label="Next project">
-            <ChevronRight className="h-[16px] w-[16px]" />
-          </NavArrow>
-        )}
+        <button
+          type="button"
+          disabled={!canScrollRight}
+          onClick={() => scrollBy(1)}
+          className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full border border-forest/20 transition disabled:opacity-30"
+          aria-label="Scroll projects right"
+        >
+          <ChevronRight className="h-[16px] w-[16px]" />
+        </button>
       </div>
     </div>
-  );
-}
-
-function NavArrow({
-  href,
-  label,
-  children,
-}: {
-  href?: string;
-  label: string;
-  children: ReactNode;
-}) {
-  if (!href) {
-    return (
-      <span
-        className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full border border-forest/20 opacity-30"
-        aria-hidden
-      >
-        {children}
-      </span>
-    );
-  }
-
-  return (
-    <Link
-      href={href}
-      prefetch
-      scroll={false}
-      className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full border border-forest/20"
-      aria-label={label}
-    >
-      {children}
-    </Link>
   );
 }

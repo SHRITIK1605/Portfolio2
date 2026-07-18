@@ -51,28 +51,33 @@ Skills: AI product management, computer vision applications, quick commerce, cat
     title: "Flipkart APM",
     slug: "flipkart-apm",
     shortDescription:
-      "Associate Product Manager work on Flipkart's e-commerce platform — product strategy, seller experience, and conversion-focused initiatives.",
+      "Flipkart APM challenge — reimagining Google Maps for an extreme data-scarce world with device-to-device mesh networks and offline-first navigation.",
     longDescription:
-      "At Flipkart, Shritik worked as an Associate Product Manager on high-impact e-commerce flows — translating business goals into product specs, partnering with engineering and design, and driving measurable improvements in seller and buyer experience. The work covers problem discovery, prioritization frameworks, cross-functional execution, and outcome tracking across one of India's largest marketplaces.",
-    aiContext: `Flipkart APM — Associate Product Manager
+      "For Flipkart's APM challenge, Shritik tackled a moonshot prompt: redesign a popular product for a world where internet data is extremely scarce. He chose Google Maps — a non-negotiable utility for 2B+ users — and proposed a G-Mesh network where nearby devices share location data peer-to-peer, combined with Device-Cache for offline map tiles and the traditional human wisdom of asking locals. The solution keeps navigation alive in offline zones while cutting data consumption per user, backed by market analysis, competitive mapping capability benchmarks, and clear success metrics.",
+    aiContext: `Flipkart APM Challenge — Reimagining Google Maps for a Data-Scarce World
 
-Context: Flipkart is India's leading e-commerce marketplace. Shritik worked in an APM capacity on product initiatives tied to marketplace growth and user experience.
+Prompt: Imagine a world where data is extremely scarce. Pick a popular product and re-think it without losing its core value proposition.
 
-Focus areas:
-- Product strategy for seller and buyer-facing flows
-- Conversion optimization and funnel analysis
-- Cross-functional alignment with engineering, design, and business teams
-- Structured problem discovery — jobs-to-be-done, hypothesis-driven experiments
-- Prioritization using impact vs effort and OKR alignment
+Product chosen: Google Maps — non-negotiable utility, data-hungry core engine, critical infrastructure for 100M+ businesses, 2 billion monthly active users.
 
-Shritik's contributions:
-- Broke ambiguous business asks into shippable product increments
-- Defined success metrics and tracking plans before build
-- Drove alignment across stakeholders with clear PRDs and tradeoff docs
-- Shipped iterative improvements rather than big-bang releases
+Key assumptions of the imagined world: governments enforce data consumption limits (500 MB/month), 2G/3G speeds (~0.1–1 MBPS), same device behavior as today.
 
-Skills demonstrated: APM, e-commerce product strategy, stakeholder management, metrics-driven product development, marketplace dynamics.`,
-    tags: ["APM", "E-commerce", "Product Strategy", "Marketplace", "Conversion"],
+Solution — G-Mesh network:
+- Device-to-device mesh network for sharing location data locally between nearby phones
+- Device-Cache: offline map tiles cached and shared while travelling
+- Blends traditional human wisdom of asking locals for directions with tech
+- In-app data optimizations for seamless navigation in offline zones
+- Self-sustaining cooperative network — every device keeps the map moving even when the internet slows down
+
+Analysis included:
+- Why Google Maps: data consumed per user (~23 MB/month), 1.4B active map users, ~30.3 petabytes/month total
+- Market share: Google Maps 67%, Apple Maps 16%, Waze 10%
+- Mapping competitive capability benchmarks (offline functionality, data efficiency, local data richness)
+- Economic and social impact of unreliable data: rising costs, disaster scenarios, carbon cost of data transfers
+- Success metrics, trade-offs, risks, and prioritization (impact vs MOAT)
+
+Skills demonstrated: first-principles product thinking, moonshot solution design, systems thinking, market analysis, metrics definition, case structuring for APM interviews.`,
+    tags: ["APM Challenge", "Product Thinking", "Google Maps", "Offline-First", "Mesh Network"],
     priority: 6,
     published: true,
     pdfFileName: "Flipkart_APM.pdf",
@@ -82,27 +87,34 @@ Skills demonstrated: APM, e-commerce product strategy, stakeholder management, m
     title: "RISA APM",
     slug: "risa-apm",
     shortDescription:
-      "Product management at RISA Labs (IIT Kharagpur) — user research, roadmap definition, and MVP delivery for an early-stage product.",
+      "JARVIS — conceptualizing an AI-native desktop browser for RISA Labs, backed by 178 surveys and 21 interviews on how users really browse.",
     longDescription:
-      "Shritik led product work at RISA Labs during his time at IIT Kharagpur — running user research, defining the product roadmap, and shipping MVP features under real constraints. The project showcases how he balances discovery with delivery: talking to users, synthesizing insights, scoping ruthlessly, and iterating based on feedback.",
-    aiContext: `RISA APM — RISA Labs, IIT Kharagpur
+      "For RISA Labs' AI Browser assignment, Shritik conceptualized JARVIS — an AI-native, task-aware desktop browser for an AI-driven world. Grounded in primary research (178 surveys, 21 interviews), the work maps why traditional browsers fail modern workflows: no grasp of user intent, manual tab chaos, and zero content intelligence. JARVIS proposes AI summaries before reading, intelligent tab grouping, cross-session continuity, and a reading companion — with full user journey mapping, wireframes, GTM, and a revenue model.",
+    aiContext: `RISA APM — JARVIS: AI-Native Desktop Browser (RISA Labs, IIT Kharagpur)
 
-Context: RISA Labs is an IIT Kharagpur-affiliated product lab. Shritik worked as APM on an early-stage product initiative.
+Assignment: Conceptualizing the Future of Browsing — reimagining the desktop browser for an AI-driven world.
 
-Workstreams:
-- User research: interviews, pain-point synthesis, persona development
-- Product roadmap: prioritized feature backlog aligned to user needs and business goals
-- MVP delivery: scoped first version, wrote specs, coordinated build, shipped iteratively
-- Metrics: defined north-star and guardrail metrics for early product validation
+Product concept: JARVIS — an AI-native, task-aware browsing experience that closes the gap between static browsers and AI-assisted workflows.
 
-Shritik's approach:
-- Started with problem validation before solutioning
-- Used research insights to kill low-impact features early
-- Maintained tight feedback loops with users post-launch
-- Documented decisions and tradeoffs for team alignment
+Primary research:
+- 178 surveys, 21 interviews (72% undergraduates, 18% employees)
+- 58% struggle to understand complex content without instant AI explanations
+- 54% said AI summaries greatly reduce reading time but require constant tool-switching
+- 49% want the browser to remember context and continue tasks intelligently across sessions
+- 33% struggle to maintain context while juggling academic sources across tabs
 
-Skills: APM, user research, roadmap planning, MVP scoping, early-stage product, IIT Kharagpur.`,
-    tags: ["APM", "User Research", "MVP", "Early-Stage", "IIT Kharagpur"],
+Why now: browser-influenced value ~275B/yr, AI browser segment ~87B by 2030, 30% AI browsers CAGR, no dominant AI-native browser category; Atlas and Comet launches signal a strategic shift toward AI-powered browsers. Traditional browser share 93% vs AI-based 7%.
+
+Problems with traditional browsers: built for page rendering only — no user intent detection, no grasp of complex content, meaning extracted manually, no tab intelligence or grouping, no continuity across sessions.
+
+Core users: college students (14–25, highest AI adoption), postgrads/researchers, multi-tab navigators, workflow users. Personas: multitasking fast-switching B.Tech learner; detail-oriented evidence-driven PhD researcher.
+
+JARVIS solutions: AI summaries before reading, deep explainer auto-highlight, split-screen suggestions, passive tab insights, smart organizer, session memory visualization, AI notes panel, writer assistant, auto citation.
+
+Deliverables: user journey mapping (search → read → verify → compare → note → write → organize), wireframes, impact & integration plan, GTM & revenue model.
+
+Skills: AI product conceptualization, primary user research, persona development, product design, GTM strategy, revenue modeling.`,
+    tags: ["AI Browser", "User Research", "Product Concept", "RISA Labs", "IIT Kharagpur"],
     priority: 5,
     published: true,
     pdfFileName: "Shritik_21BT3EP08_IITKGP_RISALABS_APM.pdf",
