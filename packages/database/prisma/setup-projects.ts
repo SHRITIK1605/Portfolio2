@@ -25,9 +25,14 @@ async function copyProjectPdf(project: (typeof PROJECTS)[number]) {
 
   await fs.mkdir(PROJECTS_DIR, { recursive: true });
   await fs.copyFile(project.sourcePdf, destPath);
+
+  const publicProjectsDir = path.join(REPO_ROOT, "apps/portfolio/public/projects");
+  await fs.mkdir(publicProjectsDir, { recursive: true });
+  await fs.copyFile(project.sourcePdf, path.join(publicProjectsDir, destName));
+
   return {
     destName,
-    pdfUrl: `/api/uploads/projects/${destName}`,
+    pdfUrl: `/projects/${destName}`,
   };
 }
 

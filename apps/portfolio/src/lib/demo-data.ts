@@ -15,7 +15,7 @@ export const DEMO_PROJECTS = [
       "Built an AI pipeline to detect and normalize inconsistent product image aspect ratios across the catalog, improving PLP scanability and visual trust.",
       "Spans computer-vision classification, batch processing workflows, and product decisions around automation vs manual QA.",
     ],
-    pdfUrl: "/api/uploads/projects/slikk-ai-catalog.pdf",
+    pdfUrl: "/projects/slikk-ai-catalog.pdf",
   },
   {
     id: "flipkart",
@@ -27,7 +27,7 @@ export const DEMO_PROJECTS = [
       "Translated business goals into product specs, partnered with engineering and design, and drove measurable marketplace improvements.",
       "Structured problem discovery, prioritization frameworks, and cross-functional execution on India's largest marketplace.",
     ],
-    pdfUrl: "/api/uploads/projects/flipkart-apm.pdf",
+    pdfUrl: "/projects/flipkart-apm.pdf",
   },
   {
     id: "risa",
@@ -39,7 +39,7 @@ export const DEMO_PROJECTS = [
       "Ran user interviews, synthesized insights, and scoped a first version under real startup constraints.",
       "Balanced discovery with delivery — iterating based on feedback and documenting tradeoffs for team alignment.",
     ],
-    pdfUrl: "/api/uploads/projects/risa-apm.pdf",
+    pdfUrl: "/projects/risa-apm.pdf",
   },
   {
     id: "paytm",
@@ -51,7 +51,7 @@ export const DEMO_PROJECTS = [
       "Simplified cluttered homepage to four core features per section and redesigned bottom navigation.",
       "AARRR-driven analysis with competitive benchmarking against PhonePe and Google Pay.",
     ],
-    pdfUrl: "/api/uploads/projects/paytm-ux-improvement.pdf",
+    pdfUrl: "/projects/paytm-ux-improvement.pdf",
   },
   {
     id: "nobroker",
@@ -63,7 +63,7 @@ export const DEMO_PROJECTS = [
       "Competitive benchmarking against MagicBricks, 99acres, and emerging PropTech startups.",
       "Proposed fixes for subscription pricing, listing quality, and tenant-owner matching.",
     ],
-    pdfUrl: "/api/uploads/projects/nobroker-rental.pdf",
+    pdfUrl: "/projects/nobroker-rental.pdf",
   },
   {
     id: "icc",
@@ -75,7 +75,7 @@ export const DEMO_PROJECTS = [
       "Proposed telematics, AI route optimization, and structured GTM for driver onboarding.",
       "Financial feasibility and operational research for logistics platform sustainability.",
     ],
-    pdfUrl: "/api/uploads/projects/icc-truck-logistics.pdf",
+    pdfUrl: "/projects/icc-truck-logistics.pdf",
   },
   {
     id: "gpt-store",
@@ -87,7 +87,7 @@ export const DEMO_PROJECTS = [
       "Analyzed creator monetization, quality control, and financial feasibility for 100M+ weekly ChatGPT users.",
       "Competitive landscape and pricing strategy for sustainable AI marketplace growth.",
     ],
-    pdfUrl: "/api/uploads/projects/openai-gpt-store.pdf",
+    pdfUrl: "/projects/openai-gpt-store.pdf",
   },
 ];
 

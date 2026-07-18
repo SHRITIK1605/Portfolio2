@@ -1,30 +1,47 @@
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
+import path from "path";
 import { getUploadPath } from "@/lib/upload";
 
 interface RouteParams {
   params: Promise<{ path: string[] }>;
 }
 
-export async function GET(_req: Request, { params }: RouteParams) {
-  const { path: segments } = await params;
-  const filePath = getUploadPath(segments.join("/"));
+function contentTypeForFile(name: string) {
+  const ext = name.split(".").pop()?.toLowerCase();
+  if (ext === "pdf") return "application/pdf";
+  if (ext === "png") return "image/png";
+  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
+  return "application/octet-stream";
+}
+
+async function readPdfWithFallback(relativePath: string) {
+  const fileName = path.basename(relativePath);
 
   try {
-    const data = await fs.readFile(filePath);
-    const ext = segments.at(-1)?.split(".").pop()?.toLowerCase();
-    const contentType =
-      ext === "pdf"
-        ? "application/pdf"
-        : ext === "png"
-          ? "image/png"
-          : ext === "jpg" || ext === "jpeg"
-            ? "image/jpeg"
-            : "application/octet-stream";
+    return await fs.readFile(getUploadPath(relativePath));
+  } catch {
+    // Deployed builds don't include repo-root uploads/ — serve from public/projects.
+    if (relativePath.startsWith("projects/")) {
+      return fs.readFile(
+        path.join(process.cwd(), "public", "projects", fileName)
+      );
+    }
+    throw new Error("Not found");
+  }
+}
 
-    return new NextResponse(data, {
+export async function GET(_req: Request, { params }: RouteParams) {
+  const { path: segments } = await params;
+  const relativePath = segments.join("/");
+  const fileName = segments.at(-1) ?? "file";
+
+  try {
+    const data = await readPdfWithFallback(relativePath);
+
+    return new NextResponse(new Uint8Array(data), {
       headers: {
-        "Content-Type": contentType,
+        "Content-Type": contentTypeForFile(fileName),
         "Cache-Control": "public, max-age=86400",
       },
     });

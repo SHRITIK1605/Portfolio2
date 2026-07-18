@@ -115,11 +115,11 @@ export default function ResumeOverlay({
             onClick={onClose}
           />
           <motion.aside
-            initial={{ x: "100%" }}
+            initial={{ x: "-100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "100%" }}
+            exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 320 }}
-            className="fixed inset-y-0 right-0 z-[70] flex w-full max-w-[760px] flex-col bg-white shadow-[-12px_0_40px_rgba(0,75,64,0.2)]"
+            className="fixed inset-y-0 left-0 z-[70] flex w-full max-w-[760px] flex-col bg-white shadow-[12px_0_40px_rgba(0,75,64,0.2)]"
             role="dialog"
             aria-label="Resume viewer"
           >
