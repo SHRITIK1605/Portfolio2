@@ -35,6 +35,13 @@ export default function PdfFrame({ url }: PdfFrameProps) {
   const [zoom, setZoom] = useState(1);
   const [error, setError] = useState(false);
 
+  useEffect(() => {
+    setNumPages(0);
+    setContentHeight(0);
+    setZoom(1);
+    setError(false);
+  }, [url]);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -172,6 +179,7 @@ export default function PdfFrame({ url }: PdfFrameProps) {
             }}
           >
             <Document
+              key={url}
               file={url}
               onLoadSuccess={({ numPages: pages }) => setNumPages(pages)}
               onLoadError={() => setError(true)}
