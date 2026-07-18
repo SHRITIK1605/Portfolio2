@@ -43,6 +43,7 @@ async function seedProjects() {
     const copied = await copyProjectPdf(project);
     const pdfUrl = copied?.pdfUrl ?? null;
     const pdfFileName = copied?.destName ?? project.pdfFileName;
+    const coverImageUrl = `/projects/${project.slug}.jpg`;
 
     const saved = await prisma.project.upsert({
       where: { slug: project.slug },
@@ -56,6 +57,7 @@ async function seedProjects() {
         published: project.published,
         pdfUrl,
         pdfFileName,
+        coverImageUrl,
       },
       create: {
         title: project.title,
@@ -68,6 +70,7 @@ async function seedProjects() {
         published: project.published,
         pdfUrl,
         pdfFileName,
+        coverImageUrl,
       },
     });
 

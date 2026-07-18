@@ -4,6 +4,7 @@ import ProjectCards from "@/components/home/ProjectCards";
 import ChatPanel from "@/components/chat/ChatPanel";
 import { getHomepageSettings, getPublishedProjects } from "@/lib/data";
 import { getResumeUrlFromEnv } from "@/lib/env";
+import { resolveProjectCoverUrl } from "@/lib/pdf";
 import { DEMO_PROJECTS } from "@/lib/demo-data";
 import type { HomepageSettings, Project } from "@/types";
 
@@ -64,6 +65,11 @@ export default async function HomePage() {
   if (projects.length === 0) {
     projects = demoProjectsAsDb();
   }
+
+  projects = projects.map((project) => ({
+    ...project,
+    coverImageUrl: resolveProjectCoverUrl(project),
+  }));
 
   return (
     <div className="min-h-screen bg-cream">
