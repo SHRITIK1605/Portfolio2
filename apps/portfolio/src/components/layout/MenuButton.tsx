@@ -17,10 +17,8 @@ export default function MenuButton({ homepage }: MenuButtonProps) {
   const email = social.email || CONTACT.email;
   const phone = social.phone || CONTACT.phone;
   const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copiedField, setCopiedField] = useState<"phone" | "email" | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-
-  const copyText = `LinkedIn: ${linkedin}\nContact: ${phone}\nMail: ${email}`;
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -32,13 +30,13 @@ export default function MenuButton({ homepage }: MenuButtonProps) {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, [open]);
 
-  async function handleCopy() {
+  async function copyValue(field: "phone" | "email", value: string) {
     try {
-      await navigator.clipboard.writeText(copyText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(value);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 1600);
     } catch {
-      setCopied(false);
+      setCopiedField(null);
     }
   }
 
@@ -61,59 +59,70 @@ export default function MenuButton({ homepage }: MenuButtonProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.18 }}
-            className="absolute right-0 top-[calc(100%+10px)] z-50 min-w-[220px] overflow-hidden rounded-[16px] border border-forest/10 bg-white shadow-[0_8px_28px_rgba(0,75,64,0.12)]"
+            className="absolute right-0 top-[calc(100%+12px)] z-50 min-w-[320px] overflow-hidden rounded-[18px] bg-white px-[20px] shadow-[0_8px_28px_rgba(0,75,64,0.12)]"
           >
-            <ul className="m-0 list-none p-[8px]">
-              <li>
-                <a
-                  href={linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-[10px] rounded-[10px] px-[12px] py-[10px] text-[14px] font-medium text-forest transition hover:bg-cream"
-                  onClick={() => setOpen(false)}
-                >
-                  <Linkedin className="h-[16px] w-[16px]" strokeWidth={1.75} />
-                  {CONTACT.linkedinLabel}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`tel:${phone.replace(/\s/g, "")}`}
-                  className="flex items-center gap-[10px] rounded-[10px] px-[12px] py-[10px] text-[14px] font-medium text-forest transition hover:bg-cream"
-                  onClick={() => setOpen(false)}
-                >
-                  <Phone className="h-[16px] w-[16px]" strokeWidth={1.75} />
-                  {CONTACT.contactLabel}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${email}`}
-                  className="flex items-center gap-[10px] rounded-[10px] px-[12px] py-[10px] text-[14px] font-medium text-forest transition hover:bg-cream"
-                  onClick={() => setOpen(false)}
-                >
-                  <Mail className="h-[16px] w-[16px]" strokeWidth={1.75} />
-                  {CONTACT.mailLabel}
-                </a>
-              </li>
-            </ul>
+            <a
+              href={linkedin}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-[14px] border-b border-black/[0.07] py-[16px] text-[17px] font-medium text-[#1a1a1a] transition hover:opacity-70"
+            >
+              <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[7px] bg-[#1a1a1a]">
+                <Linkedin
+                  className="h-[18px] w-[18px] text-white"
+                  fill="currentColor"
+                  strokeWidth={0}
+                />
+              </span>
+              {CONTACT.linkedinLabel}
+            </a>
 
-            <div className="border-t border-forest/10 p-[8px]">
+            <div className="flex items-center gap-[14px] border-b border-black/[0.07] py-[16px]">
+              <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center">
+                <Phone
+                  className="h-[22px] w-[22px] text-[#1a1a1a]"
+                  fill="currentColor"
+                  strokeWidth={0}
+                />
+              </span>
+              <span className="flex-1 text-[17px] font-medium text-[#1a1a1a]">
+                {phone}
+              </span>
               <button
                 type="button"
-                onClick={handleCopy}
-                className="flex w-full items-center justify-center gap-[8px] rounded-[10px] border border-forest/15 bg-btn-cream px-[12px] py-[10px] text-[14px] font-medium text-forest transition hover:bg-[#fde68a]"
+                onClick={() => copyValue("phone", phone)}
+                aria-label="Copy phone number"
+                className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[8px] text-[#1a1a1a] transition hover:bg-black/5"
               >
-                {copied ? (
-                  <>
-                    <Check className="h-[16px] w-[16px]" strokeWidth={1.75} />
-                    Copied!
-                  </>
+                {copiedField === "phone" ? (
+                  <Check className="h-[19px] w-[19px]" strokeWidth={2} />
                 ) : (
-                  <>
-                    <Copy className="h-[16px] w-[16px]" strokeWidth={1.75} />
-                    Copy
-                  </>
+                  <Copy className="h-[19px] w-[19px]" strokeWidth={1.75} />
+                )}
+              </button>
+            </div>
+
+            <div className="flex items-center gap-[14px] py-[16px]">
+              <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center">
+                <Mail
+                  className="h-[22px] w-[22px] text-[#1a1a1a]"
+                  strokeWidth={2}
+                />
+              </span>
+              <span className="flex-1 text-[17px] font-medium text-[#1a1a1a]">
+                {email}
+              </span>
+              <button
+                type="button"
+                onClick={() => copyValue("email", email)}
+                aria-label="Copy email address"
+                className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[8px] text-[#1a1a1a] transition hover:bg-black/5"
+              >
+                {copiedField === "email" ? (
+                  <Check className="h-[19px] w-[19px]" strokeWidth={2} />
+                ) : (
+                  <Copy className="h-[19px] w-[19px]" strokeWidth={1.75} />
                 )}
               </button>
             </div>

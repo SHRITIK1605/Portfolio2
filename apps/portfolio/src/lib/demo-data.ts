@@ -108,9 +108,9 @@ export const RESUME_URL = "#";
 
 export const CONTACT = {
   linkedin: "https://www.linkedin.com/in/shritikjaiswal",
-  linkedinLabel: "LinkedIn",
-  email: "shritik.jaiswal@example.com",
+  linkedinLabel: "Visit Linkedin",
+  email: "shritik1234j@gmail.com",
   mailLabel: "Mail",
-  phone: "+91 98765 43210",
+  phone: "+91 9975343323",
   contactLabel: "Contact",
 };
