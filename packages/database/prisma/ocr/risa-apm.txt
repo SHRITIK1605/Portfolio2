@@ -1,0 +1,933 @@
+--- PAGE 1 ---
+RISA LABS
+Al Browser Assignment: Conceptualizing the Future of Browsing
+Introducing
+• JARVIS
+Shritik Jaiswal
+IIT Kharagpur
+Institute ID: 2ІBT3ЕР08
+Phone: 91 9975343323
+Mail: shritik@kgpian.iitkgp.ac.in
+--- PAGE 2 ---
+JARVIS: Reimagining the Future of Desktop Browser for an Al driven world
+Hello, I am Jarvis.
+Your ultimate guide.
+Desktop Browsers were built for static use, while users are adapting to Al-assisted workflows. JARVIS aims to close this gap with an Al-native, task-aware browsing experience.
+WHY Browsers?
+WHY Browser Market is Huge?
+275B/yr
+Browser-influenced
+value
+87B / yr
+Al browser
+segment by 2030
+4.7 Billion
+Browser MAUS
+32%
+Active Screen Time on
+Browser
+30%
+Al browsers CAGR
+through 2030
+2.7 Hr / Day
+50+
+No dominant Al-native
+Average User Time
+Webpage / Day visited
+browser category
+Spend on Browser
+by Average User
+WHY the problem really matters?
+Traditional Browsers are just built for page rendering
+Everything needs human effort
+Cannot detect
+No grasp of
+user intent
+complex content
+Repetitive micro-
+No automoted
+actions daily
+task flows
+Manual Work
+Pages shown, meaning extracted manually
+Why Tradtional
+Browsers are
+going off?
+Tabs exist, relationships don't
+No summaries
+or highlights
+WHY Now?
+Al usage surging
+LLMs becoming reliable
+Cloud-first workflows
+No Multi-page
+comparison / Insight
+Al Browsing is NEW & Underserved
+No tab intelligence
+No continuity
+or grouping
+•cross sessions
+Recent launch of Atlas & Comet aren't coincidences;
+they signal strategic shift toward Al-powered browsers.
+Al Browser Market Share
+Traditional Browser
+93%
+Al-based Browser
+7%
+Al Browser Market Share Increased by 4% from 2024 to 2025
+Overview
+Understanding Users
+We surveyed UG /PG students early-career professionals to understand how they navigate complex online information and where today's browsers fail them.
+Word Cloud based on Primary Research
+Primary Research
+Broken Navigatior
+Switching Tools
+Slow Reading
+178
+Surveys
+21
+Interviews
+-Dense Pdfs..
+Surveyed Profiles
+72%
+UnderGraduates
+18%
+Employees
+Key Insights from Survey
+I 58% struggle to understand
+complex content without instant
+Al explanations inside the page.
+LE 54% said Al summaries greatly
+reduce reading time but require
+switching tools constantly.
+• 49% want the browser to remember
+context and continue tasks
+intelligently across sessions.
+E 33% struggle to maintain context
+while juggling academic sources
+manually.
+Hard To Understand
+Information overload
+Fragmented Workflow
+Content ayou Cognitive Load a
+aNo Context
+*Study stress
+ab ci
+Context Loss
+Manual Steps contive Loas
+Differ greater gon
+Al-Assisted Browsing Behavior Shift
+Al doesn't replace browsing; it reshapes it. Users are shifting from manual, tab-heavy actions
+to assisted, efficient, task-driven behaviors. Al is becoming the first layer of interpretation.
+Feature Usage
+Opening Multiple Tabs
+62 %
+Reading Full Content
+71%
+25 %
+43 %
+68%
+35 %
+26%
+information comparision
+Performing Repetitive Searches
+Al Summaries before reading
+Asking Al for Explanation
+Using Al to Code
+Exploring Non-Essential Tools
+36 %
+38 %
+60%
+74%
+62%
+35 %
+Decrease
+Stay the Same
+Increase
+% of Respondent Net Intent
+Explanation / Behaviour
+59%
+GPTs became go-to Platform
+68%
+Summary-First Behaviour
+33%
+29%
+53%
+8%
+Increased Al Comparisons
+65%
+Fewer Manual Searches
+60 %
+Summary-Driven Reading
+1
+48 %
+Al Clarification First
++ 55%
+Reduced Manual Debugging
++ 70%
+Reduced Exploration
+The % of Google searches that result in
+no clicks increased to 69% (May 2025),
+22%
+The signals & data are clear: users changed,
+tasks
+changed,
+expectations changed. Now the browser must change too.
+Solutions & Wireframe
+Impact & Integration
+GTM & Revenue Model
+--- PAGE 3 ---
+L-O
+L-1
+L-2
+Pain/Need
+Solution
+Who We'Ie Building For? Understanding Our Core Users
+For who are we building first?
+Age Group
+Life Stage
+School Kids (0-14 Yr) - Low Digital Access
+College Students (14 - 25 Yr) - Highest Al Adoption (#1)
+Adults (26 - 60 Yr) - Huge Market Size but Fragmented (#2)
+Senior Citizens (60+) - Selective Browser Usage
+School - Books/resources focused (#2)
+Undergraduate - Knowledge gain (#1)
+Postgraduate - Depth focused (#1)
+UG Student
+PG Student
+Shivang, B.Tech (Biotechnology), 21 Yrs - A Multitasking, fast-switching learner
+GOAL: To understand complex science topics quickly and complete assignments with clear conceptual clarity.
+Habits
+• Opens 20-30 tabs during research sessions
+• Switch b/w GPT, Google, NPTEL, Sci-Hub, Quora
+• Watches YouTube lectures, reads PDFs + Notes
+• Saves screenshots / random links to revisit
+Needs
+• Al explainers directly on the page / paf
+• Smart tab organization for assignments
+• Quick summaries of PDFs, research articles
+• Personal Al companion for explanations
+Painpoints
+Struggles to understand dense
+scientific content
+Constant lookup of terminology
+breaks study flow
+I jump between so many pages just to understand one concept... it's exhausting. I wish
+the browser could explain things to me without breaking my rhythm.
+PDFs are overwhelming and
+take too long to study
+User Journey of a College Student (UG / PG)
+Pre-Study
+During Study
+Knowledge Requirement
+Search
+Evaluate
+Select Sources
+Read
+Verify
+Compare
+Read Offline Resources (Book /
+PDFs) - Realize Knowledge Need
+Open Browser →
+Initiate Google Search
+View 10-20 Links
+and Media Options
+Open Top Links to
+get information
+Read & Scroll
+Webpages
+Switch between 3-10 tabs for more
+knowledge, comparision and verfication
+Need explanation
+before searching
+Query repetition
+Can't judge without
+opening leading to
+Tab Overload
+Difficult to decide,
+start with Ist Link
+Consumes Time
+& Effort, Difficult
+to understand
+Tab switching
+fatigue, kills
+focus
+Slow and Error Prone
+PDF/Notes Default Drive
+Al Query Assist
+Summary on Search
+for Each Link
+Chat driven
+suggestions
+Deep Explainer
+Auto-Highlight
+Split-Screen
+Suggestion, Passive
+Tab Insights
+Task Suggestion by
+user intent
+Reading Companion
+Progress Organizer
+Reading
+Companion
+Memory-Strip Mode
+(Task = Comparision
+in this case)
+Understanding Users
+Overview
+Solutions & Wireframe
+Let's decide a focus group &
+understand their core needs
+Behavioural Segmentation
+Prioritized user segments - because their behaviours and painpoints
+represent the core problems shared across most user groups
+Readers & Researchers (PhD student, Medical student)
+Multi Tab Navigators (MBA student solving case studies
+WorkFlow Users (Product Intern using Sheets, Docs)
+Low Priority/ less browsing usage
+Tool Centric Users
+Transaction User
+Entertainment / Media Consumers
+Miscellanous Users
+Srishti, PHD (Nano Technology), 31 - A detail-oriented, evidence-driven researcher
+GOAL: To synthesize insights from multiple research papers and build clear arguments for experiments and publications.
+Habits
+Needs
+Painpoints
+• Work on papers, citations, datasets, SEM/TEM
+• Mult-resource, kellable summary
+• Reads large PDFs, materials, lab manuals, etc
+• Seamless linking b/w paper, citations, notes
+• Uses Al Summary but cross-verifies manually
+• In Depth explainer of jargons equations, term
+• Maintains insight notes on Notion, Docs, Sheets • Organized research pipelines
+Scientific PDFs are too
+dense & time-consuming
+No tool helps connect insights
+across tabs or papers
+My research is scattered across dozens of papers. If the browser understood my
+research workflow, half my burden would disappear.
+Difficult to manage long-term
+research threads and keep continuity
+Note / Learn
+Write / Finalize
+note Insignt On
+Docs, Notes, etc
+Learn wnite assignments,
+reoors, researen oriers
+Scattered / Broad
+/ Vague notes
+Struggle to remember,
+lose context
+Al Notes Panel,
+Writer Assistant
+Raw Data to Insight
+Generator
+Impact & Integration
+Post-Study
+Organize
+Urganize bala, Insignts,
+rinaing, reterences, Notes
+Scattered insights,
+tedious task;
+citations are messy.
+Smart Organizer
+Suggestion + Executor
+Auto Citation
+Repeat Learning Continuity
+Revisit earlier links to refresh memory
+→ Search for missing pieces - loop
+Lost continuity,
+reopens tabs,
+repeats searches
+Session Memory
+Visualization
+GTM & Revenue Model
+--- PAGE 4 ---
+How JARVIS Reinvents Browsing for Student Workflows
+Let me
+streamline your
+entire
+study workflow
+Introducing JARVIS Browser - an Al-native workspace built to rethink how students research, learn, and create.
+Search TAB at Center +
+Drive UX Principle
+HOMEPAGE
+Al Search Enable / Disable
+Gives control to Browse simply
+JARVIS Homepage - Overview
+Acts as a unified workspace where user begin / resume tasks with
+clarity. It centrallzes search, tasks, tolders, quick-access tools,
+and Al assistance to minimize friction.
+Key Experience Improvements
+Instant access to recent work,
+research folders, reminders
+Personalized quick access tabs
+reduce repetitive navigation
+Side Panel +
+Eliminates
+Cognitive Load
+Bookmarks +
+2: Suggestions Tab
+• Notes
+ASK Jarvis
+UX RATIONALE: Designed Around Natural User Behaviour
+Al avalable immediatelv trom
+homepage
+Smooth transition into study
+mode or project workflows
+Frequent Tab #1
+Folders
+• Search is placed at the center because users naturally
+focus on the center of the screen first.
+• A sidebar replaces traditional top-tab navigation to
+maximize screen space, improve organization, and
+support drag-and-drop folder management.
+• Quick tools and Al access remain within thumb/eye
+reach, creating a behavior-aligned browsing workflow.
+High Level Workflow
+ven JARVIs
+View Quick Tabs / Notes / Central Workspace
+Frequent Tab #2
+Frequent Tab #3
+History Tab #1
+History Tab #2
+Access savea labs
+ASK JARVIS
+In tote seorch
+Customized Saved Tabs
+Sidebar
+Land JARVIS / Result Page
+Study for EXAM
+Shows "What's Inside Link?" - Summary
+Summarization button - Tells "What's Inside Link?"
+summary organizer +
+Interactive Browsing +
+Notes & Task
+Reminder
+RESULT PAGE
+86
+-https://www.google.com/search?q=cancerttreatment..
+Suggestions Tab
+• Notes
+Ask Jarvis
+Google
+cancer treatment research paper
+Research didn't
+evolve with students-
+50 JARVIS evolves the
+browser instead.
+Set JARVIS as default Browser
+Set JARVIS as default PDF opener
+National Cancer Institute (gov)
+https://www.cancer.gov› about-cancer› research
+Cancer Treatment Research - NCI
+Find research articles on cancer treatment, including news stories, clinical trials, blog posts, and
+descriptions or active studies.
++ Ask Jarvis
+→ JARVIS Quick Access - Always at Front
+→ Default Browser Drivers - Increase Adoption
+QuICK ACCeSS
+Profile Switch UX
+Drives Profile Seperation
+• Quick Access Tab Customizer
+* Temporary Chat Mode - No Memory of Conversations
+Treatment and delivery advancements
+Evaluate Sources Without Opening Tabs - on Result Page
+Al-enhanced search that summarizes each link from the results page,
+organizes clicked links into tabs, and enables follow-up Q&A; helping users
+evaluate sources quickly without opening unnecessary pages.
+Paipoints Addressed
+Hard to judge link relevance quickly
+Wasted time opening irrelevant pages
+Frequent context switching breaks flow
+High Level Workflow
+Key Experience Improvements
+• Link Summary Button
+rade summary Generation
+→ JARVIS Follow-up unau
+Link Wise Summary Tab Organization
+Other Link Summary
+Preview links
+instantly via Al
+raster selection of
+high-value sources
+Ask follow-ups w/o
+opening pages
+Quicker, more
+contident decision-
+Solutions & Wireframe
+Overview
+Understanding Users
+Impact & Integration
+GTM & Revenue Model
+--- PAGE 5 ---
+Transforming Research with Intelligence Companion
+Let me guide you
+during your research
+JARVIS SIDE PANEL AND HEADER FLOATS
+All time accessible Notes 4
+→ JARVIS Al Quick Access - Always float on top right
+G =- https://www.google.com/search?q=cancer+treatmen...
+Suggestions
+Notes
+Ask Jarvis
+NIH) NATIONAL CANCER INSTITUTE
+Compare across Tabs
+Intelligent Assistant: Turning Complex Research Into a Guided Flow
+JARVIS intelligently detects user intent, suggests relevant actions, offers AI-
+organised notes, and provides an always-visible Ask-JARVIS panel. Together,
+these features guide users through complex tasks, reduce manual effort, and
+keep research flowing smoothly.
+Paipoints Adressed
+Manual effort to extract & organise insights
+Difficult decision making
+'*.. * Generate Mindmap to write Cancer Treatment Research Paper
+YES NO
+No central place for notes and Al companion
+it User Clicks
+* Compare cost of each treatment method from opened tabs?
+YES NO
+High Level Workflow
+Can Al
+Be Trei
+extract insignts tor cancer treatment, over all Tabs?
+Key Experience Improvements
+JARVIS Asks
+followup question
+before executing
+Webpage / PDF Load
+Intent Detection
+Shows Smart Suggestions
+-: Hey, continously switching tabs? Would you like to Split Screen?
+YES NO
+Note Insights
+Task Execution
+Follow-Up Questions
+Research Continuity
+JARVIS interaction (Antime)
+Smart user intent
+Al-organised notes
+based suggestion
+for quick recall
+A wavs-avallable
+Ask Jarvis panel
+ig
+Smooth transition
+between actions
+Workflow Automation
+* Permission Access
+→ Progress Summarizer
+suggestion #2
+suggestion #3
+Prompt Suggestions - Drives Usability
+Suggestion #1
+Write or Select content
+Informs JARVIS takes inputs through
+content selection too
++ Ask Jarvis
+https://www.google.com/search?q=cancerttreatmen...
+Always Allow on this site
+CANCER• A Global
+• r
+Allow once
+100% "
+Normal text
+Corticár bulbic heartn chainenge arecang individuárs, tamines, ania inlanhcare systemis worlowiae.! ..., ?... =.
+The Impact of Cancer
+Cancer affects populations across all demographics, but its burden is not equally distributed. Key impacts
+* Suggestions Tab
+E Notes
+Ask Jarvis
+Compare across Tabs
+Summarize
+Writing your Cancer Treatment Report
+Working...
+• Excellent! Now let me continue adding more content about
+canter types, msk actors, an cang ta cnr c.
+Turn Complex Tasks Into One-Click Actions
+JARVIS automates multi-step research and writing tasks by taking controlled
+actions on the screen-clicking, extracting, typing, and compiling information
+from all open tabs to produce a ready-to-edit document with user
+permission and real-time progress feedback.
+Use Case Examples
+• Mortality: Cancer accounts for one in six deaths globally, making it the second leading cause of death after
+s ready. Let me now type the content about RISA Labs
+Generate Multi-Source Reports & Assignments
+• Morbidity: Beyond mortalit, cancer survivors often face long-term physical, emotional, and psychological
+effects, including treatment side effects, reduced quality of life, and increased healthcare needs.
+• Economic Burden: Cancer imooses a substantial economic burden throuch direct medical costs (treatment
+Fill Forms / Data Automatically
+• Disparities: Cancer incidence and outcomes varv sianificantiv based on deoaranhic location socioeconomid
+status. race. ethnicitv, and access to healthcare. Develoned nations aenerallv have hiaher incidence rates butl
+High Level Workflow
+execute calculations a rormulas in Google sneets
+Trigger Action via Prompt / Suggestions
+Tab Access Request
+Write Mails, Reports, Assignments inside Docs
+User Pause / Edit Action antime
+Show Live Steps
+Perform Actions
+Highlight PDF while reading
+RISA Labs: Revolutionizing Oncology Through Al-Powered Workflow Autor
+Writing Report
+he Problem: reatment D
+Output
+Enhance Results / Reprompt
+Perform Benchmarking Product and note comparisions
+Cancer patients face a critical barrier to timelvicare that extends bevond their disease itself-the complex
+administrative workflows that delav life-savina treatments. Todav. patients routinelv experience delavs of davs
+nr even weeks die to manual error-nrone nide authorization nencesses This administrative hurden creates a
++ | Write cancer treat report from all my tabs...
+→ Automated Task Controller - Allows stoping / Editing the task
+Solutions & Wireframe
+Overview
+Understanding Users
+Impact & Integration
+GTM & Revenue Model
+--- PAGE 6 ---
+Priorities, Differentiators & Partnerships
+Let's Align Strategy
+Roadmap for our users
+RICE Feature / Solution Prioritization
+Layered Value Stack of JARVIS Browser
+Feature
+Temporary Chat Mode
+Reach
+8
+Default Browser Driver
+Side Panel Workspace
+Result Link Summary
+10
+10
+Summary Tab Organizer
+JARVIS Interactive Chat
+Intent-Aware Suggestion
+Al Notes Panel
+Workflow Automation
+Permission Control
+10
+10
+8
+10
+10
+Impact
+Confidence
+Effort
+Score
+126
+94
+120
+10
+150
+56
+10
+10
+134
+88
+8
+64
+126
+10
+10
+333
+Rank
+#4
+#8
+#6
+#2
+#10
+#3
+#5
+#9
+#5
+#1
+JARVIS Core Value Features
+ASK Jarvis
+Permission Control
+Side Panel
+Result Link Summary
+Support Systems
+Smart Suggestions
+Temporary Chat Mode
+Tab Organizer
+Result Link Summary
+Delighters
+Workflow Automation
+Al Notes Panel
+Strategic Partnerships & Integration to Accelerate JARVIS Adoption
+By solving the right problems first, JARVIS
+becomes an indispensable study partner
+1. Academic PDFs & Research Content Platforms
+(arXiv, PubMed, Semantic Scholar, Sci-Hub mirrors)
+2. EdTech & Learning Tools Integration
+(Coursera, Udemy, Khan Academy, Unacademy, YouTube Lectures)
+3. Productivity & Note Ecosystem Integration
+(Notion, Google Docs, Sheets, Obsidian, Canva)
+Why this Matters
+65%
+Student's study time spent
+on rors, papers, sides
+42%
+End academic PDFs hard
+to understand alone
+* Unique Values Created:
+• Al Study Mode: Summaries, explainers, highlights from
+any academic PDF.
+• Instant Q&A: Ask doubts directly on the PDF without
+switching tools.
+* HOW JARVIS Drives Adoption
+• Campus rollouts: Partner with ITs, NITs, universities -
+"free Al PDF mode for students."
+• PDF-first onboarding: Every PDF opens in JARVIS
+Study Mode → instant "aha" moment.
+Why this Matters
+Avg time by students on
+72%
+Students rely on online
+hrs/day
+these sites during exams
+lectures for learning course
+* Unique Values Created:
+• Lecture-to-Notes Mode: Auto-generates clean,
+structured notes while watching any lecture.
+• Instant Concept Explainer. Breaks down formulas, code,
+or theory inside the video; no tool switching.
+• HOW JARVIS Drives Adoption
+• YouTube Notes Panel: Right-panel prompt → "Generate
+notes for this lecture?" → high-visibility entry point.
+• EdTech Creator Collabs: Influencers & educators
+demonstrate JARVIS's Al benefits on popular courses.
+Why this Matters
+85%
+Students complete reports
+assianments on inese sites
+56%
+Employees / Productive
+Users use these platforms
+Unique Values Created:
+• Al Split-Screen Workspace: Research, summaries,
+and writing in one synchronized interface.
+• Auto-Sync Insights: Summaries, citations, and
+highlights flow directly into Docs/Notion.
+How JARVIS Drives Adoption
+• One-Click Export. "Send summary to Notion/Docs" →
+direct workflow integration.
+• Student Templates: Al-ready templates for lab
+reports, literature reviews, and case study drafts.
+HoW JARVIS Differentiates from existing Browser
+Clear Functional Differentiators
+One-Click Source
+Understanding
+Context Intelligence
+& Smart suggestions
+Cross-page
+passive insights
+Self-Organizing
+Research Space
+Task Level
+Automation
+Study Companion
+- Deep Explainer
+User Outcome Differentiators
+Al Assitance Coverage
+Context based
+Browsing
+Time Efficiency
+Information Depth
+& Reliability
+Cognitive Load
+Reduction
+JARVIS Al Browser
+Traditional Browser
+User Emotion Differentiators
+"The suggestions feel uncanny - JARVIS knows
+I'm switching tabs too much and offers a split
+screen before I even realize the problem."
+"The tab organizer and notes Al keep everything
+clean - I don't feel that mental chaos that
+normally hits after 30 minutes of research."
+"When I'm stuck, JARVIS explains things like a
+patent tutor. It reels like someone s actually
+helping me, not just a browser."
+Impact & Integration
+Overview
+Understanding Users
+Solutions & Wireframe
+GTM & Revenue Model
+--- PAGE 7 ---
+AWARENESS
+ACQUISITION
+ACTIVATION
+Building a Student-Focused Revenue Flywheel
+Go-To-Market Strategy
+Target Areas
+Goal
+Strategy
+Channels
+Why it works
+Goal
+Strategy
+Channels
+Why it works
+Goal
+Strategy
+Channels
+Why it works
+Campus clubs &
+Department Groups
+Create high visibility within
+academic communities.
+Run Al workshops using real
+research tasks: Collaborate with
+faculty and club leaders.
+Workshops • Faculty • Club Leads
+Faculty demos create quick
+credibility; Student clubs quickly
+drive tool adoption.
+Convert active members through
+hands-on usage.
+Offer beta access for research
+workflows; Run live demos with
+department PDFs.
+beto Access • uve bemos • Loos
+Hands-on trials build strong
+convicton, Department tasks allgn
+well with JARVIS.
+Ensure first WOW moment in
+live sessions.
+Demonstrate split-screen research
+workflows instantly; Show tab
+grouping and quick summaries.
+Workshops • Lab Hours • Club
+Meets
+Immediate value visible within
+seconds; Workflows align with
+department tasks perfectly.
+Overview
+Undergraduate Students
+Reach students during
+assignments and study hours.
+Instant Al summaries for difficult
+topics. Use creators to show live
+research workflows.
+YouTube • Instagram • Search
+UGs seek fast clarity when
+confused. Creators strongly shape
+student tool cnoices
+Enable frictionless try-outs during
+sLuov sess ons.
+Use Chrome extension as main
+entry point; Show Al summary
+button on search results.
+extension searcn banner
+Docs Sidebar
+UGs prefer zero-effort onboarding.
+instant summares give immealate
+value.
+Deliver instant clarity within
+first 30 seconds.
+Explain PDF sections with one-click
+Al; Organize tabs automatically
+during research.
+PDF Prompt • Summaries • Ask
+Jarvis
+UGs are overwhelmed by dense
+content; Automation reduces
+confusion and speeds learning.
+Understanding Users
+Post Graduate Students
+Target heavy research users
+facing daily PDF pain.
+Al explainers for dense research
+papers. Show multi-tab insights
+for reviews.
+Research Labs • Dept Groups
+• LInkeaIn
+PGs struggle with complex multi-
+source reading. Al cuts research
+time significantly.
+Acquire research-heavy users
+with high-value tools.
+Lead with AI PDF explain mode;
+Enable multi-tab summaries for
+deep reviews.
+PDF Mode • Tab Summary •
+Faculty Mailers
+Directly targets PG research pain;
+Boosts multi-source
+comprehension speed.
+Activate PGs through deep
+research assistance.
+Provide insights across all selected
+papers; Enable JARVIS to draft
+structureo notes.
+Al Notes • Insights Mode •
+Research View
+PGs need strong multi-source
+synthesis; Structured outputs
+reduce manual research workload.
+Solutions & Wireframe
+You study better;
+I grow stronger with you!
+REVENUE MODEL
+Freemium Core (Primary Model - 95% Users)
+What Students Get for Free
+• Al Summaries of webpages
+• Link Preview Summaries
+• Note Panel (basic)
+• Ask-Jarvis (limited queries/day)
+• Basic Split Screen
+• PDF Reader (non-Al)
+• Limited Smart Suggestions
+Why This Works
+Students try
+witnout Triction
+Drives high adoption
+leading to habit loops
+Pay-Per-Use (Micro-transactions ₴10-30)
+Examples
+• Generate Lab Report Draft from All Tabs
+• Auto-Solve Sheet Formulas / Data Cleaning
+• Compare 10 Research Papers
+• Extract Citations Automatically
+Why This Works
+Students avoid
+subscription fear
+Only pay when
+needed
+10
+High-Volume
+micro-utilities
+JARVIS PrO - Student Subscription (299 / month)
+Premium Features Included
+• Unlimited Al depth explanations
+• Unlimited Automated Workflows (form, report, Sheet,
+transactions, etc)
+• Advanced Smart Suggestions
+• Longer term context memory for research
+• Al Workspace Templates (lab reports, literature
+reviews, case studies, PPT / Deck components)
+Why This Works
+Affordable Price
+for Students
+min.
+High Value for
+rower users
+Better Quality
+Results
+Ethical First-Party Data Intelligence
+What we Monetize
+• Academic intent & topic trends
+• Study behavior & content / browsing patterns
+• Skiil interesis « course cemono
+• High-intent learning segments
+Why This Works
+Browsers hold rich, high-
+intent user behaviour
+Student focused Product
+access target audience
+Let's elevate student learning together
+with AI that works beside you always
+GTM & Revenue Model
+Impact & Integration

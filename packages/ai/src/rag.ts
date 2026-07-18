@@ -4,16 +4,24 @@ import { cosineSimilarity, embedText, embedTexts } from "./embeddings";
 
 export interface IngestDocumentOptions {
   documentId: string;
-  buffer: Buffer;
+  /** PDF file contents; text is extracted with pdf-parse. */
+  buffer?: Buffer;
+  /** Pre-extracted text (e.g. OCR output for image-based PDFs). Takes precedence over buffer. */
+  text?: string;
   projectId?: string | null;
+  /** Labels stored on every embedding chunk (e.g. { source: "resume" }). */
+  metadata?: Record<string, unknown>;
 }
 
 export async function ingestDocument({
   documentId,
   buffer,
+  text: providedText,
   projectId,
+  metadata,
 }: IngestDocumentOptions) {
-  const text = await extractTextFromPdf(buffer);
+  const text =
+    providedText?.trim() || (buffer ? await extractTextFromPdf(buffer) : "");
   const chunks = chunkText(text);
 
   await prisma.document.update({
@@ -31,7 +39,7 @@ export async function ingestDocument({
     data: chunks.map((content, chunkIndex) => ({
       content,
       chunkIndex,
-      metadata: { chunkIndex },
+      metadata: { ...(metadata ?? {}), chunkIndex },
       vector: vectors[chunkIndex]?.length ? vectors[chunkIndex] : undefined,
       documentId,
       projectId: projectId ?? undefined,
@@ -83,7 +91,12 @@ export async function ingestProjectContext(projectId: string) {
     data: chunks.map((content, chunkIndex) => ({
       content,
       chunkIndex,
-      metadata: { chunkIndex, source: "aiContext" },
+      metadata: {
+        chunkIndex,
+        source: "project-notes",
+        projectSlug: project.slug,
+        title: project.title,
+      },
       vector: vectors[chunkIndex]?.length ? vectors[chunkIndex] : undefined,
       documentId: doc.id,
       projectId,
@@ -98,6 +111,7 @@ export interface RetrievedChunk {
   score: number;
   documentId: string;
   projectId: string | null;
+  metadata?: unknown;
 }
 
 function vectorFromJson(value: unknown): number[] {
@@ -120,6 +134,7 @@ async function vectorSearch(
       documentId: true,
       projectId: true,
       vector: true,
+      metadata: true,
     },
     take: 500,
   });
@@ -129,6 +144,7 @@ async function vectorSearch(
       content: row.content,
       documentId: row.documentId,
       projectId: row.projectId,
+      metadata: row.metadata,
       score: cosineSimilarity(queryVector, vectorFromJson(row.vector)),
     }))
     .filter((row) => row.score > 0.05)
@@ -155,14 +171,14 @@ async function keywordSearch(
   const pattern = `%${terms.join("%")}%`;
   const rows = projectId
     ? await prisma.$queryRaw<RetrievedChunk[]>`
-        SELECT e."content", e."documentId", e."projectId", 0.4::float AS score
+        SELECT e."content", e."documentId", e."projectId", e."metadata", 0.4::float AS score
         FROM "Embedding" e
         WHERE e."projectId" = ${projectId}
           AND LOWER(e."content") LIKE ${pattern}
         LIMIT ${limit}
       `
     : await prisma.$queryRaw<RetrievedChunk[]>`
-        SELECT e."content", e."documentId", e."projectId", 0.4::float AS score
+        SELECT e."content", e."documentId", e."projectId", e."metadata", 0.4::float AS score
         FROM "Embedding" e
         WHERE LOWER(e."content") LIKE ${pattern}
         LIMIT ${limit}
@@ -212,6 +228,23 @@ export async function searchEmbeddings(
   return results.slice(0, limit);
 }
 
+function chunkLabel(chunk: RetrievedChunk): string {
+  const meta = chunk.metadata as
+    | { source?: string; title?: string; projectSlug?: string }
+    | null
+    | undefined;
+  if (!meta?.source) return "";
+  if (meta.source === "resume") return " — from my resume";
+  const name = meta.title ?? meta.projectSlug;
+  if (meta.source === "project-pdf") {
+    return name ? ` — from project deck: ${name}` : " — from a project deck";
+  }
+  if (meta.source === "project-notes") {
+    return name ? ` — from project notes: ${name}` : " — from project notes";
+  }
+  return ` — from ${meta.source}`;
+}
+
 export function buildContext(chunks: RetrievedChunk[]): string {
   if (chunks.length === 0) {
     return "No relevant documents found in the knowledge base.";
@@ -220,7 +253,7 @@ export function buildContext(chunks: RetrievedChunk[]): string {
   return chunks
     .map(
       (chunk, i) =>
-        `[Source ${i + 1}] (relevance: ${chunk.score.toFixed(2)})\n${chunk.content}`
+        `[Source ${i + 1}${chunkLabel(chunk)}] (relevance: ${chunk.score.toFixed(2)})\n${chunk.content}`
     )
     .join("\n\n");
 }

@@ -1,0 +1,812 @@
+--- PAGE 1 ---
+Imagine a world where data is extremely scarce. Pick a
+popular product and re-think it with this constraint. How
+will you re-design this product, without losing its core
+value proposition?
+Shritik Jaiswal
+Institute ID: 21BT3EP08
+Mail: shritik@kgpian.iitkgp.ac.in
+Phone: 91 9975343323
+CONFIDENTIAL
+--- PAGE 2 ---
+• How would this world of data scarcity change user behavior and expectations?
+• Which product or experience would you reimagine, and why that one?
+• What core value must your product continue to deliver despite this constraint?
+• How will you redesign the experience? What trade-offs will you make?
+• What are the biggest risks or limitations of your approach, and how will you
+handle them?
+• What does success look like? How will you measure if your redesign truly works?
+f
+CONFIDENTIAL
+--- PAGE 3 ---
+Problem Statement: Reimagining Google Maps in an extreme internet data scarce world
+Setting the Stage: Our moonshot solution reimagines Google Maps by blending the traditional human wisdom of asking locals for directions with a device-to-device G-Mesh network G-Mesh network
+for sharing location data locally through nearby Device-Cache while travelling, combined with in-app optimizations to ensure seamless navigation; even in offline zones or while exploring distant regions
+#1 Why Google Maps? (chosen Product)
+Google Maps: Provides real-time navigation, traffic info, local discovery, and location-based services
+#2 Why the Problem Matters?
+Non-Negotiable
+Utility
+Data Hungry
+Core Engine
+Unreliable data
+in motion
+Daily Mobility impact
+on Businesses
+Core Offerings
+Critical Infra for
+100 M+ Businesses
+Economic
+2 Billion MAU
+Social Impact
+Expensive Data &
+Rising Costs
+Disaster & Remote
+Scenarios
+#3 Why Google should care?
+M
+Economic
+Inequality
+High Carbon Cost
+of Data Transfers
+Android Stickiness
+& unlock new user
+Brand Trust
+& Goodwill
+Product
+Resillience
+#4 Why NOW?
+Boost B2C Access
+& B2B Revenue
+Sustainability & ESG
+Goals
+Global Data
+Limitation Policy
+Geopolitical
+Push
+Al/ML & loT
+On-Device Maturity
+Data Consumed by Google Maps by the World
+World Population = 8.23 B
+60% Smart Phone Access
+90% Internet Penetration
+70% G-Map Users
+60% MAU
+1.4 B Active
+Map Users
+X
+23 MB.
+Month / User
+Image & Heavy Features: 8 MB
+Location Pins : 1.25 MB
+Tile Loading: 1.5 MB
+Traffic & Incident: 4 MB / hi
+Navigation: 9MB / hour
+1 AvG Google MAP User / month
+~ 30.3 Peta
+Bytes / Month
+Navigation
+Real Time Incident
+Local Business
+update
+Discovery
+Street /
+Satellite View
+Offline Maps
+Core Values
+Accuracy
+Reliability
+Accessibility
+User Safety
+Continued to be delivered,
+aespite aara constraints
+Global GIS Industry Market Share
+Google Maps Vision
+"Explore and navigate
+your world"
+G Maps
+Waze
+67%
+10%
+Apple Maps
+Others
+16%
+7%
+Mapping Competitive Capability
+Defining the Imaginary World
+mine runcuionality
+Google Maps
+Apple Maps
+Key Assumptions:
+User Experience
+Data Efficiency
+& Optimization
+open ccosystem
+& Intergratibility
+Navigation
+Accuracy
+Local Data Richness
+Consuming 5% or a user's total montnly data, making navigation a
+data-expensive essential utility, demanding immediate optimization
+1. Governments worldwide have enforced data
+consumption limits to reduce carbon emissions
+2. Android Device, current technology and human-
+behaviours are the same for share in this world
+3. Data Limit: 500 MB / Month over the world
+4. Speed: 2G / 3G, approx 0.1-1 MBPS
+5. Geographic Spread: ~ 50% Urban, 30% Rural
+6. MAPme / G-Mesh Network Signal Carbon
+Footprint is lower than data usage for Maps
+Google Maps has connected the world through data; but in a world where data is scarce, the opportunity now is to reimagine maps as a self-
+sustaining, cooperative network, where every device contributes to keeping the world moving even when the internet slows down.
+Overview
+Understanding Users
+The MoonShot Solution
+App Enhancement
+Impact, MOAT and Prioritization
+Metrics, Tradeoffs & Risk
+--- PAGE 4 ---
+Understanding Users in Low-Data Environments
+Primary Research
+178
+Surveys
+We asked peoples to imagine internet data like year 2010
+with today's technology and here is what they said!
+21
+key linsights from survey
+Interviews
+I Users consciously limit their
+data usage and open Google
+Maps only when essential
+Navigation Behaviors Shift in a Data-Scarce World
+Data scarcity doesn't stop navigation; it reshapes it. Users are moving from continuous connectivity to
+conscious efficiency, demanding products that do more with less
+Feature Usage
+Online Live Navigation
+Decrease
+% of Respondent
+Stay the Same
+Increase
+Net Intent
+Explanation / Behaviour
+Surveyed Profiles
+71%
+25%
+24%
+66%
+Continous Data Usage
+60%
+Graduates
+25%
+Employees
+* Many users pre-check routes,
+memorize key turns, or use
+screenshots to minimize data
+usage
+Downloading Maps
+Pre Check Routes / Snapshot
+Live Traffic Layer
+Turn-Off Backgroud Data
+23 %
+16%
+49%
+52%
+35 %
+63%
+35 %
+29%
+19%
++
+61%
+Offline, One Time High Data
+Smart Data Savers
+Continous Data Usage
+42%
+Word Cloud based on Primary Research
+Search-
+® Users often sacrifice live update,
+Map Usage App Time / Trip
+40 %
+Offline
+traffic layer, and satellite view,
+Location Images / Video
+* Renoie Buffering one a da
+Data
+prioritizing only essential function
+SIgna
+* Network stort
+Area Exploration (Tiles)
+44 %
+• Users would prefer to ask locals
+Explore Reviews
+10%
+despite of opening Maps In a world
+of data scarcity, users need some
+Explore 3D Street View
+innovation to combine Maps with
+Local Knowledge
+User Personas
+Data-Conscious Urban Student I Prepaid packs on limited balance
+Goal
+Behaviour
+Pain Points
+Marie | 19 yrs | Raipur
+Needs
+48%
+54%
+12%
+50%
+Data Concious Behaviour
+60%
+35 %
+5 %
+48%
+8%
+71%
+83 %
+19%
+15%
+• 55 %
++ 36%
++
+9%
+7 81%
+Shorter, Purpose Driven
+Data Heavy Feature
+Limited, Purpose Driven
+Review Only Users
+Data Heavy, Non Essential
+In a data-scarce world, users become innovators adapting optimization, caching, and co-navigating. It's time for Google Maps to mirror that ingenuity.
+World Internet Penetration
+Global Android Device Density
+Navigate new
+Searches
+areas on
+locations, avolds
+minıma cata
+tull navigatior
+Naveen | 25 yrs | Patna
+Goal
+Preters Asking
+Locals wnere
+mossibe
+Disables
+layers to save
+cata
+Ottline maps
+use nude
+storage
+Reconnecting
+prompts waste
+cata a time
+Low-Tech Rural Driver operating in tier-1 zones
+Behaviour
+Pain Points
+Lite map
+snowing key
+details only
+Needs
+Navid ate
+reliab v with
+weak signal
+uses cacnea or
+remembered
+Toutes
+Switches SIMS,
+Uses 2G
+fallback
+keeos
+hotterv-sover
+always on
+Maps freeze
+during signal
+loss
+high battery
+drains from
+reloads
+syncing only
+No Data / Nealible Densitv
+when needed
+Internet Penetration and Android Device Density in any area › 15 / sq.km is crucial for creating P2P G-Mesh Network effectively
+Overview
+Understanding Users (
+The MoonShot Solution
+App Enhancement
+Impact, MOAT and Prioritization
+Metrics, Tradeoffs & Risk
+--- PAGE 5 ---
+Introducing G-Mesh; Integrating Maps with Local Knowledge
+MAPme: A new peer-to-peer wireless
+connectivity layer built natively into
+Android devices, to relay location-based
+data through secured APIs
+User A: Resides locally. Shares 7 km Map Info in target direction & petrol pump locations;
+saved in her device as local cache, when Naveen searches for route
+0 Km
+5 Km
+10 Km
+15 Km
+User D: Recently Shifted. Searches Eco-World at same
+time when Naveen is passing. Receives Data from him.
+20 Km
+Food Delivery
+Naveen, 25Yrs
+Goal: Reach Delivery
+location by Bike
+in time
+KURAMANGALA
+JAYANAGAR
+Loco Bear - The Ultimate
+Entertainment Hub
+BANASHAN
+00 3
+Shokudo
+• Don't know Route
+• Need Navigation
+Manipal:Hospital
+Sarjapur Road
+Recently viewed
+Ecoworld B
+Shree Banashankari:
+Devi Temple:
+Ragigudda Sri Prasanna
+Anjaneya swamy Temple
+3
+Rloom Hotel - HSR
+DaV Arana
+G-Mesh : A GPS-Data Relay Ecosystem that moves Maps without Internet
+User B: Delivery Boy. Shares next 9 km info, when Naveen
+covers 4km, (prior 3 Km data) for seamless navigation
+User C: Teacher. Travels at same route daily. Shares G-Mesh Edge assisted Data packets based
+Map Tiles till destination & surrounding info like nearby Cafe, Hotels (if API asks)
+vector-to-bitmap
+rendering via Skia GPU
+Data Flow Pipeline
+Identification of A —
+Open Maps Online
+On Device Offline
+Renderer
+Local Routing
+Engine
+Presentation Layer
+G-Map Cloud
+User A
+Naveen
+Encrvpted Data Transter
+G-Mesh
+Request.Tile()
+MAPme P2P
+G-Mesh
+Cache.Load()
+Map API
+Pause Case when try Saver O
+Cache Manager
+Request Route
+MAPme.initialize()
+Cache Response
+Cache Indexer
+Cache Update /
+Deletion
+MAPme discovery
+Netowork
+OFF
+MAPme service disabled
+when device idle > 30 min
+Peer Score = Cache Overlap * Recency *
+Signal Strength * Energy State
+Secure Handshake ECDH + AES
+Cache Priortizer
+Vector tiles compression
+MAPme.queryPeers
+Local cache AES-256-GCM encrypted
+Nearby Device List
+Peers with ≥ 70% cache overlap considered
+G-Mesh API
+Rank Discovered Nodes / Peers
+GeoJSON and Protobul
+Local Storage
+Broadcast Scan
+A* + Dijkshtra's Algo
+Switch to Data
+It Peer Cloud unavailable
+#1 Pipeline: Cache Loading
+#2 Pipeline: Initializing MAPme to identify best pair of G-Mesh Network
+#3 Pipeline: Request & Get required cache data
+#4 Pipeline: Process & Present Offline data
+Overview
+The MoonShot Solution
+Understanding Users
+App Enhancement
+Impact, MOAT and Prioritization
+Metrics, Tradeoffs & Risk
+--- PAGE 6 ---
+Google Maps App Optimization & Feature Enhancement
+Core User Journey: Solution Focus
+Open Maps
+Explore Location
+Explore Category Location
+Location Detail
+Directions / Start
+1
+Data Consumption
+and low Map Utility:
+Shows Geographical
+landscape type water
+bodies, forests, garden
+consuming higher block
+data that are not required
+Navigate
+#I/ Kharagpu
+→ Distant Exploration / search:
+While exploring a new area
+Restaurant, Hotel, Shoping,
+other non-essential pins
+require 400 kb / 100 pin
+2
+Minimalist Map :
+Limit to road, street,
+major locations; leads
+to less tile blocks data
+usage, saving 1MB per
+100 km area: 5776 tiles
+with flexibility to view full,
+customized street map tiles
+Essential Pin Filtering:
+Eliminate non-essential pins
+and show pins that matter
+with a flexibility to switch
+default mode reducing
+1 MegaByte / 250 Pins - 1
+Location Range meter:
+Restricts unintentional
+tiles block rendering
+Restaurants
+# Opennow
+® Thar might affact these hour:
+Urive
+On Directions / Start Click,
+a 4 Wheeler Route loads
+by-default, but if user prefers to
+walk an extra step to load a new
+direction again
+5
+Category Button directly leads
+to Restaurant Cards with Images,
+consuming massive aata
+@ 5G. 92
+Image loads
+while scrolling
+leaving the user
+unaware of high
+data consumption
+5
+Lazy Image Load:
+On-click images / video
+loading. Show top 3 result.
+Save approx 1 MB / 10 Image
+Personalized Al Summary:
+Understands the purpose of map
+search by inputs for personalized
+map rendering specific to purpose
+Drive
+Default Route Optimization:
+Introducing an extra step to
+choose type of ride to eliminate
+the extra step after and
+save ~1 MB / 30 km route
+Light Card Load:
+Category Button leading to
+display only name, location &
+rating of restaurant, eliminates
+Images, card loading data
+Feature Focus:
+keduce visibility or aata-neavy
+non-essential features such as
+AR / VR, 3D Map, Voice Assistant.
+Show Live updates on-request
+kestaurants
+Relevance +
+Overview
+Understanding Users
+The MoonShot Solution
+App Enhancement
+Impact, MOAT and Prioritization
+Metrics, Tradeoffs & Risk
+--- PAGE 7 ---
+Solution Impact, Prioritization, and Google's Strategic Edge in Building G-Mesh Maps
+Data Usage Comparision:
+20
+Total Data Consumption / Month before G-Mesh & App Optimization
+Total Data Consumption / Month after G-Mesh & App Optimization
+14 MB
+Data Usage per Feature: Before
+Data Usage per Feature: After 9MB
+8 MB
+12 MB
+Initial Navigation load
+Direction Navigation
+4 MB / hour
+Traffic & Incident
+5 MB / hour
+The Unfair Advantage: Why only Google can build G-Mesh Map Network
+Hardware
+Software
+Data
+Replicability Gap (Years) / Competitive MOAT
+Android OS
+Userbase
+4.5B+
+Android Auto & Wear OS
+200M+ connected vehicles
+Monthly Map loads
+1B+t active users/
+month
+Regional Spread
+220+ Countries,
+63 Device / km.sq.
+Play Services integration
+Unified API layer
+Sensor Network Scale
+10B+ GPS, IMU
+Google Cloud + Edge
+38 cloud regions,
+200+ edge POPs
+within 50 ms latency
+SPACEY
+Edge & Network
+Infrastructure
+MAPme, Bluetooth,
+Nearby, WIFI
+CDN Caching Infra
+he compressed lux
+via WebP/Protobuf
+15.5 MB
+13 MB
+Tile Loading
+1.5 MB / 100 km.sq area
+Security
+buoole size - scole orimooct
+•
+Metric/Asset Impact
+Proven Compliance
+GDPR, ISO27001,
+FedRAMP certified
+End-to-End Encryption
+AES-256-GCM + TLS
+1.3 globally
+17 MB
+14 MB
+Location Pins
+1.25 MB / 250 Pins
+Feature
+Minimalist Map
+Essential Pin Filter
+Range Meter
+Lazy Image Load
+Personalized Al
+Route Flow Optimization
+Category Card Optimization
+Feature Focus
+G-Mesh Research
+Limited Eage
+Device Ecosystem
+Presence / OS Lock
+OS Level
+Global Data Infra
+Trust & Security Ecosystem
+integration Infra
+1 Only Google sits at the intersection of 4.5 B devices, edge computing, and world-class data infrastructure with proven trust making itself the only player to execute G-MESH
+G-Mesh Development
+23 MB
+18 MB
+14.5 MB
+15 MB
+The pitched solution saves
+35% (8 MB of 23 MB) / Month / User
+Equivalent to 10 Peta Byte globally
+Assumption:
+A user engages 3 x 1 hour session
+navigating / exploring Maps,
+2 x navigation session travelling
+around 40 km;
+1 x distant exploration session;
+explores 20 sq.km, pins, images, etc
+Frequent Riders & Passive Users are
+balanced out at average numbers.
+Image Render
+User flow optimization
+1MB / 10 Images
+RICE Feature / Solution Prioritization
+Reach
+Impact
+Confidence
+10
+10
+9
+Effort
+4
+4
+5
+5
+10
+10
+8
+9
+10
+8
+8
+10
+10
+4
+8
+Score
+150
+64.8
+44.8
+135
+64
+315
+144
+144
+180
+90
+Rank
+#3
+#8
+#10
+#6
+#9
+#1
+#5
+#4
+#2
+#7
+Overview
+Understanding Users
+The MoonShot Solution
+App Enhancement
+Impact, MOAT and Prioritization P
+Metrics, Tradeoffs & Risk
+--- PAGE 8 ---
+Success Metrics, Trade-offs, and Risk Mitigation
+Defining What Success would look like: Google Maps continues to deliver accurate, reliable navigation while cutting data usage drastically;
+improving accessibility and user satisfaction in a low-data world.
+Metric Type
+Metric
+Description
+North Star
+Low-data navigations / ser
+Completed low-data trips (<2 MB) per active user
+Data per Session
+Average MB consumed per completed trip
+Level 1 Metrics
+Trip Success Rate
+Lite/Mesh MAU
+% of users reaching destination without disruption
+Total unique users leveraging new low-data features
+Caching Performance
+Peer-to-Peer Mesh Efficiency
+Level 2 Metrics
+Offline Mode Utilization
+% of map tiles served from the device cache
+% of map/route bytes served by P2P/mesh network
+% navigation sessions fully completed entirely offline
+Reroute Success Rate (Offline)
+% of local reroutes successful without a live connection
+Latency Delta vs Online Mode
+Battery Impact per Session
+Offline/mesh load time difference compared to online
+Extra battery used in mesh/offline mode
+Supporting Metrics
+Opt-in Rate for Mesh Network
+% of eligible users actively enabling P2P mesh opt-in
+Map Update Propagation Delay
+Time taken for local map edits to sync nearby
+Possible Pitfalls and How to overcome them?
+Technical &
+Infrastructure Risks
+Data Accuracy &
+Freshness Risks
+User Adoption &
+Behavior Risks
+Privacy & Security
+Risks
+Building reliable, low-data mesh
+systems hard with bandwidth limit
+Limited data exchange causes stale
+routes and outdated POls
+Users may resist sync/sharing due to
+privacy or battery fears
+P2P sharing and local storage risk
+data leaks/violations
+Start with mesh
+rollout in dense
+regions first
+Use compression,
+edge Al, and
+lightweight vector
+tiles
+Sync critical
+roads and
+business listings
+first
+Use on-device
+ML to predict
+route changes
+Onboard by
+creating privacy
+& battery safety
+awareness
+Reward users for
+helping others
+navigate offline
+Encrypt all mesh
+broadcast data
+by default
+Share only
+anonymized,
+non-identifiable
+map tiles
+Overview
+Understanding Users
+The MoonShot Solution
+App Enhancement
+Goal
+80% trips completed ‹ 2 MB
+Reduce avg session to ‹ 1.5 MB
+90% users
+1.5 Billion MAUs globally
+60% of tile data
+70% bytes
+50% Navigations
+40% reroutes resolved ‹ 5 s
+‹ +1.5 seconds lower
+~20-25 mAh per 30-min trip
+50% devices
+‹ 5 minutes
+Business & Scalability
+Risks
+costs, unclear offline monetization,
+ecosystem fragmentation
+Partner with
+telcos/OEMs for
+OS-level mesh
+integration
+Launch MVP in
+developing
+regions before
+scaling
+Data Limitations Trade-Offs
+Current Data Rich Map
+Post Solution Implement
+Closeness to metric define tradeoff weightage
+Data
+Efficiency
+Open Mesh
+Network
+Server
+Intelligence
+Wide
+Exploration
+Ad
+Monetization
+Wifi /Mapme
+Radioactive
+App Depth
+Real Time
+Accuracy
+User Privacy
+Concerns
+On Device
+Computation
+Selective
+Radius Search
+UX & data
+consumption
+•all
+Health Concerns
+by Data Signals
+Low App
+Size
+Metrics, Tradeoffs & Risk P
+Impact, MOAT and Prioritization

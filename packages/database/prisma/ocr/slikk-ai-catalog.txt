@@ -1,0 +1,191 @@
+--- PAGE 1 ---
+Slikk Aspect Ratio Fix
+Problem Overview
+Current Scenario
+Product images come from multiple vendors
+No control over:
+• Aspect ratios
+• Backgrounds
+• Framing
+• Positioning
+Impact on Business
+• Product visibility issues (cropped or too small)
+• Inconsistent Ul → poor user experience
+Misaligned thumbnails → lower trust
+• Reduced conversion rates
+Try & Buy
+Low Product Coverage
+Try & Buy
+Image not fiting in
+standardized container ratio,
+leading to white space BG
+Try & Buy
+Cropped Product
+thumbnails
+Try & Buy
+Model Crop
+Try & Buy
+Product / Model not at centre
+--- PAGE 2 ---
+Product
+List
+...
+Slikk Aspect Ratio Fix
+Proposed Solution Workflow: Product & BG Differentiation + BG Crop + BG Stretch
+We use a two-stage segmentation pipeline: a domain-specific transformer-based model followed by a general-purpose foundation segmentation model, both producing pixel-level masks which are converted into bounding regions.
+Stage
+Step O: Aspect Ratio
+Identification
+Step 1: Product
+Boundary detection +
+crop
+Step 2 (Fallback)
+HF model fails to produce a
+geometrically valid
+bounding region
+Condition
+(Trigger)
+Image received
+Ratio ‡ 0.75
+Product not in
+trained items of HF
+model & ratio!=0.75
+Original
+W/H (original image)
+1.0000
+What Happens
+Extract aspect ratio from: •
+URL (preferred) • Image
+dimensions (fallback)
+Detect product+
+background
+Detect product using
+general segmentation
+Model / Method
+Used
+Regex + OpenCV
+Hugging Face Model
+(fashn-human-parser)
+SAM (Segment
+Anything - Meta)
+0.8950
+Output / Action
+Stop Condition
+Compute W/H ratio
+If ratio = 0.75 → STOP
+Generate segmentation
+mask → bounding box →
+attempt safe crop
+1: Crop extent until
+Image reaches target
+aspect ratio OR 2. Until
+Product boundary
+saturates
+Generate masks → filter →
+union → bounding box →
+safe crop
+Same as above
+0.8950
+STEP 2
+NA
+STEP 3
+BG STRETCH
+Base
+BACKGROUND
+SUBSTRACTION /
+CROP
+BACKGROUND
+SUBSTRACTION /
+CROP
+0.7497
+STEP 1
+BORDER DETECTION
+&
+BG CROP
+--- PAGE 3 ---
+Slikk Aspect Ratio Fix
+Proposed Solution Workflow: Product & BG Differentiation + BG Crop + BG Stretch
+Stage
+Condition
+(Trigger)
+Step 3 - BG STRETCH
+Ratio still # 0.75
+What Happens
+Adjust background only
+Model / Method
+Used
+Variance-based BG
+classification +
+OpenCV resize
+Output / Action
+Stretch background
+(horizontal / vertical)
+Final Step
+After all
+transformations
+Original
+W/H (original image)
+1.0000
+Recenter Product Box at mid
+Plan: recentering of
+product bounding (not
+yet executed)
+0.8950
+Final standardized image
+0.8950
+STEP 1
+BORDER DETECTION
+&
+BG CROP
+STEP 2
+NA
+Hard Constraints: - Product mask (Object Boundary) treated as immutable region
+- All transformations applied only on background pixels
+...
+..
+..o.
+Stop Condition
+Base
+Until Ratio ~ 0.75 for
+solid/gradient image..
+(Low var)
+Limited stretch for
+complex BGs (25% of
+BG Width)
+END
+BACKGROUND
+ADDITION / PADDING
+IMAGE POSITIONING
+0.7497
+STEP 3
+BG STRETCH
+--- PAGE 4 ---
+Slikk Aspect Ratio Fix
+MVP Code Flaws
+1. Float Error: Aspect Ratio reaches near 0.75 (eg: 0.7495/0.7505)and pipeline stops
+2. SAM Model not working - which was designed as backup for product Fashn Parser not trained
+3. BG Stretch - Replicating and streching replicated BG in some cases. Expected: stretching pixel across BG, no BG
+replication. Works for solid, gradient, textured BG only
+0.7500
+1.0000
+Model not trained to identify Bangles
+Model recognized all image as BG,
+and streched all image to fit from 1 to 0.75
+Wrong Detection saved by:
+Crop Condition: 1: Crop extent until Image
+reaches target aspect ratio OR 2.tUntil
+Product boundary saturates
+GOAL: Crop Image to achieve aspect ratio =
+0.75, not achieve maximum product coverage
+Additional Conditions required to improve in MVP:
+1. 1% Gap b/w Product Border and Container to
+avoid product edge touching container, that
+feels like cropped product
+2. Signature, Text, Tags inclusion in product
+ooundary
+3. Recenter product if bg available
+Img ratio = 1
+--- PAGE 5 ---
+Slikk Aspect Ratio Fix
+MVP Model Fixes ~97% Images
+Analysis O
