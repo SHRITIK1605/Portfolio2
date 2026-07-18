@@ -303,7 +303,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 340 }}
             style={{ "--chat-w": `${panelWidth}%` } as React.CSSProperties}
-            className="fixed inset-y-0 right-0 z-50 flex w-full flex-col bg-cream shadow-[-8px_0_32px_rgba(0,75,64,0.12)] md:w-[max(var(--chat-w),300px)] md:border-l md:border-forest/10"
+            className="fixed inset-y-0 right-0 z-50 flex w-full flex-col bg-cream pb-[env(safe-area-inset-bottom)] shadow-[-8px_0_32px_rgba(0,75,64,0.12)] md:w-[max(var(--chat-w),300px)] md:border-l md:border-forest/10"
             role="dialog"
             aria-label="AI chat"
           >
@@ -314,7 +314,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
               aria-orientation="vertical"
               aria-label="Resize chat panel"
             />
-            <header className="flex items-center justify-between border-b border-forest/10 px-[20px] py-[16px]">
+            <header className="flex items-center justify-between border-b border-forest/10 px-[16px] py-[14px] pt-[max(14px,env(safe-area-inset-top))] sm:px-[20px] sm:py-[16px]">
               <div className="flex items-center gap-[8px] text-forest">
                 <SparkleIcon size={24} />
                 <span className="text-[15px] font-semibold">Virtual Me</span>
@@ -322,29 +322,29 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
               <button
                 type="button"
                 onClick={closeChat}
-                className="flex h-[36px] w-[36px] items-center justify-center rounded-full border border-forest/20 bg-white"
+                className="flex h-[44px] w-[44px] items-center justify-center rounded-full border border-forest/20 bg-white sm:h-[36px] sm:w-[36px]"
                 aria-label="Close chat"
               >
                 <X className="h-[16px] w-[16px]" />
               </button>
             </header>
 
-            <div className="flex-1 overflow-y-auto px-[20px] py-[24px]">
+            <div className="flex-1 overflow-y-auto overscroll-contain px-[16px] py-[20px] sm:px-[20px] sm:py-[24px]">
               {messages.length === 0 ? (
                 <div className="animate-fade-in">
-                  <h2 className="m-0 text-[20px] font-semibold text-forest">
+                  <h2 className="m-0 text-[18px] font-semibold text-forest sm:text-[20px]">
                     Hi! How can I help you?
                   </h2>
                   <p className="mt-2 text-[14px] text-forest/60">
-                    Ask about Shritik&apos;s projects, experience, or resume.
+                    Ask about my projects, experience, or resume.
                   </p>
-                  <div className="mt-[24px] flex flex-col gap-[8px]">
+                  <div className="mt-[20px] flex flex-col gap-[8px] sm:mt-[24px]">
                     {suggestedPrompts.map((prompt) => (
                       <button
                         key={prompt}
                         type="button"
                         onClick={() => sendMessage(prompt)}
-                        className="rounded-[16px] border border-forest/15 bg-white px-[16px] py-[12px] text-left text-[14px] text-forest transition hover:border-forest/30"
+                        className="min-h-[48px] rounded-[16px] border border-forest/15 bg-white px-[16px] py-[12px] text-left text-[14px] text-forest transition hover:border-forest/30"
                       >
                         {prompt}
                       </button>
@@ -425,7 +425,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
             </div>
 
             <form
-              className="border-t border-forest/10 p-[16px]"
+              className="border-t border-forest/10 p-[12px] pb-[max(12px,env(safe-area-inset-bottom))] sm:p-[16px]"
               onSubmit={(e) => {
                 e.preventDefault();
                 sendMessage(input);

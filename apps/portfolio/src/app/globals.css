@@ -29,6 +29,11 @@ body {
   color: var(--portfolio-text);
   font-family: var(--font-poppins), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 ::selection {
@@ -75,12 +80,3 @@ body {
   animation-delay: 0.3s;
 }
 
-@media (max-width: 640px) {
-  .hero-title-mobile {
-    font-size: 38px;
-  }
-
-  .hero-subtitle-mobile {
-    font-size: 32px;
-  }
-}

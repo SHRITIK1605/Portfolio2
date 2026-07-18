@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { ChatProvider } from "@/context/ChatContext";
 import ChatLayoutShell from "@/components/layout/ChatLayoutShell";
@@ -13,6 +13,12 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Shritik — Portfolio",
   description: "AI-powered portfolio by Shritik",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

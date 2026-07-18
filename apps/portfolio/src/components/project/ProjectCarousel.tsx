@@ -13,7 +13,7 @@ interface ProjectCarouselProps {
   onNavigate?: (slug: string) => void;
 }
 
-const SCROLL_STEP = 260;
+const SCROLL_STEP = 220;
 
 export default function ProjectCarousel({
   projects,
@@ -64,16 +64,16 @@ export default function ProjectCarousel({
   };
 
   const pillClass = (slug: string) =>
-    `shrink-0 rounded-full px-[16px] py-[6px] text-[14px] transition ${
+    `shrink-0 rounded-full px-[14px] py-[8px] text-[13px] transition sm:px-[16px] sm:text-[14px] ${
       slug === activeSlug
         ? "bg-carousel-active font-semibold text-forest"
         : "font-normal text-forest/55 hover:text-forest"
     }`;
 
   return (
-    <div className="mx-auto mt-[48px] max-w-[1100px] rounded-full border border-forest/[0.1] bg-white/80 px-[16px] py-[12px] shadow-[0_1px_8px_rgba(0,75,64,0.05)] backdrop-blur-sm">
-      <div className="flex items-center gap-[12px]">
-        <span className="shrink-0 pl-[4px] text-[14px] font-medium text-forest/60">
+    <div className="mx-auto mt-[32px] max-w-[1100px] rounded-[28px] border border-forest/[0.1] bg-white/80 px-[10px] py-[10px] shadow-[0_1px_8px_rgba(0,75,64,0.05)] backdrop-blur-sm sm:mt-[40px] sm:rounded-full sm:px-[14px] sm:py-[12px] md:mt-[48px] md:px-[16px]">
+      <div className="flex items-center gap-[8px] sm:gap-[12px]">
+        <span className="hidden shrink-0 pl-[4px] text-[14px] font-medium text-forest/60 sm:inline">
           View more
         </span>
 
@@ -81,15 +81,15 @@ export default function ProjectCarousel({
           type="button"
           disabled={!canScrollLeft}
           onClick={() => scrollBy(-1)}
-          className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full border border-forest/20 transition disabled:opacity-30"
+          className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full border border-forest/20 transition disabled:opacity-30 sm:h-[32px] sm:w-[32px]"
           aria-label="Scroll projects left"
         >
-          <ChevronLeft className="h-[16px] w-[16px]" />
+          <ChevronLeft className="h-[18px] w-[18px] sm:h-[16px] sm:w-[16px]" />
         </button>
 
         <div
           ref={trackRef}
-          className="flex flex-1 items-center gap-[8px] overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex flex-1 items-center gap-[6px] overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-[8px]"
         >
           {projects.map((project) =>
             onNavigate ? (
@@ -121,10 +121,10 @@ export default function ProjectCarousel({
           type="button"
           disabled={!canScrollRight}
           onClick={() => scrollBy(1)}
-          className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full border border-forest/20 transition disabled:opacity-30"
+          className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full border border-forest/20 transition disabled:opacity-30 sm:h-[32px] sm:w-[32px]"
           aria-label="Scroll projects right"
         >
-          <ChevronRight className="h-[16px] w-[16px]" />
+          <ChevronRight className="h-[18px] w-[18px] sm:h-[16px] sm:w-[16px]" />
         </button>
       </div>
     </div>

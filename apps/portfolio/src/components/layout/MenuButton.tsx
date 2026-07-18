@@ -59,14 +59,14 @@ export default function MenuButton({ homepage }: MenuButtonProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.18 }}
-            className="absolute right-0 top-[calc(100%+12px)] z-50 min-w-[320px] overflow-hidden rounded-[18px] bg-white px-[20px] shadow-[0_8px_28px_rgba(0,75,64,0.12)]"
+            className="absolute right-0 top-[calc(100%+12px)] z-50 w-[min(320px,calc(100vw-32px))] overflow-hidden rounded-[18px] bg-white px-[16px] shadow-[0_8px_28px_rgba(0,75,64,0.12)] sm:px-[20px]"
           >
             <a
               href={linkedin}
               target="_blank"
               rel="noreferrer"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-[14px] border-b border-black/[0.07] py-[16px] text-[17px] font-medium text-[#1a1a1a] transition hover:opacity-70"
+              className="flex min-h-[52px] items-center gap-[12px] border-b border-black/[0.07] py-[14px] text-[16px] font-medium text-[#1a1a1a] transition hover:opacity-70 sm:gap-[14px] sm:py-[16px] sm:text-[17px]"
             >
               <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[7px] bg-[#1a1a1a]">
                 <Linkedin
@@ -78,7 +78,7 @@ export default function MenuButton({ homepage }: MenuButtonProps) {
               {CONTACT.linkedinLabel}
             </a>
 
-            <div className="flex items-center gap-[14px] border-b border-black/[0.07] py-[16px]">
+            <div className="flex min-h-[52px] items-center gap-[12px] border-b border-black/[0.07] py-[14px] sm:gap-[14px] sm:py-[16px]">
               <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center">
                 <Phone
                   className="h-[22px] w-[22px] text-[#1a1a1a]"
@@ -86,14 +86,14 @@ export default function MenuButton({ homepage }: MenuButtonProps) {
                   strokeWidth={0}
                 />
               </span>
-              <span className="flex-1 text-[17px] font-medium text-[#1a1a1a]">
+              <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-[#1a1a1a] sm:text-[17px]">
                 {phone}
               </span>
               <button
                 type="button"
                 onClick={() => copyValue("phone", phone)}
                 aria-label="Copy phone number"
-                className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[8px] text-[#1a1a1a] transition hover:bg-black/5"
+                className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-[8px] text-[#1a1a1a] transition hover:bg-black/5"
               >
                 {copiedField === "phone" ? (
                   <Check className="h-[19px] w-[19px]" strokeWidth={2} />
@@ -103,21 +103,21 @@ export default function MenuButton({ homepage }: MenuButtonProps) {
               </button>
             </div>
 
-            <div className="flex items-center gap-[14px] py-[16px]">
+            <div className="flex min-h-[52px] items-center gap-[12px] py-[14px] sm:gap-[14px] sm:py-[16px]">
               <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center">
                 <Mail
                   className="h-[22px] w-[22px] text-[#1a1a1a]"
                   strokeWidth={2}
                 />
               </span>
-              <span className="flex-1 text-[17px] font-medium text-[#1a1a1a]">
+              <span className="min-w-0 flex-1 truncate text-[14px] font-medium text-[#1a1a1a] sm:text-[17px]">
                 {email}
               </span>
               <button
                 type="button"
                 onClick={() => copyValue("email", email)}
                 aria-label="Copy email address"
-                className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[8px] text-[#1a1a1a] transition hover:bg-black/5"
+                className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-[8px] text-[#1a1a1a] transition hover:bg-black/5"
               >
                 {copiedField === "email" ? (
                   <Check className="h-[19px] w-[19px]" strokeWidth={2} />

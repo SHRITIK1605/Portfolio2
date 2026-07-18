@@ -13,10 +13,28 @@ const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 2.5;
 const ZOOM_STEP = 0.25;
 const WHEEL_ZOOM_STEP = 0.08;
-const BASE_PAGE_WIDTH = 580;
+const DESKTOP_PAGE_WIDTH = 580;
 
 function clampZoom(v: number) {
   return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, v));
+}
+
+function usePageWidth() {
+  const [width, setWidth] = useState(DESKTOP_PAGE_WIDTH);
+
+  useEffect(() => {
+    const update = () => {
+      const vw = window.innerWidth;
+      if (vw < 480) setWidth(Math.max(280, vw - 48));
+      else if (vw < 768) setWidth(Math.min(DESKTOP_PAGE_WIDTH, vw - 64));
+      else setWidth(DESKTOP_PAGE_WIDTH);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return width;
 }
 
 function touchDistance(touches: React.TouchList) {
@@ -40,6 +58,7 @@ export default function ResumeOverlay({
   const [zoom, setZoom] = useState(1);
   const [numPages, setNumPages] = useState(0);
   const [error, setError] = useState(false);
+  const pageWidth = usePageWidth();
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const pinchRef = useRef<{ startDistance: number; startZoom: number } | null>(
@@ -123,30 +142,31 @@ export default function ResumeOverlay({
             role="dialog"
             aria-label="Resume viewer"
           >
-            <header className="flex items-center justify-between border-b border-forest/10 px-[20px] py-[14px]">
-              <span className="text-[15px] font-semibold text-forest">
-                Shritik Jaiswal — Resume
+            <header className="flex items-center justify-between gap-[8px] border-b border-forest/10 px-[12px] py-[12px] sm:px-[20px] sm:py-[14px]">
+              <span className="min-w-0 truncate text-[14px] font-semibold text-forest sm:text-[15px]">
+                <span className="sm:hidden">Resume</span>
+                <span className="hidden sm:inline">Shritik Jaiswal — Resume</span>
               </span>
 
-              <div className="flex items-center gap-[8px]">
-                <div className="mr-[4px] flex items-center gap-[2px] rounded-full border border-forest/15 bg-white px-[4px] py-[2px]">
+              <div className="flex shrink-0 items-center gap-[6px] sm:gap-[8px]">
+                <div className="mr-[2px] flex items-center gap-[2px] rounded-full border border-forest/15 bg-white px-[2px] py-[2px] sm:mr-[4px] sm:px-[4px]">
                   <button
                     type="button"
                     onClick={() => setZoom((z) => clampZoom(z - ZOOM_STEP))}
                     disabled={zoom <= MIN_ZOOM}
-                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full text-forest transition hover:bg-forest/[0.06] disabled:opacity-35"
+                    className="flex h-[36px] w-[36px] items-center justify-center rounded-full text-forest transition hover:bg-forest/[0.06] disabled:opacity-35 sm:h-[30px] sm:w-[30px]"
                     aria-label="Zoom out"
                   >
                     <Minus className="h-[14px] w-[14px]" />
                   </button>
-                  <span className="min-w-[44px] text-center text-[12.5px] font-medium tabular-nums text-forest/70">
+                  <span className="min-w-[40px] text-center text-[12px] font-medium tabular-nums text-forest/70 sm:min-w-[44px] sm:text-[12.5px]">
                     {Math.round(zoom * 100)}%
                   </span>
                   <button
                     type="button"
                     onClick={() => setZoom((z) => clampZoom(z + ZOOM_STEP))}
                     disabled={zoom >= MAX_ZOOM}
-                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full text-forest transition hover:bg-forest/[0.06] disabled:opacity-35"
+                    className="flex h-[36px] w-[36px] items-center justify-center rounded-full text-forest transition hover:bg-forest/[0.06] disabled:opacity-35 sm:h-[30px] sm:w-[30px]"
                     aria-label="Zoom in"
                   >
                     <Plus className="h-[14px] w-[14px]" />
@@ -163,16 +183,16 @@ export default function ResumeOverlay({
                       body: JSON.stringify({ type: "RESUME_DOWNLOAD" }),
                     }).catch(() => {});
                   }}
-                  className="inline-flex h-[36px] items-center gap-[7px] rounded-full border-[1.5px] border-forest bg-btn-cream px-[14px] text-[13px] font-medium text-forest transition hover:bg-forest/10"
+                  className="inline-flex h-[40px] items-center gap-[6px] rounded-full border-[1.5px] border-forest bg-btn-cream px-[12px] text-[13px] font-medium text-forest transition hover:bg-forest/10 sm:h-[36px] sm:gap-[7px] sm:px-[14px]"
                 >
                   <Download className="h-[14px] w-[14px]" strokeWidth={2} />
-                  Download
+                  <span className="hidden sm:inline">Download</span>
                 </a>
 
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex h-[36px] w-[36px] items-center justify-center rounded-full border border-forest/20 bg-white text-forest transition hover:bg-forest/[0.06]"
+                  className="flex h-[40px] w-[40px] items-center justify-center rounded-full border border-forest/20 bg-white text-forest transition hover:bg-forest/[0.06] sm:h-[36px] sm:w-[36px]"
                   aria-label="Close resume"
                 >
                   <X className="h-[16px] w-[16px]" />
@@ -185,7 +205,7 @@ export default function ResumeOverlay({
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
-              className="flex-1 overflow-auto bg-forest/[0.04] px-[24px] py-[24px]"
+              className="flex-1 overflow-auto bg-forest/[0.04] px-[12px] py-[16px] touch-pan-y sm:px-[24px] sm:py-[24px]"
             >
               {error ? (
                 <div className="flex h-full flex-col items-center justify-center gap-[12px] text-[14px] text-forest/55">
@@ -204,7 +224,7 @@ export default function ResumeOverlay({
               ) : (
                 <div
                   className="mx-auto"
-                  style={{ width: BASE_PAGE_WIDTH * zoom }}
+                  style={{ width: pageWidth * zoom }}
                 >
                   <Document
                     file="/api/resume"
@@ -221,7 +241,7 @@ export default function ResumeOverlay({
                       <Page
                         key={`resume-page-${index + 1}`}
                         pageNumber={index + 1}
-                        width={BASE_PAGE_WIDTH * zoom}
+                        width={pageWidth * zoom}
                         className="shadow-[0_4px_20px_rgba(0,75,64,0.12)]"
                         renderTextLayer={false}
                         renderAnnotationLayer={false}

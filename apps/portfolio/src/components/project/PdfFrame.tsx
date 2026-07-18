@@ -54,7 +54,8 @@ export default function PdfFrame({ url }: PdfFrameProps) {
     if (!node) return;
 
     const updateWidth = () => {
-      setBaseWidth(Math.min(node.clientWidth - 48, 720));
+      const pad = node.clientWidth < 480 ? 24 : 48;
+      setBaseWidth(Math.max(260, Math.min(node.clientWidth - pad, 720)));
     };
 
     updateWidth();
@@ -161,7 +162,7 @@ export default function PdfFrame({ url }: PdfFrameProps) {
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        className="max-h-[640px] overflow-auto bg-white px-[24px] py-[24px] outline-none focus-visible:ring-2 focus-visible:ring-forest/20"
+        className="max-h-[70vh] overflow-auto bg-white px-[12px] py-[12px] outline-none focus-visible:ring-2 focus-visible:ring-forest/20 sm:max-h-[640px] sm:px-[24px] sm:py-[24px] touch-pan-y"
       >
         <div
           className="relative mx-auto"

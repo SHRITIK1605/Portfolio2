@@ -68,14 +68,14 @@ export default function ProjectCards({ projects }: ProjectCardsProps) {
                 </div>
               )}
             </div>
-            <div className="p-[24px]">
-              <h3 className="m-0 text-[22px] font-bold leading-tight tracking-[-0.02em] text-forest">
+            <div className="p-[18px] sm:p-[24px]">
+              <h3 className="m-0 text-[20px] font-bold leading-tight tracking-[-0.02em] text-forest sm:text-[22px]">
                 {project.title}
               </h3>
-              <p className="mt-[12px] line-clamp-2 text-[14px] leading-[1.5] text-forest/75">
+              <p className="mt-[10px] line-clamp-2 text-[14px] leading-[1.5] text-forest/75 sm:mt-[12px]">
                 {project.shortDescription}
               </p>
-              <div className="mt-[16px] flex flex-nowrap items-center gap-[8px] overflow-x-auto">
+              <div className="mt-[14px] flex flex-nowrap items-center gap-[8px] overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-[16px]">
                 {project.tags.slice(0, 4).map((tag) => (
                   <span
                     key={tag}
@@ -85,7 +85,7 @@ export default function ProjectCards({ projects }: ProjectCardsProps) {
                   </span>
                 ))}
               </div>
-              <span className="mt-[20px] inline-flex items-center gap-[6px] text-[14px] font-semibold text-forest transition-all group-hover:gap-[10px]">
+              <span className="mt-[16px] inline-flex items-center gap-[6px] text-[14px] font-semibold text-forest transition-all group-hover:gap-[10px] sm:mt-[20px]">
                 View project
                 <ArrowRight className="h-[16px] w-[16px]" />
               </span>

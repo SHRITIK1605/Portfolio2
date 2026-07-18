@@ -76,8 +76,8 @@ export default async function HomePage() {
       <Navbar homepage={settings} />
       <main>
         <Hero homepage={settings} />
-        <section className="mx-auto max-w-[1100px] px-[48px] pb-[96px]">
-          <h2 className="m-0 mb-[32px] text-[26px] font-bold leading-tight tracking-[-0.02em] text-forest">
+        <section className="mx-auto max-w-[1100px] px-[20px] pb-[64px] sm:px-[32px] sm:pb-[80px] md:px-[48px] md:pb-[96px]">
+          <h2 className="m-0 mb-[20px] text-[22px] font-bold leading-tight tracking-[-0.02em] text-forest sm:mb-[28px] sm:text-[24px] md:mb-[32px] md:text-[26px]">
             Welcome to my creations!
           </h2>
           <ProjectCards projects={projects} />
