@@ -20,6 +20,7 @@
     "migrate": "prisma migrate dev",
     "push": "prisma db push",
     "seed": "tsx prisma/seed.ts",
+    "setup:projects": "tsx prisma/setup-projects.ts",
     "studio": "prisma studio",
     "build": "prisma generate && tsc"
   },
@@ -27,6 +28,7 @@
     "@prisma/client": "^6.3.1"
   },
   "devDependencies": {
+    "@portfolio/ai": "*",
     "bcryptjs": "^2.4.3",
     "prisma": "^6.3.1",
     "tsx": "^4.19.2",

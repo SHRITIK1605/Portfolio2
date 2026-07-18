@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../src/index";
+import { PROJECTS } from "./projects-data";
 import {
   DEFAULT_RESUME_URL,
   PROJECT_ASSISTANT_PROMPT,
@@ -60,9 +61,8 @@ async function main() {
   const suggestedQuestions = [
     { text: "Tell me about Shritik's background", category: "general", order: 0 },
     { text: "What are his strongest product skills?", category: "general", order: 1 },
-    { text: "Help me find Shritik's resume", category: "resume", order: 2 },
-    { text: "Walk me through his top projects", category: "projects", order: 3 },
-    { text: "How can I contact him?", category: "contact", order: 4 },
+    { text: "Walk me through his top projects", category: "projects", order: 2 },
+    { text: "How can I contact him?", category: "contact", order: 3 },
   ];
 
   for (const q of suggestedQuestions) {
@@ -74,92 +74,50 @@ async function main() {
     }
   }
 
-  const demoProjects = [
-    {
-      title: "Slikk AI Catalog",
-      slug: "slikk-ai-catalog",
-      shortDescription:
-        "AI-powered catalog consistency for fashion quick commerce product listings.",
-      longDescription:
-        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum.",
-      aiContext:
-        "Slikk AI Catalog: Built image processing pipeline for PLP consistency. Key metrics: 40% reduction in listing errors. Tech: computer vision, ML classification.",
-      tags: [
-        "AI Product",
-        "Image Processing",
-        "Fashion Quick Commerce",
-        "Product Listing Page Consistency",
-      ],
-      priority: 4,
-      published: true,
-      pdfUrl: "/demo/paytm.pdf",
-    },
-    {
-      title: "Flipkart APM",
-      slug: "flipkart-apm",
-      shortDescription: "Associate Product Manager work on e-commerce product strategy.",
-      longDescription:
-        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum.",
-      aiContext:
-        "Flipkart APM: Focused on seller experience and conversion optimization. Led cross-functional initiatives.",
-      tags: ["APM", "E-commerce", "Product Strategy"],
-      priority: 3,
-      published: true,
-      pdfUrl: "/demo/paytm.pdf",
-    },
-    {
-      title: "RISA APM",
-      slug: "risa-apm",
-      shortDescription: "Product management and user research for RISA platform.",
-      longDescription:
-        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum.",
-      aiContext:
-        "RISA APM: Conducted user research, defined product roadmap, shipped MVP features.",
-      tags: ["APM", "Product Management", "User Research"],
-      priority: 2,
-      published: true,
-      pdfUrl: "/demo/paytm.pdf",
-    },
-    {
-      title: "BCG Ideathon",
-      slug: "bcg-ideathon",
-      shortDescription: "Strategy and innovation ideation for BCG case competition.",
-      longDescription:
-        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum.",
-      aiContext:
-        "BCG Ideathon: Won regional round. Focus on sustainable supply chain innovation.",
-      tags: ["Ideation", "Strategy", "Innovation"],
-      priority: 1,
-      published: true,
-      pdfUrl: "/demo/paytm.pdf",
-    },
-  ];
+  // Deactivate old resume-focused suggested question if present
+  await prisma.suggestedQuestion.updateMany({
+    where: { text: "Help me find Shritik's resume" },
+    data: { active: false },
+  });
 
-  for (const project of demoProjects) {
+  for (const project of PROJECTS) {
     await prisma.project.upsert({
       where: { slug: project.slug },
-      update: project,
-      create: project,
+      update: {
+        title: project.title,
+        shortDescription: project.shortDescription,
+        longDescription: project.longDescription,
+        aiContext: project.aiContext,
+        tags: project.tags,
+        priority: project.priority,
+        published: project.published,
+        pdfUrl: `/api/uploads/projects/${project.slug}.pdf`,
+        pdfFileName: `${project.slug}.pdf`,
+      },
+      create: {
+        title: project.title,
+        slug: project.slug,
+        shortDescription: project.shortDescription,
+        longDescription: project.longDescription,
+        aiContext: project.aiContext,
+        tags: project.tags,
+        priority: project.priority,
+        published: project.published,
+        pdfUrl: `/api/uploads/projects/${project.slug}.pdf`,
+        pdfFileName: `${project.slug}.pdf`,
+      },
     });
   }
 
-  const allProjects = await prisma.project.findMany();
-  for (const project of allProjects) {
-    const normalized = project.slug
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-    if (normalized && normalized !== project.slug) {
-      await prisma.project.update({
-        where: { id: project.id },
-        data: { slug: normalized },
-      });
-    }
-  }
+  const validSlugs = new Set(PROJECTS.map((p) => p.slug));
+  await prisma.project.updateMany({
+    where: { slug: { notIn: [...validSlugs] } },
+    data: { published: false },
+  });
 
   console.log("Seed complete.");
   console.log(`Admin login: ${email} / ${password}`);
+  console.log("Run npm run setup:projects to copy PDFs and ingest RAG embeddings.");
 }
 
 main()
