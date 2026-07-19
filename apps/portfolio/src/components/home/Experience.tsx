@@ -5,7 +5,6 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, MapPin } from "lucide-react";
 import { EXPERIENCES, type ExperienceItem } from "@/lib/experience-data";
-import { ExperienceSketchIcon } from "./ExperienceSketchIcons";
 
 function boldHighlights(text: string, highlights: string[] = []) {
   if (highlights.length === 0) return text;
@@ -55,6 +54,23 @@ function DottedConnector({ className }: { className?: string }) {
   );
 }
 
+function SketchLogo({ item, size }: { item: ExperienceItem; size: number }) {
+  return (
+    <span
+      className="relative shrink-0 overflow-hidden rounded-[10px] border border-forest/15 bg-cream"
+      style={{ width: size, height: size }}
+    >
+      <Image
+        src={item.sketchLogoUrl}
+        alt=""
+        fill
+        className="object-contain p-[4px]"
+        sizes={`${size}px`}
+      />
+    </span>
+  );
+}
+
 function ExperienceNavItem({
   item,
   active,
@@ -75,9 +91,7 @@ function ExperienceNavItem({
           : "border-forest/25 bg-[#faf3df] hover:border-forest/50"
       }`}
     >
-      <span className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[10px] border border-forest/15 bg-cream text-forest sm:h-[40px] sm:w-[40px]">
-        <ExperienceSketchIcon kind={item.sketchIcon} className="h-6 w-6 sm:h-7 sm:w-7" />
-      </span>
+      <SketchLogo item={item} size={40} />
       <span className="text-[12px] font-bold uppercase leading-snug tracking-[0.02em] text-forest sm:text-[13px] md:text-[14px]">
         {item.company}
       </span>
@@ -110,15 +124,18 @@ function ExperienceNavItem({
 
 function DetailCard({ item }: { item: ExperienceItem }) {
   return (
-    <article className="flex h-full flex-col rounded-[22px] border-[2.5px] border-forest bg-white p-[16px] shadow-[0_4px_24px_rgba(0,75,64,0.06)] sm:rounded-[28px] sm:border-[3px] sm:p-[22px] md:p-[26px]">
-      <header className="mb-[14px] flex flex-col gap-[12px] sm:mb-[16px] sm:flex-row sm:items-start sm:justify-between sm:gap-[16px]">
+    <article className="flex h-full min-h-0 flex-col rounded-[22px] border-[2.5px] border-forest bg-white p-[16px] shadow-[0_4px_24px_rgba(0,75,64,0.06)] sm:rounded-[28px] sm:border-[3px] sm:p-[22px] md:p-[26px]">
+      <header className="mb-[14px] flex shrink-0 flex-col gap-[12px] sm:mb-[16px] sm:flex-row sm:items-start sm:justify-between sm:gap-[16px]">
         <div className="flex min-w-0 items-start gap-[12px] sm:gap-[14px]">
-          <div className="relative h-[48px] w-[48px] shrink-0 overflow-hidden rounded-[10px] border border-forest/10 bg-forest sm:h-[56px] sm:w-[56px] sm:rounded-[12px]">
+          <div
+            className="relative h-[48px] w-[48px] shrink-0 overflow-hidden rounded-[10px] border border-forest/10 sm:h-[56px] sm:w-[56px] sm:rounded-[12px]"
+            style={{ backgroundColor: item.logoBg ?? "#ffffff" }}
+          >
             <Image
               src={item.logoUrl}
               alt={`${item.company} logo`}
               fill
-              className="object-cover"
+              className="object-contain p-[4px]"
               sizes="56px"
             />
           </div>
@@ -144,11 +161,11 @@ function DetailCard({ item }: { item: ExperienceItem }) {
         </div>
       </header>
 
-      <p className="m-0 mb-[12px] text-[13px] italic leading-relaxed text-forest/85 sm:mb-[14px] sm:text-[14px]">
+      <p className="m-0 mb-[12px] shrink-0 text-[13px] italic leading-relaxed text-forest/85 sm:mb-[14px] sm:text-[14px]">
         Overview : {item.overview}
       </p>
 
-      <ul className="m-0 mb-[16px] flex list-disc flex-col gap-[8px] pl-[18px] text-[13px] leading-relaxed text-forest/90 sm:mb-[18px] sm:gap-[10px] sm:text-[14px]">
+      <ul className="m-0 mb-[16px] flex shrink-0 list-disc flex-col gap-[8px] pl-[18px] text-[13px] leading-relaxed text-forest/90 sm:mb-[18px] sm:gap-[10px] sm:text-[14px]">
         {item.bullets.map((bullet) => (
           <li key={bullet} className="pl-[2px]">
             {boldHighlights(bullet, item.highlights)}
@@ -156,7 +173,8 @@ function DetailCard({ item }: { item: ExperienceItem }) {
         ))}
       </ul>
 
-      <div className="relative mt-auto aspect-[16/9] w-full overflow-hidden rounded-[14px] bg-[#ececec] sm:rounded-[16px]">
+      {/* Fills remaining height so the card matches the 6-box stack */}
+      <div className="relative mt-auto min-h-[140px] w-full flex-1 overflow-hidden rounded-[14px] bg-[#ececec] sm:min-h-[180px] sm:rounded-[16px]">
         <Image
           src={item.illustrationUrl}
           alt={`${item.company} work illustration`}
@@ -182,16 +200,17 @@ export default function Experience() {
       className="mx-auto max-w-[1100px] px-[20px] pb-[48px] sm:px-[32px] sm:pb-[64px] md:px-[48px] md:pb-[80px]"
       aria-labelledby="experience-heading"
     >
-      <div className="grid gap-[20px] md:grid-cols-[minmax(220px,300px)_minmax(0,1fr)] md:items-start md:gap-[28px] lg:gap-[36px]">
-        {/* Left nav */}
-        <div className="min-w-0">
-          <h2
-            id="experience-heading"
-            className="m-0 mb-[16px] text-[28px] font-bold tracking-[-0.02em] text-forest sm:mb-[20px] sm:text-[32px] md:text-[36px]"
-          >
-            Experience
-          </h2>
+      <h2
+        id="experience-heading"
+        className="m-0 mb-[16px] text-[28px] font-bold tracking-[-0.02em] text-forest sm:mb-[20px] sm:text-[32px] md:mb-[24px] md:text-[36px]"
+      >
+        Experience
+      </h2>
 
+      {/* Heading is outside so left nav + right panel stretch to the same height */}
+      <div className="grid gap-[20px] md:grid-cols-[minmax(220px,300px)_minmax(0,1fr)] md:items-stretch md:gap-[28px] lg:gap-[36px]">
+        {/* Left nav */}
+        <div className="min-w-0 md:flex md:h-full md:flex-col">
           {/* Mobile: horizontal scroll pills */}
           <div className="mb-[4px] flex gap-[10px] overflow-x-auto pb-[8px] [-ms-overflow-style:none] [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
             {EXPERIENCES.map((item) => (
@@ -206,10 +225,7 @@ export default function Experience() {
                     : "border-forest/25 bg-[#faf3df] text-forest/70"
                 }`}
               >
-                <ExperienceSketchIcon
-                  kind={item.sketchIcon}
-                  className="h-5 w-5 shrink-0"
-                />
+                <SketchLogo item={item} size={28} />
                 <span className="whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.02em]">
                   {item.company}
                 </span>
@@ -217,8 +233,8 @@ export default function Experience() {
             ))}
           </div>
 
-          {/* Desktop: vertical list with dotted connectors */}
-          <div className="relative hidden md:block">
+          {/* Desktop: vertical list with dotted connectors — defines column height */}
+          <div className="relative hidden md:flex md:h-full md:flex-col">
             <ul className="m-0 flex list-none flex-col gap-0 p-0">
               {EXPERIENCES.map((item, index) => (
                 <li key={item.id} className="relative">
@@ -241,8 +257,8 @@ export default function Experience() {
           </div>
         </div>
 
-        {/* Right detail */}
-        <div className="min-w-0 md:pt-[8px]">
+        {/* Right detail — stretches to match left stack height on desktop */}
+        <div className="min-w-0 md:h-full">
           <AnimatePresence mode="wait">
             <motion.div
               key={active.id}
@@ -250,6 +266,7 @@ export default function Experience() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
+              className="h-full"
             >
               <DetailCard item={active} />
             </motion.div>

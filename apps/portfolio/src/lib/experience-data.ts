@@ -9,8 +9,12 @@ export interface ExperienceItem {
   bullets: string[];
   /** Highlight phrases to bold in bullets (matched case-insensitively). */
   highlights?: string[];
+  /** Original full-color company logo (right detail panel). */
   logoUrl: string;
-  sketchIcon: "bse" | "slikk" | "times" | "emb" | "aarya" | "unifly";
+  /** Theme-blended pencil sketch of the logo (left nav pills). */
+  sketchLogoUrl: string;
+  /** Background behind the original logo mark. */
+  logoBg?: string;
   illustrationUrl: string;
 }
 
@@ -46,7 +50,8 @@ export const EXPERIENCES: ExperienceItem[] = [
       "20% TAT",
     ],
     logoUrl: "/experience/logos/bse.png",
-    sketchIcon: "bse",
+    sketchLogoUrl: "/experience/sketches/bse.png",
+    logoBg: "#000000",
     illustrationUrl: "/experience/illustrations/bse.jpg",
   },
   {
@@ -72,7 +77,8 @@ export const EXPERIENCES: ExperienceItem[] = [
       "8%+ PLP CVR",
     ],
     logoUrl: "/experience/logos/slikk.png",
-    sketchIcon: "slikk",
+    sketchLogoUrl: "/experience/sketches/slikk.png",
+    logoBg: "#111111",
     illustrationUrl: "/experience/illustrations/slikk.jpg",
   },
   {
@@ -99,7 +105,8 @@ export const EXPERIENCES: ExperienceItem[] = [
       "3 weeks",
     ],
     logoUrl: "/experience/logos/times.png",
-    sketchIcon: "times",
+    sketchLogoUrl: "/experience/sketches/times.png",
+    logoBg: "#1A1E4E",
     illustrationUrl: "/experience/illustrations/times.jpg",
   },
   {
@@ -118,7 +125,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     ],
     highlights: ["10%", "55%", "75%", "60%", "Zoho"],
     logoUrl: "/experience/logos/emb.png",
-    sketchIcon: "emb",
+    sketchLogoUrl: "/experience/sketches/emb.png",
+    logoBg: "#FFFFFF",
     illustrationUrl: "/experience/illustrations/emb.jpg",
   },
   {
@@ -137,7 +145,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     ],
     highlights: ["20+ flows", "25%", "50+ hrs/month", "70%"],
     logoUrl: "/experience/logos/aarya.png",
-    sketchIcon: "aarya",
+    sketchLogoUrl: "/experience/sketches/aarya.png",
+    logoBg: "#FFFFFF",
     illustrationUrl: "/experience/illustrations/aarya.jpg",
   },
   {
@@ -164,7 +173,8 @@ export const EXPERIENCES: ExperienceItem[] = [
       "12L",
     ],
     logoUrl: "/experience/logos/unifly.png",
-    sketchIcon: "unifly",
+    sketchLogoUrl: "/experience/sketches/unifly.png",
+    logoBg: "#FFFFFF",
     illustrationUrl: "/experience/illustrations/unifly.jpg",
   },
 ];
