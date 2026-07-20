@@ -251,7 +251,75 @@ function CompanyBlock({
   );
 }
 
-/** Enlarged pinned polaroid pair only — no full-bleed photo, no captions. */
+/** Open graph-paper notebook sitting under the pinned polaroids. */
+function NotebookBookBg() {
+  const gridStyle = {
+    backgroundColor: "#fbfaf4",
+    backgroundImage: `
+      linear-gradient(rgba(0, 75, 64, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 75, 64, 0.07) 1px, transparent 1px)
+    `,
+    backgroundSize: "14px 14px",
+  } as const;
+
+  return (
+    <div
+      className="pointer-events-none absolute inset-[2%] z-0 rotate-[-3deg]"
+      aria-hidden
+    >
+      {/* Soft book shadow */}
+      <div className="absolute inset-[2%] rounded-[6px] bg-black/10 blur-[10px]" />
+
+      {/* Open book cover / pages */}
+      <div className="absolute inset-0 flex overflow-hidden rounded-[4px] border border-[#d8d2c4] bg-[#f3efe4] shadow-[0_12px_28px_rgba(40,30,10,0.14)]">
+        {/* Left page */}
+        <div className="relative h-full w-1/2 border-r border-[#e0d9ca]" style={gridStyle}>
+          <div className="absolute inset-y-0 right-0 w-[18%] bg-gradient-to-l from-black/[0.06] to-transparent" />
+        </div>
+        {/* Right page */}
+        <div className="relative h-full w-1/2" style={gridStyle}>
+          <div className="absolute inset-y-0 left-0 w-[18%] bg-gradient-to-r from-black/[0.06] to-transparent" />
+        </div>
+        {/* Center spine crease */}
+        <div className="absolute inset-y-[3%] left-1/2 w-[2px] -translate-x-1/2 bg-gradient-to-b from-transparent via-[#c9c0ae] to-transparent opacity-80" />
+        <div className="absolute inset-y-[8%] left-1/2 w-[10px] -translate-x-1/2 bg-gradient-to-r from-transparent via-black/[0.05] to-transparent" />
+      </div>
+
+      {/* Binding edge hint */}
+      <div className="absolute inset-y-[6%] left-[-3px] w-[6px] rounded-l-[3px] bg-[#d4ccba] shadow-sm" />
+    </div>
+  );
+}
+
+function WashiTape({ className }: { className?: string }) {
+  return (
+    <div
+      className={`h-[18px] w-[72px] rotate-[-18deg] rounded-[1px] border border-forest/10 bg-[#c8e0d4]/90 shadow-sm ${className ?? ""}`}
+      aria-hidden
+    >
+      <div
+        className="h-full w-full opacity-40"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0,75,64,0.18) 6px, rgba(0,75,64,0.18) 7px)",
+        }}
+      />
+    </div>
+  );
+}
+
+function MiniSticky({ className }: { className?: string }) {
+  return (
+    <div
+      className={`flex h-[54px] w-[54px] rotate-[8deg] items-start justify-center bg-[#f6e7a1] p-[6px] text-[8px] leading-tight text-forest/70 shadow-[1px_2px_6px_rgba(0,0,0,0.12)] ${className ?? ""}`}
+      aria-hidden
+    >
+      <span className="font-medium italic">build · ship · learn</span>
+    </div>
+  );
+}
+
+/** Scrapbook clip: notebook grid behind, pinned polaroids on top. */
 function PolaroidClip({
   item,
   height,
@@ -270,29 +338,28 @@ function PolaroidClip({
       "/experience/craft/polaroid-desk.jpg",
   ];
 
-  // Large overlapping frames — scrapbook pin UI fills the side column
   const shots = [
     {
       src: images[0],
-      rotate: -8,
-      left: "2%",
-      top: "10%",
-      width: "88%",
-      z: 1,
+      rotate: -7,
+      left: "8%",
+      top: "14%",
+      width: "78%",
+      z: 2,
     },
     {
       src: images[1],
-      rotate: 7,
-      left: "14%",
-      top: "34%",
-      width: "86%",
-      z: 2,
+      rotate: 6,
+      left: "18%",
+      top: "38%",
+      width: "76%",
+      z: 3,
     },
   ];
 
   return (
     <div
-      className="relative w-full select-none overflow-visible bg-transparent"
+      className="relative w-full select-none overflow-visible"
       style={
         height
           ? { height, minHeight: height }
@@ -300,6 +367,16 @@ function PolaroidClip({
       }
       aria-hidden
     >
+      <NotebookBookBg />
+
+      {/* Scrapbook accents on the notebook */}
+      <WashiTape className="absolute left-[6%] top-[8%] z-[4]" />
+      <MiniSticky className="absolute bottom-[10%] right-[4%] z-[4]" />
+      <div
+        className="absolute bottom-[16%] left-[5%] z-[4] h-[10px] w-[10px] rotate-12 rounded-full bg-[#e23d3d]/85 shadow-sm"
+        aria-hidden
+      />
+
       <AnimatePresence mode="wait">
         <motion.div
           key={item.id}
@@ -307,7 +384,7 @@ function PolaroidClip({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -10, scale: 0.98 }}
           transition={{ duration: 0.34, ease: "easeOut" }}
-          className="absolute inset-0"
+          className="absolute inset-0 z-[2]"
         >
           {shots.map((shot, i) => (
             <div
@@ -336,8 +413,8 @@ function PolaroidClip({
         </motion.div>
       </AnimatePresence>
 
-      <RedStar className="absolute left-[44%] top-[2%] z-30 h-[36px] w-[36px] drop-shadow-md sm:h-[42px] sm:w-[42px]" />
-      <SafetyPin className="absolute left-[48%] top-[-4%] z-40 h-[48px] w-[26px] sm:h-[56px] sm:w-[30px]" />
+      <RedStar className="absolute left-[44%] top-[6%] z-30 h-[36px] w-[36px] drop-shadow-md sm:h-[42px] sm:w-[42px]" />
+      <SafetyPin className="absolute left-[48%] top-[1%] z-40 h-[48px] w-[26px] sm:h-[56px] sm:w-[30px]" />
     </div>
   );
 }
