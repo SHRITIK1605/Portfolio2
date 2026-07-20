@@ -43,7 +43,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
         >
           <div className="relative mx-auto w-full">
             <div
-              className="pointer-events-none absolute left-1/2 top-[8%] z-0 w-[125%] -translate-x-1/2"
+              className="pointer-events-none absolute left-1/2 top-[28%] z-0 w-[122%] -translate-x-1/2"
               aria-hidden
             >
               <Image
