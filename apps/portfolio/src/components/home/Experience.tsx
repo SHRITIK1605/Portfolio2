@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { motion, useInView } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { CalendarDays, MapPin } from "lucide-react";
 import {
   DEFAULT_CRAFT_POLAROIDS,
@@ -205,13 +205,7 @@ function CompanyBlock({
       data-exp-id={item.id}
       className="scroll-mt-[10px]"
     >
-      <div
-        className={`rounded-[12px] px-[2px] py-[2px] transition-[background-color,box-shadow] duration-300 ${
-          active
-            ? "bg-[#f7f1e0]/70 shadow-[inset_0_0_0_1.5px_rgba(0,75,64,0.14)]"
-            : ""
-        }`}
-      >
+      <div className="px-[2px] py-[2px]">
         <header className="mb-[12px] flex flex-col gap-[10px] sm:mb-[14px] sm:flex-row sm:items-start sm:justify-between sm:gap-[14px]">
           <div className="flex min-w-0 items-start gap-[12px]">
             <div
@@ -219,7 +213,7 @@ function CompanyBlock({
                 item.logoWide
                   ? "h-[42px] w-[76px] sm:h-[48px] sm:w-[86px]"
                   : "h-[46px] w-[46px] sm:h-[52px] sm:w-[52px]"
-              } ${active ? "ring-[3px] ring-forest/15" : ""}`}
+              }`}
               style={{ backgroundColor: item.logoBg ?? "#ffffff" }}
             >
               <Image
@@ -298,6 +292,59 @@ function CompanyBlock({
   );
 }
 
+function ExperienceClip({
+  item,
+  height,
+}: {
+  item: ExperienceItem;
+  height: number | null;
+}) {
+  return (
+    <div
+      className="relative w-full overflow-hidden rounded-[18px] border-[2.5px] border-forest/25 bg-[#f3eee0] shadow-[0_4px_16px_rgba(0,40,30,0.08)] sm:rounded-[20px]"
+      style={
+        height
+          ? { height, maxHeight: height }
+          : { minHeight: 220, aspectRatio: "3 / 4" }
+      }
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={item.id}
+          initial={{ opacity: 0, scale: 1.04, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.98, y: -8 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={item.clipImageUrl}
+            alt={item.clipImageAlt ?? `${item.company} clip`}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 220px"
+            unoptimized
+          />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/45 to-transparent px-[12px] pb-[12px] pt-[36px]">
+            <p className="m-0 text-[11px] font-bold uppercase tracking-[0.06em] text-white">
+              {item.company}
+            </p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+      {/* Polaroid-style clip corners */}
+      <span
+        className="pointer-events-none absolute left-[10px] top-[10px] h-[10px] w-[10px] rounded-full bg-white/80 shadow-sm"
+        aria-hidden
+      />
+      <span
+        className="pointer-events-none absolute right-[10px] top-[10px] h-[10px] w-[10px] rounded-full bg-white/80 shadow-sm"
+        aria-hidden
+      />
+    </div>
+  );
+}
+
 interface ExperienceProps {
   craftImages?: CraftPolaroid[] | null;
 }
@@ -313,6 +360,9 @@ export default function Experience({ craftImages }: ExperienceProps) {
     craftImages && craftImages.length > 0
       ? craftImages
       : DEFAULT_CRAFT_POLAROIDS;
+
+  const activeItem =
+    EXPERIENCES.find((e) => e.id === activeId) ?? EXPERIENCES[0];
 
   const syncHeight = useCallback(() => {
     const left = leftRef.current;
@@ -416,7 +466,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
 
       <CraftPolaroidDecor polaroids={polaroids} />
 
-      <div className="relative z-[1] grid gap-[16px] md:grid-cols-[minmax(210px,280px)_minmax(0,1fr)] md:items-start md:gap-[32px] lg:gap-[40px]">
+      <div className="relative z-[1] grid gap-[16px] md:grid-cols-[minmax(200px,250px)_minmax(0,1fr)] md:items-start md:gap-[24px] lg:gap-[28px]">
         <div ref={leftRef} className="min-w-0 overflow-visible">
           <div className="mb-[4px] flex gap-[8px] overflow-x-auto pb-[6px] [-ms-overflow-style:none] [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
             {EXPERIENCES.map((item) => (
@@ -440,7 +490,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
           </div>
 
           <div className="relative hidden md:block">
-            <ul className="m-0 flex list-none flex-col gap-[10px] p-0">
+            <ul className="m-0 flex list-none flex-col gap-[18px] p-0 sm:gap-[20px]">
               {EXPERIENCES.map((item, index) => (
                 <li key={item.id} className="relative">
                   <ExperienceNavItem
@@ -455,10 +505,10 @@ export default function Experience({ craftImages }: ExperienceProps) {
           </div>
         </div>
 
-        <div className="min-w-0">
-          <motion.div
-            layout
-            className="flex flex-col overflow-hidden rounded-[20px] border-[2.5px] border-forest bg-[#fffdf8] shadow-[0_4px_20px_rgba(0,75,64,0.06)] sm:rounded-[24px] sm:border-[3px]"
+        <div className="flex min-w-0 flex-col gap-[14px] md:flex-row md:items-stretch md:gap-[14px] lg:gap-[16px]">
+          {/* Detail panel — 70% */}
+          <div
+            className="flex min-w-0 flex-col overflow-hidden rounded-[20px] border-[2.5px] border-forest bg-white shadow-[0_4px_20px_rgba(0,75,64,0.06)] sm:rounded-[24px] sm:border-[3px] md:w-[70%]"
             style={
               panelHeight
                 ? { height: panelHeight, maxHeight: panelHeight }
@@ -467,7 +517,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
           >
             <div
               ref={panelRef}
-              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[14px] py-[14px] [scrollbar-color:rgba(0,75,64,0.28)_transparent] [scrollbar-width:thin] sm:px-[20px] sm:py-[16px] md:px-[22px]"
+              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[14px] py-[14px] [scrollbar-color:rgba(0,75,64,0.28)_transparent] [scrollbar-width:thin] sm:px-[18px] sm:py-[16px] md:px-[20px]"
               style={{ overscrollBehavior: "contain" }}
             >
               <div className="flex flex-col">
@@ -481,7 +531,14 @@ export default function Experience({ craftImages }: ExperienceProps) {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
+
+          {/* Scroll-synced clip — 30% */}
+          <div className="md:w-[30%]">
+            {activeItem ? (
+              <ExperienceClip item={activeItem} height={panelHeight} />
+            ) : null}
+          </div>
         </div>
       </div>
     </section>

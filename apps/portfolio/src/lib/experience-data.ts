@@ -18,6 +18,9 @@ export interface ExperienceItem {
   logoBg?: string;
   /** Wider logo frame for horizontal marks (e.g. BSE). */
   logoWide?: boolean;
+  /** Side clip image shown beside the detail panel (changes with active company). */
+  clipImageUrl: string;
+  clipImageAlt?: string;
 }
 
 export interface CraftPolaroid {
@@ -58,10 +61,12 @@ export const EXPERIENCES: ExperienceItem[] = [
       "30 hrs/month",
       "20% TAT",
     ],
-    logoUrl: "/experience/logos/bse.png",
+    logoUrl: "/experience/logos/bse.png?v=3",
     sketchLogoUrl: "/experience/sketches/bse.jpg?v=2",
-    logoBg: "#FFFFFF",
+    logoBg: "#000000",
     logoWide: true,
+    clipImageUrl: "/experience/craft/polaroid-notebook.jpg",
+    clipImageAlt: "BSE work desk notes",
   },
   {
     id: "slikk",
@@ -81,6 +86,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/slikk.png",
     sketchLogoUrl: "/experience/sketches/slikk.jpg?v=2",
     logoBg: "#111111",
+    clipImageUrl: "/experience/craft/polaroid-desk.jpg",
+    clipImageAlt: "Slikk product workspace",
   },
   {
     id: "times",
@@ -101,6 +108,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/times.png",
     sketchLogoUrl: "/experience/sketches/times.jpg?v=2",
     logoBg: "#1A1E4E",
+    clipImageUrl: "/experience/craft/polaroid-books.jpg",
+    clipImageAlt: "Times Internet research notes",
   },
   {
     id: "emb",
@@ -120,6 +129,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/emb.png",
     sketchLogoUrl: "/experience/sketches/emb.jpg?v=2",
     logoBg: "#FFFFFF",
+    clipImageUrl: "/experience/craft/polaroid-craft.jpg",
+    clipImageAlt: "EMB product craft board",
   },
   {
     id: "aarya",
@@ -139,6 +150,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/aarya.png",
     sketchLogoUrl: "/experience/sketches/aarya.jpg?v=2",
     logoBg: "#FFFFFF",
+    clipImageUrl: "/experience/craft/polaroid-notebook.jpg",
+    clipImageAlt: "Aarya Stays planning sketches",
   },
   {
     id: "unifly",
@@ -166,6 +179,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/unifly.png",
     sketchLogoUrl: "/experience/sketches/unifly.jpg?v=2",
     logoBg: "#FFFFFF",
+    clipImageUrl: "/experience/craft/polaroid-desk.jpg",
+    clipImageAlt: "Unifly founding workspace",
   },
 ];
 
