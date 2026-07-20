@@ -103,10 +103,11 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           className="absolute bottom-[1%] left-[-2%] z-[3] w-[clamp(170px,28.5%,369px)] sm:bottom-[3%] sm:left-[-1%]"
         >
           <Image
-            src="/hero/definition-scrap.png"
+            src="/hero/definition-scrap-clear.png"
             alt="Definition of Shritik"
-            width={369}
-            height={297}
+            width={328}
+            height={271}
+            unoptimized
             className="h-auto w-full object-contain drop-shadow-[0_8px_18px_rgba(0,40,30,0.12)]"
           />
         </motion.div>
