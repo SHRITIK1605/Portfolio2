@@ -8,6 +8,7 @@
   --color-carousel-active: #e8f5e9;
   --font-sans: var(--font-poppins);
   --font-serif: var(--font-poppins);
+  --font-hand: var(--font-caveat);
 }
 
 :root {

@@ -1,11 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
+import { Caveat, Poppins } from "next/font/google";
 import { ChatProvider } from "@/context/ChatContext";
 import ChatLayoutShell from "@/components/layout/ChatLayoutShell";
 import "./globals.css";
 
 const poppins = Poppins({
   variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -26,7 +32,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} antialiased`}>
+      <body className={`${poppins.variable} ${caveat.variable} antialiased`}>
         <ChatProvider>
           <ChatLayoutShell>{children}</ChatLayoutShell>
         </ChatProvider>
