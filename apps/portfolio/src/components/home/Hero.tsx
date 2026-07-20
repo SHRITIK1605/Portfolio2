@@ -9,7 +9,6 @@ interface HeroProps {
 }
 
 export default function Hero({ homepage: _homepage }: HeroProps) {
-  // Craft tagline from landing PDF (not the long heroSubtitle copy)
   const tagline = "AI & Digital Product Enthusiast";
 
   return (
@@ -17,24 +16,61 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
       className="relative mx-auto w-full max-w-[1310px] overflow-visible px-[clamp(16px,6.5vw,84px)] pb-[clamp(40px,5vw,64px)] pt-[clamp(4px,1vw,12px)]"
       aria-label="Introduction"
     >
-      {/* Design canvas — proportions match portfolio landing.pdf */}
+      {/* Canvas proportions from shritik_portfolio_landing.pdf */}
       <div className="relative mx-auto aspect-[1310/860] w-full min-h-[500px] max-h-[min(860px,88vw)] sm:min-h-[600px]">
-        {/* Giant pale watermark — behind everything */}
+        {/* Giant forest-green name — behind paint + portrait */}
         <div
-          className="pointer-events-none absolute inset-x-[-4%] top-[4%] z-0 select-none overflow-visible text-center"
+          className="pointer-events-none absolute inset-x-[-4%] top-[6%] z-0 select-none overflow-visible text-center"
           aria-hidden
         >
-          <span className="block text-[clamp(80px,19vw,300px)] font-bold leading-[0.82] tracking-[-0.05em] text-[#F0E08A]/90">
+          <span className="block text-[clamp(80px,19vw,300px)] font-bold leading-[0.82] tracking-[-0.05em] text-[#016146]">
             SHRITIK
           </span>
         </div>
 
-        {/* Welcome tape — above portrait head */}
+        {/* Portrait stack: zigzag paint behind cutout */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.08 }}
+          className="absolute left-1/2 top-[12%] z-[2] w-[clamp(260px,48%,620px)] -translate-x-1/2"
+        >
+          <div className="relative mx-auto w-full">
+            {/* Zigzag paint — behind head/shoulders, wider than the figure */}
+            <div
+              className="pointer-events-none absolute left-1/2 top-[2%] z-0 w-[132%] -translate-x-1/2 sm:w-[140%]"
+              aria-hidden
+            >
+              <Image
+                src="/hero/zigzag-paint.png"
+                alt=""
+                width={775}
+                height={628}
+                priority
+                className="h-auto w-full origin-center object-contain opacity-[0.92] [transform:rotate(-2deg)_scale(1.02)]"
+              />
+            </div>
+
+            {/* Portrait cutout */}
+            <div className="relative z-[1] mx-auto w-[clamp(200px,70%,450px)]">
+              <Image
+                src="/hero/portrait.png"
+                alt="Shritik"
+                width={450}
+                height={602}
+                priority
+                className="h-auto w-full object-contain"
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Welcome tape — above head */}
         <motion.div
           initial={{ opacity: 0, y: -8, rotate: -2 }}
           animate={{ opacity: 1, y: 0, rotate: -1.5 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="absolute left-1/2 top-[11%] z-[5] -translate-x-1/2"
+          className="absolute left-1/2 top-[9%] z-[5] -translate-x-1/2"
         >
           <div
             className="px-[clamp(16px,1.8vw,24px)] py-[clamp(7px,0.75vw,10px)] shadow-[1px_2px_3px_rgba(0,75,64,0.1)]"
@@ -49,34 +85,17 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           </div>
         </motion.div>
 
-        {/* Portrait — centered */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.08 }}
-          className="absolute left-1/2 top-[14%] z-[2] w-[clamp(210px,34.5%,450px)] -translate-x-1/2"
-        >
-          <Image
-            src="/hero/portrait.png"
-            alt="Shritik"
-            width={450}
-            height={602}
-            priority
-            className="h-auto w-full object-contain"
-          />
-        </motion.div>
-
         {/* Tagline — right of face */}
         <motion.p
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.18 }}
-          className="pointer-events-none absolute right-[1%] top-[40%] z-[4] hidden max-w-[min(260px,26%)] text-left font-[family-name:var(--font-caveat)] text-[clamp(18px,2.05vw,28px)] leading-[1.1] text-[#C4A035] sm:block md:right-[3%] lg:right-[5%]"
+          className="pointer-events-none absolute right-[1%] top-[38%] z-[4] hidden max-w-[min(260px,26%)] text-left font-[family-name:var(--font-caveat)] text-[clamp(18px,2.05vw,28px)] leading-[1.1] text-[#C4A035] sm:block md:right-[3%] lg:right-[5%]"
         >
           — {tagline}
         </motion.p>
 
-        {/* Definition scrap — bottom left, overlaps portrait */}
+        {/* Definition scrap — bottom left */}
         <motion.div
           initial={{ opacity: 0, y: 18, rotate: -6 }}
           animate={{ opacity: 1, y: 0, rotate: -3.5 }}
@@ -109,7 +128,6 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
         </motion.div>
       </div>
 
-      {/* Mobile tagline */}
       <p className="mt-[-4px] text-center font-[family-name:var(--font-caveat)] text-[20px] text-[#C4A035] sm:hidden">
         — {tagline}
       </p>
