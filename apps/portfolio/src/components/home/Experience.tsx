@@ -308,13 +308,19 @@ function WashiTape({ className }: { className?: string }) {
   );
 }
 
-function MiniSticky({ className }: { className?: string }) {
+function MiniSticky({
+  className,
+  label,
+}: {
+  className?: string;
+  label?: string;
+}) {
   return (
     <div
-      className={`flex h-[48px] w-[48px] rotate-[8deg] items-start justify-center bg-[#f6e7a1] p-[5px] text-[7px] leading-tight text-forest/70 shadow-[1px_2px_6px_rgba(0,0,0,0.12)] ${className ?? ""}`}
+      className={`flex h-[48px] w-[48px] items-start justify-center bg-[#f6e7a1] p-[5px] text-[7px] leading-tight text-forest/70 shadow-[1px_2px_6px_rgba(0,0,0,0.12)] ${className ?? ""}`}
       aria-hidden
     >
-      <span className="font-medium italic">build · ship</span>
+      <span className="font-medium italic">{label ?? "build · ship"}</span>
     </div>
   );
 }
@@ -367,16 +373,66 @@ function CoffeeCup({ className }: { className?: string }) {
   );
 }
 
+/** Per-company desk accent layouts that animate on scroll change. */
+const ACCENT_LAYOUTS = [
+  {
+    sticky: "build · ship",
+    lamp: "right-[-4%] top-[4%]",
+    coffee: "bottom-[10%] right-[8%] rotate-[-10deg]",
+    stickyPos: "bottom-[14%] left-[6%] rotate-[10deg]",
+    washi: "left-[10%] top-[12%] rotate-[-22deg]",
+  },
+  {
+    sticky: "ship fast",
+    lamp: "left-[-6%] top-[8%] -scale-x-100",
+    coffee: "bottom-[8%] left-[10%] rotate-[12deg]",
+    stickyPos: "top-[14%] right-[8%] rotate-[-6deg]",
+    washi: "right-[12%] bottom-[22%] rotate-[16deg]",
+  },
+  {
+    sticky: "clarify",
+    lamp: "right-[-2%] bottom-[18%]",
+    coffee: "top-[12%] left-[6%] rotate-[-6deg]",
+    stickyPos: "bottom-[10%] right-[14%] rotate-[14deg]",
+    washi: "left-[14%] top-[40%] rotate-[-8deg]",
+  },
+  {
+    sticky: "iterate",
+    lamp: "right-[2%] top-[2%]",
+    coffee: "bottom-[12%] right-[4%] rotate-[4deg]",
+    stickyPos: "top-[18%] left-[4%] rotate-[-12deg]",
+    washi: "left-[8%] bottom-[28%] rotate-[20deg]",
+  },
+  {
+    sticky: "own it",
+    lamp: "left-[-4%] bottom-[16%] -scale-x-100",
+    coffee: "top-[10%] right-[10%] rotate-[-14deg]",
+    stickyPos: "bottom-[8%] left-[12%] rotate-[6deg]",
+    washi: "right-[6%] top-[36%] rotate-[-18deg]",
+  },
+  {
+    sticky: "launch",
+    lamp: "right-[-6%] top-[10%]",
+    coffee: "bottom-[6%] left-[8%] rotate-[8deg]",
+    stickyPos: "top-[12%] left-[10%] rotate-[-4deg]",
+    washi: "right-[10%] bottom-[18%] rotate-[12deg]",
+  },
+] as const;
+
 /** Scrapbook clip: notebook grid behind, pinned polaroids on top. */
 function PolaroidClip({
   item,
+  itemIndex,
   height,
   fallback,
 }: {
   item: ExperienceItem;
+  itemIndex: number;
   height: number | null;
   fallback: CraftPolaroid[];
 }) {
+  const [hovered, setHovered] = useState(false);
+
   const images: [string, string] = [
     item.clipImages[0] ||
       fallback[0]?.src ||
@@ -386,25 +442,23 @@ function PolaroidClip({
       "/experience/craft/polaroid-desk.jpg",
   ];
 
-  // Smaller frames so ~70% of notebook grid stays visible
-  const shots = [
-    {
-      src: images[0],
-      rotate: -8,
-      left: "16%",
-      top: "18%",
-      width: "48%",
-      z: 2,
-    },
-    {
-      src: images[1],
-      rotate: 7,
-      left: "36%",
-      top: "34%",
-      width: "46%",
-      z: 3,
-    },
-  ];
+  const accents = ACCENT_LAYOUTS[itemIndex % ACCENT_LAYOUTS.length];
+
+  // Compact polaroids — leave most of the notebook visible
+  const backShot = {
+    src: images[0],
+    restRotate: -6,
+    left: "18%",
+    top: "20%",
+    width: "40%",
+  };
+  const frontShot = {
+    src: images[1],
+    restRotate: 5,
+    left: "38%",
+    top: "30%",
+    width: "38%",
+  };
 
   return (
     <div
@@ -414,54 +468,112 @@ function PolaroidClip({
           ? { height, minHeight: height }
           : { minHeight: 320, aspectRatio: "3 / 4" }
       }
-      aria-hidden
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <NotebookBookBg />
 
-      <WashiTape className="absolute left-[8%] top-[10%] z-[1]" />
-      <MiniSticky className="absolute bottom-[12%] left-[8%] z-[4]" />
-      <DeskLamp className="absolute right-[-2%] top-[6%] z-[5] h-[72px] w-[58px] drop-shadow-md sm:h-[88px] sm:w-[70px]" />
-      <CoffeeCup className="absolute bottom-[8%] right-[6%] z-[5] h-[44px] w-[44px] rotate-[-8deg] drop-shadow-sm sm:h-[52px] sm:w-[52px]" />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`accents-${item.id}`}
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.92, y: -8 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="pointer-events-none absolute inset-0 z-[5]"
+          aria-hidden
+        >
+          <WashiTape className={`absolute z-[1] ${accents.washi}`} />
+          <MiniSticky
+            label={accents.sticky}
+            className={`absolute z-[4] ${accents.stickyPos}`}
+          />
+          <DeskLamp
+            className={`absolute z-[5] h-[68px] w-[54px] drop-shadow-md sm:h-[82px] sm:w-[66px] ${accents.lamp}`}
+          />
+          <CoffeeCup
+            className={`absolute z-[5] h-[42px] w-[42px] drop-shadow-sm sm:h-[50px] sm:w-[50px] ${accents.coffee}`}
+          />
+        </motion.div>
+      </AnimatePresence>
 
       <AnimatePresence mode="wait">
         <motion.div
           key={item.id}
-          initial={{ opacity: 0, y: 12, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -8, scale: 0.98 }}
-          transition={{ duration: 0.34, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 16, rotate: -2 }}
+          animate={{ opacity: 1, y: 0, rotate: 0 }}
+          exit={{ opacity: 0, y: -12, rotate: 2 }}
+          transition={{ duration: 0.38, ease: "easeOut" }}
           className="absolute inset-0 z-[2]"
         >
-          {shots.map((shot, i) => (
-            <div
-              key={`${item.id}-${i}`}
-              className="absolute rounded-[4px] bg-white p-[7px] pb-[20px] shadow-[0_8px_20px_rgba(0,40,30,0.15)]"
-              style={{
-                width: shot.width,
-                left: shot.left,
-                top: shot.top,
-                zIndex: shot.z,
-                transform: `rotate(${shot.rotate}deg)`,
-              }}
-            >
-              <div className="relative aspect-square w-full overflow-hidden bg-[#eee6d4]">
-                <Image
-                  src={shot.src}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="220px"
-                  unoptimized
-                />
-              </div>
+          <motion.div
+            className="absolute rounded-[4px] bg-white p-[6px] pb-[18px] shadow-[0_8px_20px_rgba(0,40,30,0.15)]"
+            style={{
+              width: backShot.width,
+              left: backShot.left,
+              top: backShot.top,
+              zIndex: 2,
+              transformOrigin: "top right",
+            }}
+            animate={{
+              rotate: hovered ? -1 : backShot.restRotate,
+              y: hovered ? -8 : 0,
+              scale: hovered ? 0.9 : 1,
+              opacity: hovered ? 0 : 1,
+            }}
+            transition={{ type: "spring", stiffness: 280, damping: 22 }}
+          >
+            <div className="relative aspect-square w-full overflow-hidden bg-[#eee6d4]">
+              <Image
+                src={backShot.src}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="200px"
+                unoptimized
+              />
             </div>
-          ))}
+          </motion.div>
+
+          <motion.div
+            className="absolute cursor-pointer rounded-[4px] bg-white p-[6px] pb-[18px] shadow-[0_8px_20px_rgba(0,40,30,0.15)]"
+            style={{
+              width: frontShot.width,
+              left: frontShot.left,
+              top: frontShot.top,
+              zIndex: 3,
+              transformOrigin: "top right",
+            }}
+            animate={{
+              rotate: hovered ? 48 : frontShot.restRotate,
+              y: hovered ? 36 : 0,
+              x: hovered ? 14 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          >
+            <div className="relative aspect-square w-full overflow-hidden bg-[#eee6d4]">
+              <Image
+                src={frontShot.src}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="200px"
+                unoptimized
+              />
+            </div>
+          </motion.div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Pin + star seated on the overlapping photo tops */}
-      <RedStar className="absolute left-[42%] top-[14%] z-30 h-[28px] w-[28px] drop-shadow-md sm:h-[32px] sm:w-[32px]" />
-      <SafetyPin className="absolute left-[45%] top-[12%] z-40 h-[42px] w-[22px] sm:h-[48px] sm:w-[24px]" />
+      <motion.div
+        className="pointer-events-none absolute left-[58%] top-[17%] z-40"
+        animate={{ y: hovered ? 1 : 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 24 }}
+        aria-hidden
+      >
+        <RedStar className="absolute -left-[14px] -top-[10px] h-[26px] w-[26px] drop-shadow-md sm:h-[30px] sm:w-[30px]" />
+        <SafetyPin className="relative h-[40px] w-[22px] sm:h-[46px] sm:w-[24px]" />
+      </motion.div>
     </div>
   );
 }
@@ -562,14 +674,9 @@ export default function Experience({ craftImages }: ExperienceProps) {
 
   return (
     <section
-      className="relative mx-auto max-w-[1320px] overflow-visible px-[16px] pb-[56px] sm:px-[28px] sm:pb-[72px] md:px-[36px] md:pb-[88px] lg:px-[40px]"
+      className="relative mx-auto max-w-[1320px] overflow-visible rounded-[28px] bg-[#EAECE2] px-[16px] pb-[56px] pt-[28px] sm:px-[28px] sm:pb-[72px] sm:pt-[32px] md:px-[36px] md:pb-[88px] lg:px-[40px]"
       aria-labelledby="experience-heading"
     >
-      <div
-        className="pointer-events-none absolute inset-x-[8px] top-[36px] bottom-[20px] -z-10 rounded-[28px] bg-[#eef3ea]/65 sm:inset-x-[16px]"
-        aria-hidden
-      />
-
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -657,6 +764,10 @@ export default function Experience({ craftImages }: ExperienceProps) {
             {activeItem ? (
               <PolaroidClip
                 item={activeItem}
+                itemIndex={Math.max(
+                  0,
+                  EXPERIENCES.findIndex((e) => e.id === activeItem.id)
+                )}
                 height={panelHeight}
                 fallback={polaroids}
               />
