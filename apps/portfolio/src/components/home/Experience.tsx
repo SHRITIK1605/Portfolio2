@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { CalendarDays, MapPin } from "lucide-react";
 import {
   DEFAULT_CRAFT_POLAROIDS,
@@ -39,90 +39,129 @@ function boldHighlights(text: string, highlights: string[] = []) {
   });
 }
 
-/**
- * Snaking dotted arrows alternating sides — matches the craft mockup
- * (right curve → left curve → loop → left → right …).
- */
-function SnakingConnector({
-  variant,
+type ArrowKind =
+  | "arc-right"
+  | "arc-left"
+  | "swoop-out"
+  | "loop"
+  | "zigzag"
+  | "wide-right";
+
+const ARROW_SEQUENCE: ArrowKind[] = [
+  "swoop-out",
+  "arc-left",
+  "wide-right",
+  "loop",
+  "zigzag",
+];
+
+/** Organic dotted connectors — tip centered on path end via marker. */
+function CraftArrow({
+  kind,
+  markerId,
   className,
 }: {
-  variant: "right" | "left" | "loop";
+  kind: ArrowKind;
+  markerId: string;
   className?: string;
 }) {
-  if (variant === "left") {
-    return (
-      <svg className={className} viewBox="0 0 120 36" fill="none" aria-hidden>
-        <path
-          d="M78 2c-22 2-40 8-48 16S18 30 28 34"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeDasharray="2.8 4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M22 28l6 6 8-4"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
+  const paths: Record<
+    ArrowKind,
+    { d: string; viewBox: string; w: number; h: number; align: string }
+  > = {
+    "arc-right": {
+      d: "M52 2 C78 4, 108 14, 114 30",
+      viewBox: "0 0 128 40",
+      w: 104,
+      h: 34,
+      align: "justify-end -mr-[14px]",
+    },
+    "arc-left": {
+      d: "M78 2 C48 6, 18 16, 12 30",
+      viewBox: "0 0 128 40",
+      w: 104,
+      h: 34,
+      align: "justify-start -ml-[14px]",
+    },
+    "swoop-out": {
+      d: "M46 4 C92 -10, 148 6, 138 24 C130 34, 108 34, 96 30",
+      viewBox: "0 0 160 44",
+      w: 140,
+      h: 36,
+      align: "justify-end -mr-[42px]",
+    },
+    loop: {
+      d: "M62 3 C96 0, 118 10, 108 20 C98 30, 74 26, 80 16 C86 8, 110 10, 118 26 C122 36, 100 40, 74 38",
+      viewBox: "0 0 140 48",
+      w: 118,
+      h: 40,
+      align: "justify-center -mr-[10px]",
+    },
+    zigzag: {
+      d: "M36 3 C54 3, 58 15, 76 15 C94 15, 98 29, 116 31",
+      viewBox: "0 0 132 40",
+      w: 112,
+      h: 34,
+      align: "justify-center",
+    },
+    "wide-right": {
+      d: "M40 6 C88 -14, 158 4, 150 22 C142 34, 118 36, 104 32",
+      viewBox: "0 0 168 46",
+      w: 148,
+      h: 38,
+      align: "justify-end -mr-[48px]",
+    },
+  };
 
-  if (variant === "loop") {
-    return (
-      <svg className={className} viewBox="0 0 120 40" fill="none" aria-hidden>
-        <path
-          d="M72 2c18 0 28 6 28 14s-10 12-22 12c-8 0-12-4-10-8s10-4 16 0c8 5 6 14-8 16"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeDasharray="2.8 4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M70 32l6 6 8-3"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
+  const cfg = paths[kind];
 
-  // right
   return (
-    <svg className={className} viewBox="0 0 120 36" fill="none" aria-hidden>
-      <path
-        d="M42 2c22 2 40 8 48 16s12 12 2 16"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeDasharray="2.8 4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M84 28l8 4-2 8"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <motion.div
+      initial={{ opacity: 0, pathLength: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, amount: 0.6 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+      className={`flex overflow-visible py-[3px] text-forest/55 ${cfg.align}`}
+      aria-hidden
+    >
+      <svg
+        className={className}
+        width={cfg.w}
+        height={cfg.h}
+        viewBox={cfg.viewBox}
+        fill="none"
+        overflow="visible"
+      >
+        <defs>
+          <marker
+            id={markerId}
+            markerWidth="9"
+            markerHeight="9"
+            refX="7"
+            refY="4.5"
+            orient="auto"
+            markerUnits="userSpaceOnUse"
+          >
+            {/* Tip apex at (7,4.5) so it sits on the stroke end */}
+            <path d="M0.5 0.5 L8 4.5 L0.5 8.5 Z" fill="currentColor" />
+          </marker>
+        </defs>
+        <motion.path
+          d={cfg.d}
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeDasharray="2.4 3.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          markerEnd={`url(#${markerId})`}
+          initial={{ pathLength: 0, opacity: 0.35 }}
+          whileInView={{ pathLength: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeInOut" }}
+        />
+      </svg>
+    </motion.div>
   );
-}
-
-function connectorVariant(index: number): "right" | "left" | "loop" {
-  // Match mockup rhythm: right, left, loop, left, right…
-  const pattern: Array<"right" | "left" | "loop"> = [
-    "right",
-    "left",
-    "loop",
-    "left",
-    "right",
-  ];
-  return pattern[index % pattern.length] ?? "right";
 }
 
 function SafetyPin({ className }: { className?: string }) {
@@ -169,15 +208,18 @@ function CraftPolaroidDecor({ polaroids }: { polaroids: CraftPolaroid[] }) {
       aria-hidden
     >
       {top.map((shot, i) => (
-        <div
+        <motion.div
           key={shot.src}
+          initial={{ opacity: 0, y: 10, rotate: shot.rotate - 8 }}
+          whileInView={{ opacity: 1, y: 0, rotate: shot.rotate }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.55, delay: i * 0.08, ease: "easeOut" }}
           className="absolute rounded-[3px] bg-white p-[5px] pb-[18px] shadow-[0_5px_14px_rgba(0,40,30,0.11)]"
           style={{
             width: i === 0 ? "54%" : "52%",
             left: i === 0 ? "8%" : "40%",
             top: i === 0 ? "12%" : "32%",
             zIndex: i + 1,
-            transform: `rotate(${shot.rotate}deg)`,
           }}
         >
           <div className="relative aspect-square w-full overflow-hidden bg-[#eee6d4]">
@@ -189,7 +231,7 @@ function CraftPolaroidDecor({ polaroids }: { polaroids: CraftPolaroid[] }) {
               sizes="90px"
             />
           </div>
-        </div>
+        </motion.div>
       ))}
       <RedStar className="absolute left-[44%] top-[4%] z-20 h-[18px] w-[18px] drop-shadow-sm" />
       <SafetyPin className="absolute left-[47%] top-[-2%] z-30 h-[26px] w-[15px]" />
@@ -207,7 +249,7 @@ function SketchLogo({ item, size }: { item: ExperienceItem; size: number }) {
         src={item.sketchLogoUrl}
         alt=""
         fill
-        className="object-contain p-[2px]"
+        className="object-contain p-[1px]"
         sizes={`${size}px`}
       />
     </span>
@@ -218,61 +260,82 @@ function ExperienceNavItem({
   item,
   active,
   onSelect,
+  index,
 }: {
   item: ExperienceItem;
   active: boolean;
   onSelect: () => void;
+  index: number;
 }) {
   return (
     <motion.button
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      layout
+      initial={{ opacity: 0, x: -14 }}
       animate={{
-        scale: active ? 1.02 : 1,
-        x: active ? 4 : 0,
+        opacity: 1,
+        x: active ? 6 : 0,
+        scale: active ? 1.03 : 1,
       }}
-      transition={{ type: "spring", stiffness: 420, damping: 28 }}
-      className={`relative flex min-h-[46px] w-full items-center gap-[10px] rounded-[12px] border px-[10px] py-[8px] text-left transition-colors sm:min-h-[48px] sm:gap-[12px] sm:rounded-[14px] sm:px-[12px] ${
+      transition={{
+        type: "spring",
+        stiffness: 380,
+        damping: 26,
+        delay: active ? 0 : index * 0.03,
+      }}
+      className={`relative flex min-h-[46px] w-full items-center gap-[10px] rounded-[12px] border px-[10px] py-[8px] text-left sm:min-h-[48px] sm:gap-[12px] sm:rounded-[14px] sm:px-[12px] ${
         active
-          ? "border-forest bg-[#f4ecd4] shadow-[0_2px_12px_rgba(0,75,64,0.1)]"
+          ? "border-forest bg-[#f4ecd4] shadow-[0_2px_12px_rgba(0,75,64,0.12)]"
           : "border-forest/22 bg-[#faf3df] hover:border-forest/45"
       }`}
     >
       {active ? (
         <motion.span
           layoutId="exp-active-glow"
-          className="pointer-events-none absolute inset-0 rounded-[12px] ring-2 ring-forest/25 sm:rounded-[14px]"
-          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+          className="pointer-events-none absolute inset-0 rounded-[12px] ring-2 ring-forest/30 sm:rounded-[14px]"
+          transition={{ type: "spring", stiffness: 360, damping: 28 }}
         />
       ) : null}
-      <SketchLogo item={item} size={36} />
+      <motion.span
+        animate={{ rotate: active ? [-2, 2, 0] : 0 }}
+        transition={{ duration: 0.45 }}
+      >
+        <SketchLogo item={item} size={36} />
+      </motion.span>
       <span className="relative text-[11px] font-bold uppercase leading-snug tracking-[0.02em] text-forest sm:text-[12px] md:text-[13px]">
         {item.company}
       </span>
       {active ? (
-        <span
+        <motion.span
+          initial={{ opacity: 0, x: -4 }}
+          animate={{ opacity: 1, x: 0 }}
           className="pointer-events-none absolute -right-[26px] top-1/2 hidden -translate-y-1/2 text-forest/55 md:block"
           aria-hidden
         >
           <svg width="32" height="18" viewBox="0 0 32 18" fill="none">
+            <defs>
+              <marker
+                id="nav-tip"
+                markerWidth="7"
+                markerHeight="7"
+                refX="5.5"
+                refY="3.5"
+                orient="auto"
+              >
+                <path d="M0 0 L6.5 3.5 L0 7 Z" fill="currentColor" />
+              </marker>
+            </defs>
             <path
-              d="M2 9c10 0 14-5 20-5 4 0 6 3 6 5"
+              d="M2 9c10 0 14-5 20-5 3.5 0 5.5 2.5 6 5"
               stroke="currentColor"
               strokeWidth="1.5"
               strokeDasharray="2.2 3.2"
               strokeLinecap="round"
-            />
-            <path
-              d="M22 3l8 6-8 6"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              markerEnd="url(#nav-tip)"
             />
           </svg>
-        </span>
+        </motion.span>
       ) : null}
     </motion.button>
   );
@@ -281,91 +344,137 @@ function ExperienceNavItem({
 function CompanyBlock({
   item,
   active,
+  isLast,
 }: {
   item: ExperienceItem;
   active: boolean;
+  isLast: boolean;
 }) {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { amount: 0.35, margin: "-10% 0px" });
+
   return (
-    <article
+    <motion.article
+      ref={ref}
       id={`exp-${item.id}`}
       data-exp-id={item.id}
-      className={`scroll-mt-[12px] border-b border-forest/10 pb-[24px] last:border-b-0 last:pb-[4px] sm:pb-[28px] ${
-        active ? "opacity-100" : "opacity-90"
-      }`}
+      initial={{ opacity: 0.55, y: 18 }}
+      animate={{
+        opacity: active ? 1 : 0.72,
+        y: 0,
+        scale: active ? 1 : 0.985,
+      }}
+      transition={{ type: "spring", stiffness: 260, damping: 28 }}
+      className={`scroll-mt-[10px] ${isLast ? "pb-[8px]" : ""}`}
     >
-      <header className="mb-[12px] flex flex-col gap-[10px] sm:mb-[14px] sm:flex-row sm:items-start sm:justify-between sm:gap-[14px]">
-        <div className="flex min-w-0 items-start gap-[12px]">
-          <div
-            className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
-              item.logoWide
-                ? "h-[42px] w-[76px] sm:h-[48px] sm:w-[86px]"
-                : "h-[46px] w-[46px] sm:h-[52px] sm:w-[52px]"
-            }`}
-            style={{ backgroundColor: item.logoBg ?? "#ffffff" }}
+      <div className="px-[2px]">
+        <header className="mb-[12px] flex flex-col gap-[10px] sm:mb-[14px] sm:flex-row sm:items-start sm:justify-between sm:gap-[14px]">
+          <div className="flex min-w-0 items-start gap-[12px]">
+            <motion.div
+              animate={
+                active
+                  ? { boxShadow: "0 0 0 3px rgba(0,75,64,0.12)" }
+                  : { boxShadow: "0 0 0 0 rgba(0,75,64,0)" }
+              }
+              className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
+                item.logoWide
+                  ? "h-[42px] w-[76px] sm:h-[48px] sm:w-[86px]"
+                  : "h-[46px] w-[46px] sm:h-[52px] sm:w-[52px]"
+              }`}
+              style={{ backgroundColor: item.logoBg ?? "#ffffff" }}
+            >
+              <Image
+                src={item.logoUrl}
+                alt={`${item.company} logo`}
+                fill
+                className="object-contain p-[3px]"
+                sizes={item.logoWide ? "86px" : "52px"}
+              />
+            </motion.div>
+            <div className="min-w-0 pt-[1px]">
+              <h3 className="m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
+                {item.company}
+              </h3>
+              <p className="m-0 mt-[3px] text-[12px] font-medium leading-snug text-forest/75 sm:text-[13px]">
+                {item.role}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex shrink-0 flex-col gap-[5px] text-[12px] text-forest/80 sm:items-end sm:text-[13px]">
+            <span className="inline-flex items-center gap-[6px]">
+              <CalendarDays
+                className="h-[13px] w-[13px] shrink-0 text-forest"
+                strokeWidth={2}
+              />
+              <span className="font-medium">{item.dates}</span>
+            </span>
+            <span className="inline-flex items-center gap-[6px] italic">
+              <MapPin
+                className="h-[13px] w-[13px] shrink-0 text-forest"
+                strokeWidth={2}
+              />
+              <span>{item.location}</span>
+            </span>
+          </div>
+        </header>
+
+        <div className="relative pl-[26px] sm:pl-[30px]">
+          <motion.span
+            className="absolute left-[8px] top-[5px] w-[2px] origin-top bg-forest/20"
+            animate={{ height: inView || active ? "calc(100% - 8px)" : "28%" }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
+            aria-hidden
+          />
+          <span
+            className="absolute left-[2px] top-[3px] flex h-[14px] w-[14px] items-center justify-center rounded-full border-2 border-forest bg-white"
+            aria-hidden
           >
-            <Image
-              src={item.logoUrl}
-              alt={`${item.company} logo`}
-              fill
-              className="object-contain p-[3px]"
-              sizes={item.logoWide ? "86px" : "52px"}
+            <motion.span
+              className="h-[5px] w-[5px] rounded-full bg-forest"
+              animate={{ scale: active ? [1, 1.35, 1] : 1 }}
+              transition={{ duration: 0.5 }}
             />
-          </div>
-          <div className="min-w-0 pt-[1px]">
-            <h3 className="m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
-              {item.company}
-            </h3>
-            <p className="m-0 mt-[3px] text-[12px] font-medium leading-snug text-forest/75 sm:text-[13px]">
-              {item.role}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex shrink-0 flex-col gap-[5px] text-[12px] text-forest/80 sm:items-end sm:text-[13px]">
-          <span className="inline-flex items-center gap-[6px]">
-            <CalendarDays
-              className="h-[13px] w-[13px] shrink-0 text-forest"
-              strokeWidth={2}
-            />
-            <span className="font-medium">{item.dates}</span>
           </span>
-          <span className="inline-flex items-center gap-[6px] italic">
-            <MapPin
-              className="h-[13px] w-[13px] shrink-0 text-forest"
-              strokeWidth={2}
-            />
-            <span>{item.location}</span>
-          </span>
-        </div>
-      </header>
 
-      <div className="relative pl-[26px] sm:pl-[30px]">
-        <span
-          className="absolute bottom-0 left-[8px] top-[5px] w-[2px] bg-forest/18"
-          aria-hidden
-        />
-        <span
-          className="absolute left-[2px] top-[3px] flex h-[14px] w-[14px] items-center justify-center rounded-full border-2 border-forest bg-white"
+          <p className="m-0 mb-[8px] text-[12px] font-semibold uppercase tracking-[0.04em] text-forest sm:text-[13px]">
+            {item.dates}
+          </p>
+          <p className="m-0 mb-[10px] text-[13px] italic leading-relaxed text-forest/85 sm:text-[14px]">
+            {item.overview}
+          </p>
+          <ul className="m-0 flex list-disc flex-col gap-[7px] pl-[18px] text-[13px] leading-relaxed text-forest/90 sm:gap-[9px] sm:text-[14px]">
+            {item.bullets.map((bullet, i) => (
+              <motion.li
+                key={bullet}
+                initial={{ opacity: 0, x: 8 }}
+                animate={
+                  active
+                    ? { opacity: 1, x: 0 }
+                    : { opacity: 0.85, x: 0 }
+                }
+                transition={{ delay: active ? i * 0.04 : 0, duration: 0.28 }}
+                className="pl-[2px]"
+              >
+                {boldHighlights(bullet, item.highlights)}
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Divider centered between companies */}
+      {!isLast ? (
+        <div
+          className="flex items-center py-[22px] sm:py-[26px]"
           aria-hidden
         >
-          <span className="h-[5px] w-[5px] rounded-full bg-forest" />
-        </span>
-
-        <p className="m-0 mb-[8px] text-[12px] font-semibold uppercase tracking-[0.04em] text-forest sm:text-[13px]">
-          {item.dates}
-        </p>
-        <p className="m-0 mb-[10px] text-[13px] italic leading-relaxed text-forest/85 sm:text-[14px]">
-          {item.overview}
-        </p>
-        <ul className="m-0 flex list-disc flex-col gap-[7px] pl-[18px] text-[13px] leading-relaxed text-forest/90 sm:gap-[9px] sm:text-[14px]">
-          {item.bullets.map((bullet) => (
-            <li key={bullet} className="pl-[2px]">
-              {boldHighlights(bullet, item.highlights)}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </article>
+          <span className="h-px w-full bg-forest/14" />
+        </div>
+      ) : (
+        <div className="h-[12px]" aria-hidden />
+      )}
+    </motion.article>
   );
 }
 
@@ -414,45 +523,49 @@ export default function Experience({ craftImages }: ExperienceProps) {
     scrollingFromNav.current = true;
     setActiveId(id);
     panel.scrollTo({
-      top: Math.max(0, target.offsetTop - 10),
+      top: Math.max(0, target.offsetTop - 8),
       behavior: "smooth",
     });
     window.setTimeout(() => {
       scrollingFromNav.current = false;
-    }, 450);
+    }, 500);
   }, []);
 
+  // Reliable active detection — including last company at bottom
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
 
-    const blocks = Array.from(
-      panel.querySelectorAll<HTMLElement>("[data-exp-id]")
-    );
-    if (blocks.length === 0) return;
+    const updateActive = () => {
+      if (scrollingFromNav.current) return;
+      const blocks = Array.from(
+        panel.querySelectorAll<HTMLElement>("[data-exp-id]")
+      );
+      if (blocks.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (scrollingFromNav.current) return;
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort(
-            (a, b) =>
-              Math.abs(a.boundingClientRect.top) -
-              Math.abs(b.boundingClientRect.top)
-          );
-        const id = visible[0]?.target.getAttribute("data-exp-id");
-        if (id) setActiveId(id);
-      },
-      {
-        root: panel,
-        rootMargin: "-8% 0px -62% 0px",
-        threshold: [0.12, 0.35, 0.55],
+      const { scrollTop, clientHeight, scrollHeight } = panel;
+      const nearBottom = scrollTop + clientHeight >= scrollHeight - 48;
+      if (nearBottom) {
+        const last = blocks[blocks.length - 1]?.getAttribute("data-exp-id");
+        if (last) setActiveId(last);
+        return;
       }
-    );
 
-    blocks.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+      const probe = scrollTop + Math.min(140, clientHeight * 0.28);
+      let current = blocks[0]?.getAttribute("data-exp-id") ?? EXPERIENCES[0]?.id;
+      for (const block of blocks) {
+        if (block.offsetTop <= probe) {
+          current = block.getAttribute("data-exp-id") ?? current;
+        } else {
+          break;
+        }
+      }
+      if (current) setActiveId(current);
+    };
+
+    updateActive();
+    panel.addEventListener("scroll", updateActive, { passive: true });
+    return () => panel.removeEventListener("scroll", updateActive);
   }, []);
 
   return (
@@ -465,20 +578,25 @@ export default function Experience({ craftImages }: ExperienceProps) {
         aria-hidden
       />
 
-      <div className="relative mb-[10px] md:mb-[16px] md:pr-[160px]">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.45 }}
+        className="relative mb-[10px] md:mb-[16px] md:pr-[160px]"
+      >
         <h2
           id="experience-heading"
           className="m-0 text-[28px] font-bold tracking-[-0.02em] text-forest sm:text-[32px] md:text-[36px]"
         >
           Experience
         </h2>
-      </div>
+      </motion.div>
 
       <CraftPolaroidDecor polaroids={polaroids} />
 
       <div className="relative z-[1] grid gap-[16px] md:grid-cols-[minmax(210px,280px)_minmax(0,1fr)] md:items-start md:gap-[32px] lg:gap-[40px]">
-        {/* Left company stack — defines height on desktop */}
-        <div ref={leftRef} className="min-w-0">
+        <div ref={leftRef} className="min-w-0 overflow-visible">
           <div className="mb-[4px] flex gap-[8px] overflow-x-auto pb-[6px] [-ms-overflow-style:none] [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
             {EXPERIENCES.map((item) => (
               <button
@@ -500,42 +618,31 @@ export default function Experience({ craftImages }: ExperienceProps) {
             ))}
           </div>
 
-          <div className="relative hidden md:block">
-            <ul className="m-0 flex list-none flex-col p-0">
-              {EXPERIENCES.map((item, index) => {
-                const variant = connectorVariant(index);
-                return (
-                  <li key={item.id} className="relative">
-                    <ExperienceNavItem
-                      item={item}
-                      active={item.id === activeId}
-                      onSelect={() => scrollToCompany(item.id)}
+          <div className="relative hidden overflow-visible md:block">
+            <ul className="m-0 flex list-none flex-col overflow-visible p-0">
+              {EXPERIENCES.map((item, index) => (
+                <li key={item.id} className="relative overflow-visible">
+                  <ExperienceNavItem
+                    item={item}
+                    active={item.id === activeId}
+                    onSelect={() => scrollToCompany(item.id)}
+                    index={index}
+                  />
+                  {index < EXPERIENCES.length - 1 ? (
+                    <CraftArrow
+                      kind={ARROW_SEQUENCE[index] ?? "arc-right"}
+                      markerId={`exp-arrow-${index}`}
                     />
-                    {index < EXPERIENCES.length - 1 ? (
-                      <div
-                        className={`flex py-[1px] text-forest/45 ${
-                          variant === "left"
-                            ? "justify-start pl-[18px]"
-                            : "justify-end pr-[10px]"
-                        }`}
-                        aria-hidden
-                      >
-                        <SnakingConnector
-                          variant={variant}
-                          className="h-[28px] w-[88px]"
-                        />
-                      </div>
-                    ) : null}
-                  </li>
-                );
-              })}
+                  ) : null}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
-        {/* Right panel — height locked to left column; scroll stays inside */}
         <div className="min-w-0">
-          <div
+          <motion.div
+            layout
             className="flex flex-col overflow-hidden rounded-[20px] border-[2.5px] border-forest bg-[#fffdf8] shadow-[0_4px_20px_rgba(0,75,64,0.06)] sm:rounded-[24px] sm:border-[3px]"
             style={
               panelHeight
@@ -548,17 +655,18 @@ export default function Experience({ craftImages }: ExperienceProps) {
               className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[14px] py-[16px] [scrollbar-color:rgba(0,75,64,0.28)_transparent] [scrollbar-width:thin] sm:px-[20px] sm:py-[18px] md:px-[22px]"
               style={{ overscrollBehavior: "contain" }}
             >
-              <div className="flex flex-col">
-                {EXPERIENCES.map((item) => (
+              <div className="flex flex-col pb-[min(28%,120px)]">
+                {EXPERIENCES.map((item, index) => (
                   <CompanyBlock
                     key={item.id}
                     item={item}
                     active={item.id === activeId}
+                    isLast={index === EXPERIENCES.length - 1}
                   />
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -60,7 +60,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     ],
     logoUrl: "/experience/logos/bse.png",
     sketchLogoUrl: "/experience/sketches/bse.jpg",
-    logoBg: "#000000",
+    logoBg: "#FFFFFF",
     logoWide: true,
   },
   {
