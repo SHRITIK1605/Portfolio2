@@ -73,58 +73,22 @@ function RedStar({ className }: { className?: string }) {
   );
 }
 
-function CraftPolaroidDecor({ polaroids }: { polaroids: CraftPolaroid[] }) {
-  const top = polaroids.slice(0, 2);
-  if (top.length === 0) return null;
-
-  return (
-    <div
-      className="pointer-events-none relative mx-auto mb-[12px] h-[100px] w-full max-w-[180px] select-none opacity-95 sm:mb-[14px] sm:h-[112px] md:absolute md:right-[4px] md:top-[-4px] md:z-[2] md:mb-0 md:h-[128px] md:w-[148px] lg:right-[12px]"
-      aria-hidden
-    >
-      {top.map((shot, i) => (
-        <motion.div
-          key={shot.src}
-          initial={{ opacity: 0, y: 10, rotate: shot.rotate - 8 }}
-          whileInView={{ opacity: 1, y: 0, rotate: shot.rotate }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.55, delay: i * 0.08, ease: "easeOut" }}
-          className="absolute rounded-[3px] bg-white p-[5px] pb-[18px] shadow-[0_5px_14px_rgba(0,40,30,0.11)]"
-          style={{
-            width: i === 0 ? "54%" : "52%",
-            left: i === 0 ? "8%" : "40%",
-            top: i === 0 ? "12%" : "32%",
-            zIndex: i + 1,
-          }}
-        >
-          <div className="relative aspect-square w-full overflow-hidden bg-[#eee6d4]">
-            <Image
-              src={shot.src}
-              alt=""
-              fill
-              className="object-cover"
-              sizes="90px"
-            />
-          </div>
-        </motion.div>
-      ))}
-      <RedStar className="absolute left-[44%] top-[4%] z-20 h-[18px] w-[18px] drop-shadow-sm" />
-      <SafetyPin className="absolute left-[47%] top-[-2%] z-30 h-[26px] w-[15px]" />
-    </div>
-  );
-}
-
-function SketchLogo({ item, size }: { item: ExperienceItem; size: number }) {
+/** Visible company mark for left nav — uses the real color logo. */
+function NavLogo({ item, size }: { item: ExperienceItem; size: number }) {
   return (
     <span
-      className="relative shrink-0 overflow-hidden rounded-[10px] border-2 border-forest/25 bg-white"
-      style={{ width: size, height: size }}
+      className="relative shrink-0 overflow-hidden rounded-[10px] border border-forest/20"
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: item.logoBg ?? "#ffffff",
+      }}
     >
       <Image
-        src={item.sketchLogoUrl}
+        src={item.logoUrl}
         alt=""
         fill
-        className="object-contain p-[1px] contrast-[1.35] brightness-[0.92] saturate-[1.2]"
+        className="object-contain p-[3px]"
         sizes={`${size}px`}
         unoptimized
       />
@@ -160,7 +124,7 @@ function ExperienceNavItem({
         damping: 26,
         delay: active ? 0 : index * 0.03,
       }}
-      className={`relative flex min-h-[46px] w-full items-center gap-[10px] rounded-[12px] border px-[10px] py-[8px] text-left sm:min-h-[48px] sm:gap-[12px] sm:rounded-[14px] sm:px-[12px] ${
+      className={`relative flex min-h-[52px] w-full items-center gap-[12px] rounded-[14px] border px-[12px] py-[10px] text-left ${
         active
           ? "border-forest bg-[#f4ecd4] shadow-[0_2px_12px_rgba(0,75,64,0.12)]"
           : "border-forest/22 bg-[#faf3df] hover:border-forest/45"
@@ -169,17 +133,12 @@ function ExperienceNavItem({
       {active ? (
         <motion.span
           layoutId="exp-active-glow"
-          className="pointer-events-none absolute inset-0 rounded-[12px] ring-2 ring-forest/30 sm:rounded-[14px]"
+          className="pointer-events-none absolute inset-0 rounded-[14px] ring-2 ring-forest/30"
           transition={{ type: "spring", stiffness: 360, damping: 28 }}
         />
       ) : null}
-      <motion.span
-        animate={{ rotate: active ? [-2, 2, 0] : 0 }}
-        transition={{ duration: 0.45 }}
-      >
-        <SketchLogo item={item} size={44} />
-      </motion.span>
-      <span className="relative text-[11px] font-bold uppercase leading-snug tracking-[0.02em] text-forest sm:text-[12px] md:text-[13px]">
+      <NavLogo item={item} size={46} />
+      <span className="relative text-[12px] font-bold uppercase leading-snug tracking-[0.02em] text-forest md:text-[13px]">
         {item.company}
       </span>
     </motion.button>
@@ -211,8 +170,8 @@ function CompanyBlock({
             <div
               className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
                 item.logoWide
-                  ? "h-[42px] w-[76px] sm:h-[48px] sm:w-[86px]"
-                  : "h-[46px] w-[46px] sm:h-[52px] sm:w-[52px]"
+                  ? "h-[48px] w-[88px] sm:h-[54px] sm:w-[100px]"
+                  : "h-[48px] w-[48px] sm:h-[54px] sm:w-[54px]"
               }`}
               style={{ backgroundColor: item.logoBg ?? "#ffffff" }}
             >
@@ -221,7 +180,7 @@ function CompanyBlock({
                 alt={`${item.company} logo`}
                 fill
                 className="object-contain p-[3px]"
-                sizes={item.logoWide ? "86px" : "52px"}
+                sizes={item.logoWide ? "100px" : "54px"}
                 unoptimized
               />
             </div>
@@ -292,55 +251,74 @@ function CompanyBlock({
   );
 }
 
-function ExperienceClip({
+/** Enlarged pinned polaroid pair — images swap with active internship. */
+function PolaroidClip({
   item,
   height,
+  fallback,
 }: {
   item: ExperienceItem;
   height: number | null;
+  fallback: CraftPolaroid[];
 }) {
+  const images: [string, string] = [
+    item.clipImages[0] || fallback[0]?.src || "/experience/craft/polaroid-notebook.jpg",
+    item.clipImages[1] || fallback[1]?.src || "/experience/craft/polaroid-desk.jpg",
+  ];
+
+  const shots = [
+    { src: images[0], rotate: -7, left: "4%", top: "8%", width: "72%", z: 1 },
+    { src: images[1], rotate: 6, left: "26%", top: "28%", width: "70%", z: 2 },
+  ];
+
   return (
     <div
-      className="relative w-full overflow-hidden rounded-[18px] border-[2.5px] border-forest/25 bg-[#f3eee0] shadow-[0_4px_16px_rgba(0,40,30,0.08)] sm:rounded-[20px]"
+      className="relative w-full select-none"
       style={
         height
-          ? { height, maxHeight: height }
-          : { minHeight: 220, aspectRatio: "3 / 4" }
+          ? { height, minHeight: height }
+          : { minHeight: 280, aspectRatio: "4 / 5" }
       }
+      aria-hidden
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={item.id}
-          initial={{ opacity: 0, scale: 1.04, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.98, y: -8 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.32, ease: "easeOut" }}
           className="absolute inset-0"
         >
-          <Image
-            src={item.clipImageUrl}
-            alt={item.clipImageAlt ?? `${item.company} clip`}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 220px"
-            unoptimized
-          />
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/45 to-transparent px-[12px] pb-[12px] pt-[36px]">
-            <p className="m-0 text-[11px] font-bold uppercase tracking-[0.06em] text-white">
-              {item.company}
-            </p>
-          </div>
+          {shots.map((shot, i) => (
+            <div
+              key={`${item.id}-${i}`}
+              className="absolute rounded-[4px] bg-white p-[7px] pb-[22px] shadow-[0_8px_22px_rgba(0,40,30,0.14)]"
+              style={{
+                width: shot.width,
+                left: shot.left,
+                top: shot.top,
+                zIndex: shot.z,
+                transform: `rotate(${shot.rotate}deg)`,
+              }}
+            >
+              <div className="relative aspect-square w-full overflow-hidden bg-[#eee6d4]">
+                <Image
+                  src={shot.src}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="280px"
+                  unoptimized
+                />
+              </div>
+            </div>
+          ))}
         </motion.div>
       </AnimatePresence>
-      {/* Polaroid-style clip corners */}
-      <span
-        className="pointer-events-none absolute left-[10px] top-[10px] h-[10px] w-[10px] rounded-full bg-white/80 shadow-sm"
-        aria-hidden
-      />
-      <span
-        className="pointer-events-none absolute right-[10px] top-[10px] h-[10px] w-[10px] rounded-full bg-white/80 shadow-sm"
-        aria-hidden
-      />
+
+      <RedStar className="absolute left-[46%] top-[2%] z-30 h-[28px] w-[28px] drop-shadow-md sm:h-[32px] sm:w-[32px]" />
+      <SafetyPin className="absolute left-[49%] top-[-2%] z-40 h-[38px] w-[22px] sm:h-[44px] sm:w-[24px]" />
     </div>
   );
 }
@@ -441,11 +419,11 @@ export default function Experience({ craftImages }: ExperienceProps) {
 
   return (
     <section
-      className="relative mx-auto max-w-[1100px] overflow-visible px-[20px] pb-[56px] sm:px-[32px] sm:pb-[72px] md:px-[48px] md:pb-[88px]"
+      className="relative mx-auto max-w-[1320px] overflow-visible px-[16px] pb-[56px] sm:px-[28px] sm:pb-[72px] md:px-[36px] md:pb-[88px] lg:px-[40px]"
       aria-labelledby="experience-heading"
     >
       <div
-        className="pointer-events-none absolute inset-x-[12px] top-[36px] bottom-[20px] -z-10 rounded-[28px] bg-[#eef3ea]/65 sm:inset-x-[20px]"
+        className="pointer-events-none absolute inset-x-[8px] top-[36px] bottom-[20px] -z-10 rounded-[28px] bg-[#eef3ea]/65 sm:inset-x-[16px]"
         aria-hidden
       />
 
@@ -454,7 +432,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.45 }}
-        className="relative mb-[10px] md:mb-[16px] md:pr-[160px]"
+        className="relative mb-[14px] md:mb-[18px]"
       >
         <h2
           id="experience-heading"
@@ -464,10 +442,8 @@ export default function Experience({ craftImages }: ExperienceProps) {
         </h2>
       </motion.div>
 
-      <CraftPolaroidDecor polaroids={polaroids} />
-
-      <div className="relative z-[1] grid gap-[16px] md:grid-cols-[minmax(200px,250px)_minmax(0,1fr)] md:items-start md:gap-[24px] lg:gap-[28px]">
-        <div ref={leftRef} className="min-w-0 overflow-visible">
+      <div className="relative z-[1] grid gap-[16px] md:grid-cols-[minmax(220px,270px)_minmax(0,1fr)] md:items-start md:gap-[22px] lg:gap-[28px]">
+        <div ref={leftRef} className="min-w-0">
           <div className="mb-[4px] flex gap-[8px] overflow-x-auto pb-[6px] [-ms-overflow-style:none] [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
             {EXPERIENCES.map((item) => (
               <button
@@ -481,7 +457,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
                     : "border-forest/22 bg-[#faf3df] text-forest/70"
                 }`}
               >
-                <SketchLogo item={item} size={28} />
+                <NavLogo item={item} size={30} />
                 <span className="whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.02em]">
                   {item.company}
                 </span>
@@ -492,7 +468,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
           <div className="relative hidden md:block">
             <ul className="m-0 flex list-none flex-col gap-[18px] p-0 sm:gap-[20px]">
               {EXPERIENCES.map((item, index) => (
-                <li key={item.id} className="relative">
+                <li key={item.id}>
                   <ExperienceNavItem
                     item={item}
                     active={item.id === activeId}
@@ -505,10 +481,10 @@ export default function Experience({ craftImages }: ExperienceProps) {
           </div>
         </div>
 
-        <div className="flex min-w-0 flex-col gap-[14px] md:flex-row md:items-stretch md:gap-[14px] lg:gap-[16px]">
-          {/* Detail panel — 70% */}
+        <div className="flex min-w-0 flex-col gap-[16px] lg:flex-row lg:items-stretch lg:gap-[20px]">
+          {/* White detail panel */}
           <div
-            className="flex min-w-0 flex-col overflow-hidden rounded-[20px] border-[2.5px] border-forest bg-white shadow-[0_4px_20px_rgba(0,75,64,0.06)] sm:rounded-[24px] sm:border-[3px] md:w-[70%]"
+            className="flex min-w-0 flex-col overflow-hidden rounded-[20px] border-[2.5px] border-forest bg-white shadow-[0_4px_20px_rgba(0,75,64,0.06)] sm:rounded-[24px] sm:border-[3px] lg:w-[58%]"
             style={
               panelHeight
                 ? { height: panelHeight, maxHeight: panelHeight }
@@ -517,7 +493,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
           >
             <div
               ref={panelRef}
-              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[14px] py-[14px] [scrollbar-color:rgba(0,75,64,0.28)_transparent] [scrollbar-width:thin] sm:px-[18px] sm:py-[16px] md:px-[20px]"
+              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[14px] py-[14px] [scrollbar-color:rgba(0,75,64,0.28)_transparent] [scrollbar-width:thin] sm:px-[18px] sm:py-[16px] md:px-[22px]"
               style={{ overscrollBehavior: "contain" }}
             >
               <div className="flex flex-col">
@@ -533,10 +509,14 @@ export default function Experience({ craftImages }: ExperienceProps) {
             </div>
           </div>
 
-          {/* Scroll-synced clip — 30% */}
-          <div className="md:w-[30%]">
+          {/* Enlarged pinned polaroids */}
+          <div className="lg:w-[42%]">
             {activeItem ? (
-              <ExperienceClip item={activeItem} height={panelHeight} />
+              <PolaroidClip
+                item={activeItem}
+                height={panelHeight}
+                fallback={polaroids}
+              />
             ) : null}
           </div>
         </div>

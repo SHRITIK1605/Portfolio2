@@ -10,17 +10,16 @@ export interface ExperienceItem {
   bullets: string[];
   /** Highlight phrases to bold in bullets (matched case-insensitively). */
   highlights?: string[];
-  /** Original full-color company logo (right detail panel). */
+  /** Original full-color company logo. */
   logoUrl: string;
-  /** Theme-blended pencil sketch of the logo (left nav pills). */
+  /** Theme-blended pencil sketch of the logo (optional accent). */
   sketchLogoUrl: string;
-  /** Background behind the original logo mark. */
+  /** Background behind the logo mark. */
   logoBg?: string;
   /** Wider logo frame for horizontal marks (e.g. BSE). */
   logoWide?: boolean;
-  /** Side clip image shown beside the detail panel (changes with active company). */
-  clipImageUrl: string;
-  clipImageAlt?: string;
+  /** Two polaroid photos for the side scrapbook clip (swap with active company). */
+  clipImages: [string, string];
 }
 
 export interface CraftPolaroid {
@@ -61,12 +60,14 @@ export const EXPERIENCES: ExperienceItem[] = [
       "30 hrs/month",
       "20% TAT",
     ],
-    logoUrl: "/experience/logos/bse.png?v=4",
+    logoUrl: "/experience/logos/bse.png?v=5",
     sketchLogoUrl: "/experience/sketches/bse.jpg?v=4",
     logoBg: "#FFFFFF",
     logoWide: true,
-    clipImageUrl: "/experience/craft/polaroid-notebook.jpg",
-    clipImageAlt: "BSE work desk notes",
+    clipImages: [
+      "/experience/craft/polaroid-notebook.jpg",
+      "/experience/craft/polaroid-desk.jpg",
+    ],
   },
   {
     id: "slikk",
@@ -86,8 +87,10 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/slikk.png",
     sketchLogoUrl: "/experience/sketches/slikk.jpg?v=4",
     logoBg: "#111111",
-    clipImageUrl: "/experience/craft/polaroid-desk.jpg",
-    clipImageAlt: "Slikk product workspace",
+    clipImages: [
+      "/experience/craft/polaroid-desk.jpg",
+      "/experience/craft/polaroid-craft.jpg",
+    ],
   },
   {
     id: "times",
@@ -108,8 +111,10 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/times.png",
     sketchLogoUrl: "/experience/sketches/times.jpg?v=4",
     logoBg: "#1A1E4E",
-    clipImageUrl: "/experience/craft/polaroid-books.jpg",
-    clipImageAlt: "Times Internet research notes",
+    clipImages: [
+      "/experience/craft/polaroid-books.jpg",
+      "/experience/craft/polaroid-notebook.jpg",
+    ],
   },
   {
     id: "emb",
@@ -129,8 +134,10 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/emb.png",
     sketchLogoUrl: "/experience/sketches/emb.jpg?v=4",
     logoBg: "#FFFFFF",
-    clipImageUrl: "/experience/craft/polaroid-craft.jpg",
-    clipImageAlt: "EMB product craft board",
+    clipImages: [
+      "/experience/craft/polaroid-craft.jpg",
+      "/experience/craft/polaroid-books.jpg",
+    ],
   },
   {
     id: "aarya",
@@ -150,8 +157,10 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/aarya.png",
     sketchLogoUrl: "/experience/sketches/aarya.jpg?v=4",
     logoBg: "#FFFFFF",
-    clipImageUrl: "/experience/craft/polaroid-notebook.jpg",
-    clipImageAlt: "Aarya Stays planning sketches",
+    clipImages: [
+      "/experience/craft/polaroid-notebook.jpg",
+      "/experience/craft/polaroid-books.jpg",
+    ],
   },
   {
     id: "unifly",
@@ -179,8 +188,10 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoUrl: "/experience/logos/unifly.png",
     sketchLogoUrl: "/experience/sketches/unifly.jpg?v=4",
     logoBg: "#FFFFFF",
-    clipImageUrl: "/experience/craft/polaroid-desk.jpg",
-    clipImageAlt: "Unifly founding workspace",
+    clipImages: [
+      "/experience/craft/polaroid-desk.jpg",
+      "/experience/craft/polaroid-craft.jpg",
+    ],
   },
 ];
 
