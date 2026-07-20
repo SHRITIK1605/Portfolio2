@@ -47,7 +47,7 @@ export default function MenuButton({ homepage }: MenuButtonProps) {
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-[48px] w-[48px] items-center justify-center rounded-full border-0 bg-[#FFF4D7] text-[#016146] shadow-none sm:h-[55px] sm:w-[55px]"
+        className="flex h-[56px] w-[56px] items-center justify-center rounded-full border-0 bg-[#FFF4D7] text-[#016146] shadow-none sm:h-[60px] sm:w-[60px]"
       >
         <HamburgerIcon />
       </button>
