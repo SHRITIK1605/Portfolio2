@@ -59,7 +59,7 @@ export const EXPERIENCES: ExperienceItem[] = [
       "20% TAT",
     ],
     logoUrl: "/experience/logos/bse.png",
-    sketchLogoUrl: "/experience/sketches/bse.jpg",
+    sketchLogoUrl: "/experience/sketches/bse.jpg?v=2",
     logoBg: "#FFFFFF",
     logoWide: true,
   },
@@ -79,7 +79,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     ],
     highlights: ["150k+", "Meta SAM", "70%", "Cursor", "6% CVR", "8%+ PLP CVR"],
     logoUrl: "/experience/logos/slikk.png",
-    sketchLogoUrl: "/experience/sketches/slikk.jpg",
+    sketchLogoUrl: "/experience/sketches/slikk.jpg?v=2",
     logoBg: "#111111",
   },
   {
@@ -99,7 +99,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     ],
     highlights: ["MoSCoW", "10+ features", "1.5Mn DAUs", "21 mockups", "70%", "3 weeks"],
     logoUrl: "/experience/logos/times.png",
-    sketchLogoUrl: "/experience/sketches/times.jpg",
+    sketchLogoUrl: "/experience/sketches/times.jpg?v=2",
     logoBg: "#1A1E4E",
   },
   {
@@ -118,7 +118,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     ],
     highlights: ["10%", "55%", "75%", "60%", "Zoho"],
     logoUrl: "/experience/logos/emb.png",
-    sketchLogoUrl: "/experience/sketches/emb.jpg",
+    sketchLogoUrl: "/experience/sketches/emb.jpg?v=2",
     logoBg: "#FFFFFF",
   },
   {
@@ -137,7 +137,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     ],
     highlights: ["20+ flows", "25%", "50+ hrs/month", "70%"],
     logoUrl: "/experience/logos/aarya.png",
-    sketchLogoUrl: "/experience/sketches/aarya.jpg",
+    sketchLogoUrl: "/experience/sketches/aarya.jpg?v=2",
     logoBg: "#FFFFFF",
   },
   {
@@ -164,7 +164,7 @@ export const EXPERIENCES: ExperienceItem[] = [
       "12L",
     ],
     logoUrl: "/experience/logos/unifly.png",
-    sketchLogoUrl: "/experience/sketches/unifly.jpg",
+    sketchLogoUrl: "/experience/sketches/unifly.jpg?v=2",
     logoBg: "#FFFFFF",
   },
 ];

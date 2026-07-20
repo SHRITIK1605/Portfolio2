@@ -39,93 +39,66 @@ function boldHighlights(text: string, highlights: string[] = []) {
   });
 }
 
-type ArrowKind =
-  | "arc-right"
-  | "arc-left"
-  | "swoop-out"
-  | "loop"
-  | "zigzag"
-  | "wide-right";
+type ArrowKind = "curve-right" | "curve-left" | "gentle-s" | "soft-zig" | "lean-right";
 
+/** Dotted connectors that stay between nav boxes and tip into the next box. */
 const ARROW_SEQUENCE: ArrowKind[] = [
-  "swoop-out",
-  "arc-left",
-  "wide-right",
-  "loop",
-  "zigzag",
+  "curve-right",
+  "curve-left",
+  "gentle-s",
+  "soft-zig",
+  "lean-right",
 ];
 
-/** Organic dotted connectors — tip centered on path end via marker. */
 function CraftArrow({
   kind,
   markerId,
-  className,
 }: {
   kind: ArrowKind;
   markerId: string;
-  className?: string;
 }) {
+  // Paths start under previous box center and end at top-center of next box
   const paths: Record<
     ArrowKind,
-    { d: string; viewBox: string; w: number; h: number; align: string }
+    { d: string; viewBox: string; w: number; h: number }
   > = {
-    "arc-right": {
-      d: "M52 2 C78 4, 108 14, 114 30",
-      viewBox: "0 0 128 40",
-      w: 104,
-      h: 34,
-      align: "justify-end -mr-[14px]",
+    "curve-right": {
+      d: "M40 2 C58 6, 66 14, 40 26",
+      viewBox: "0 0 80 30",
+      w: 72,
+      h: 28,
     },
-    "arc-left": {
-      d: "M78 2 C48 6, 18 16, 12 30",
-      viewBox: "0 0 128 40",
-      w: 104,
-      h: 34,
-      align: "justify-start -ml-[14px]",
+    "curve-left": {
+      d: "M40 2 C22 6, 14 14, 40 26",
+      viewBox: "0 0 80 30",
+      w: 72,
+      h: 28,
     },
-    "swoop-out": {
-      d: "M46 4 C92 -10, 148 6, 138 24 C130 34, 108 34, 96 30",
-      viewBox: "0 0 160 44",
-      w: 140,
-      h: 36,
-      align: "justify-end -mr-[42px]",
+    "gentle-s": {
+      d: "M40 2 C54 8, 26 16, 40 26",
+      viewBox: "0 0 80 30",
+      w: 72,
+      h: 28,
     },
-    loop: {
-      d: "M62 3 C96 0, 118 10, 108 20 C98 30, 74 26, 80 16 C86 8, 110 10, 118 26 C122 36, 100 40, 74 38",
-      viewBox: "0 0 140 48",
-      w: 118,
-      h: 40,
-      align: "justify-center -mr-[10px]",
+    "soft-zig": {
+      d: "M40 2 C50 7, 50 12, 40 14 C30 16, 30 21, 40 26",
+      viewBox: "0 0 80 30",
+      w: 72,
+      h: 28,
     },
-    zigzag: {
-      d: "M36 3 C54 3, 58 15, 76 15 C94 15, 98 29, 116 31",
-      viewBox: "0 0 132 40",
-      w: 112,
-      h: 34,
-      align: "justify-center",
-    },
-    "wide-right": {
-      d: "M40 6 C88 -14, 158 4, 150 22 C142 34, 118 36, 104 32",
-      viewBox: "0 0 168 46",
-      w: 148,
-      h: 38,
-      align: "justify-end -mr-[48px]",
+    "lean-right": {
+      d: "M40 2 C62 8, 58 18, 40 26",
+      viewBox: "0 0 80 30",
+      w: 72,
+      h: 28,
     },
   };
 
   const cfg = paths[kind];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, pathLength: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, amount: 0.6 }}
-      transition={{ duration: 0.45, ease: "easeOut" }}
-      className={`flex overflow-visible py-[3px] text-forest/55 ${cfg.align}`}
-      aria-hidden
-    >
+    <div className="flex justify-center overflow-visible py-[2px] text-forest" aria-hidden>
       <svg
-        className={className}
         width={cfg.w}
         height={cfg.h}
         viewBox={cfg.viewBox}
@@ -135,32 +108,31 @@ function CraftArrow({
         <defs>
           <marker
             id={markerId}
-            markerWidth="9"
-            markerHeight="9"
-            refX="7"
-            refY="4.5"
+            markerWidth="8"
+            markerHeight="8"
+            refX="6.5"
+            refY="4"
             orient="auto"
             markerUnits="userSpaceOnUse"
           >
-            {/* Tip apex at (7,4.5) so it sits on the stroke end */}
-            <path d="M0.5 0.5 L8 4.5 L0.5 8.5 Z" fill="currentColor" />
+            <path d="M0.5 0.5 L7 4 L0.5 7.5 Z" fill="currentColor" />
           </marker>
         </defs>
         <motion.path
           d={cfg.d}
           stroke="currentColor"
-          strokeWidth="1.7"
-          strokeDasharray="2.4 3.6"
+          strokeWidth="1.85"
+          strokeDasharray="1.8 3.4"
           strokeLinecap="round"
           strokeLinejoin="round"
           markerEnd={`url(#${markerId})`}
-          initial={{ pathLength: 0, opacity: 0.35 }}
+          initial={{ pathLength: 0, opacity: 0.4 }}
           whileInView={{ pathLength: 1, opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: "easeInOut" }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
         />
       </svg>
-    </motion.div>
+    </div>
   );
 }
 
@@ -242,15 +214,16 @@ function CraftPolaroidDecor({ polaroids }: { polaroids: CraftPolaroid[] }) {
 function SketchLogo({ item, size }: { item: ExperienceItem; size: number }) {
   return (
     <span
-      className="relative shrink-0 overflow-hidden rounded-[10px] border border-forest/12 bg-[#faf6ea]"
+      className="relative shrink-0 overflow-hidden rounded-[10px] border border-forest/18 bg-white shadow-[inset_0_0_0_1px_rgba(0,75,64,0.04)]"
       style={{ width: size, height: size }}
     >
       <Image
         src={item.sketchLogoUrl}
         alt=""
         fill
-        className="object-contain p-[1px]"
+        className="object-contain p-[2px] contrast-[1.15] saturate-[1.05]"
         sizes={`${size}px`}
+        unoptimized
       />
     </span>
   );
@@ -272,11 +245,11 @@ function ExperienceNavItem({
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      initial={{ opacity: 0, x: -14 }}
+      initial={{ opacity: 0, x: -12 }}
       animate={{
         opacity: 1,
-        x: active ? 6 : 0,
-        scale: active ? 1.03 : 1,
+        x: active ? 4 : 0,
+        scale: active ? 1.02 : 1,
       }}
       transition={{
         type: "spring",
@@ -301,42 +274,11 @@ function ExperienceNavItem({
         animate={{ rotate: active ? [-2, 2, 0] : 0 }}
         transition={{ duration: 0.45 }}
       >
-        <SketchLogo item={item} size={36} />
+        <SketchLogo item={item} size={40} />
       </motion.span>
       <span className="relative text-[11px] font-bold uppercase leading-snug tracking-[0.02em] text-forest sm:text-[12px] md:text-[13px]">
         {item.company}
       </span>
-      {active ? (
-        <motion.span
-          initial={{ opacity: 0, x: -4 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="pointer-events-none absolute -right-[26px] top-1/2 hidden -translate-y-1/2 text-forest/55 md:block"
-          aria-hidden
-        >
-          <svg width="32" height="18" viewBox="0 0 32 18" fill="none">
-            <defs>
-              <marker
-                id="nav-tip"
-                markerWidth="7"
-                markerHeight="7"
-                refX="5.5"
-                refY="3.5"
-                orient="auto"
-              >
-                <path d="M0 0 L6.5 3.5 L0 7 Z" fill="currentColor" />
-              </marker>
-            </defs>
-            <path
-              d="M2 9c10 0 14-5 20-5 3.5 0 5.5 2.5 6 5"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeDasharray="2.2 3.2"
-              strokeLinecap="round"
-              markerEnd="url(#nav-tip)"
-            />
-          </svg>
-        </motion.span>
-      ) : null}
     </motion.button>
   );
 }
@@ -358,22 +300,28 @@ function CompanyBlock({
       ref={ref}
       id={`exp-${item.id}`}
       data-exp-id={item.id}
-      initial={{ opacity: 0.55, y: 18 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{
-        opacity: active ? 1 : 0.72,
+        opacity: 1,
         y: 0,
-        scale: active ? 1 : 0.985,
+        scale: active ? 1 : 0.992,
       }}
       transition={{ type: "spring", stiffness: 260, damping: 28 }}
-      className={`scroll-mt-[10px] ${isLast ? "pb-[8px]" : ""}`}
+      className="scroll-mt-[10px]"
     >
-      <div className="px-[2px]">
+      <div
+        className={`rounded-[12px] px-[2px] transition-[background-color,box-shadow] duration-300 ${
+          active
+            ? "bg-[#f7f1e0]/55 shadow-[inset_0_0_0_1px_rgba(0,75,64,0.08)]"
+            : ""
+        }`}
+      >
         <header className="mb-[12px] flex flex-col gap-[10px] sm:mb-[14px] sm:flex-row sm:items-start sm:justify-between sm:gap-[14px]">
           <div className="flex min-w-0 items-start gap-[12px]">
             <motion.div
               animate={
                 active
-                  ? { boxShadow: "0 0 0 3px rgba(0,75,64,0.12)" }
+                  ? { boxShadow: "0 0 0 3px rgba(0,75,64,0.14)" }
                   : { boxShadow: "0 0 0 0 rgba(0,75,64,0)" }
               }
               className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
@@ -389,10 +337,16 @@ function CompanyBlock({
                 fill
                 className="object-contain p-[3px]"
                 sizes={item.logoWide ? "86px" : "52px"}
+                unoptimized
+                priority={active}
               />
             </motion.div>
             <div className="min-w-0 pt-[1px]">
-              <h3 className="m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
+              <h3
+                className={`m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] sm:text-[16px] md:text-[17px] ${
+                  active ? "text-forest" : "text-forest/80"
+                }`}
+              >
                 {item.company}
               </h3>
               <p className="m-0 mt-[3px] text-[12px] font-medium leading-snug text-forest/75 sm:text-[13px]">
@@ -440,19 +394,23 @@ function CompanyBlock({
           <p className="m-0 mb-[8px] text-[12px] font-semibold uppercase tracking-[0.04em] text-forest sm:text-[13px]">
             {item.dates}
           </p>
-          <p className="m-0 mb-[10px] text-[13px] italic leading-relaxed text-forest/85 sm:text-[14px]">
+          <p
+            className={`m-0 mb-[10px] text-[13px] italic leading-relaxed sm:text-[14px] ${
+              active ? "text-forest/90" : "text-forest/70"
+            }`}
+          >
             {item.overview}
           </p>
-          <ul className="m-0 flex list-disc flex-col gap-[7px] pl-[18px] text-[13px] leading-relaxed text-forest/90 sm:gap-[9px] sm:text-[14px]">
+          <ul
+            className={`m-0 flex list-disc flex-col gap-[7px] pl-[18px] text-[13px] leading-relaxed sm:gap-[9px] sm:text-[14px] ${
+              active ? "text-forest/95" : "text-forest/75"
+            }`}
+          >
             {item.bullets.map((bullet, i) => (
               <motion.li
                 key={bullet}
                 initial={{ opacity: 0, x: 8 }}
-                animate={
-                  active
-                    ? { opacity: 1, x: 0 }
-                    : { opacity: 0.85, x: 0 }
-                }
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: active ? i * 0.04 : 0, duration: 0.28 }}
                 className="pl-[2px]"
               >
@@ -463,17 +421,11 @@ function CompanyBlock({
         </div>
       </div>
 
-      {/* Divider centered between companies */}
       {!isLast ? (
-        <div
-          className="flex items-center py-[22px] sm:py-[26px]"
-          aria-hidden
-        >
+        <div className="flex items-center py-[20px] sm:py-[24px]" aria-hidden>
           <span className="h-px w-full bg-forest/14" />
         </div>
-      ) : (
-        <div className="h-[12px]" aria-hidden />
-      )}
+      ) : null}
     </motion.article>
   );
 }
@@ -531,7 +483,6 @@ export default function Experience({ craftImages }: ExperienceProps) {
     }, 500);
   }, []);
 
-  // Reliable active detection — including last company at bottom
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
@@ -544,14 +495,16 @@ export default function Experience({ craftImages }: ExperienceProps) {
       if (blocks.length === 0) return;
 
       const { scrollTop, clientHeight, scrollHeight } = panel;
-      const nearBottom = scrollTop + clientHeight >= scrollHeight - 48;
+      const canScroll = scrollHeight > clientHeight + 4;
+      const nearBottom =
+        canScroll && scrollTop + clientHeight >= scrollHeight - 12;
       if (nearBottom) {
         const last = blocks[blocks.length - 1]?.getAttribute("data-exp-id");
         if (last) setActiveId(last);
         return;
       }
 
-      const probe = scrollTop + Math.min(140, clientHeight * 0.28);
+      const probe = scrollTop + Math.min(120, clientHeight * 0.25);
       let current = blocks[0]?.getAttribute("data-exp-id") ?? EXPERIENCES[0]?.id;
       for (const block of blocks) {
         if (block.offsetTop <= probe) {
@@ -610,7 +563,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
                     : "border-forest/22 bg-[#faf3df] text-forest/70"
                 }`}
               >
-                <SketchLogo item={item} size={26} />
+                <SketchLogo item={item} size={28} />
                 <span className="whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.02em]">
                   {item.company}
                 </span>
@@ -618,10 +571,10 @@ export default function Experience({ craftImages }: ExperienceProps) {
             ))}
           </div>
 
-          <div className="relative hidden overflow-visible md:block">
-            <ul className="m-0 flex list-none flex-col overflow-visible p-0">
+          <div className="relative hidden md:block">
+            <ul className="m-0 flex list-none flex-col p-0">
               {EXPERIENCES.map((item, index) => (
-                <li key={item.id} className="relative overflow-visible">
+                <li key={item.id} className="relative">
                   <ExperienceNavItem
                     item={item}
                     active={item.id === activeId}
@@ -630,7 +583,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
                   />
                   {index < EXPERIENCES.length - 1 ? (
                     <CraftArrow
-                      kind={ARROW_SEQUENCE[index] ?? "arc-right"}
+                      kind={ARROW_SEQUENCE[index] ?? "curve-right"}
                       markerId={`exp-arrow-${index}`}
                     />
                   ) : null}
@@ -652,10 +605,10 @@ export default function Experience({ craftImages }: ExperienceProps) {
           >
             <div
               ref={panelRef}
-              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[14px] py-[16px] [scrollbar-color:rgba(0,75,64,0.28)_transparent] [scrollbar-width:thin] sm:px-[20px] sm:py-[18px] md:px-[22px]"
+              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[14px] py-[14px] [scrollbar-color:rgba(0,75,64,0.28)_transparent] [scrollbar-width:thin] sm:px-[20px] sm:py-[16px] md:px-[22px]"
               style={{ overscrollBehavior: "contain" }}
             >
-              <div className="flex flex-col pb-[min(28%,120px)]">
+              <div className="flex flex-col">
                 {EXPERIENCES.map((item, index) => (
                   <CompanyBlock
                     key={item.id}
