@@ -291,36 +291,86 @@ function NotebookBookBg() {
   );
 }
 
-function WashiTape({ className }: { className?: string }) {
+type ScrapKind =
+  | "lamp"
+  | "coffee"
+  | "sticky"
+  | "washi"
+  | "pencil"
+  | "paperclip"
+  | "coin"
+  | "chart"
+  | "tag"
+  | "eraser"
+  | "plant"
+  | "key"
+  | "ticket"
+  | "stamp"
+  | "ruler"
+  | "pushpin"
+  | "folder"
+  | "leaf"
+  | "bookmark"
+  | "badge";
+
+const SCRAP_POOL: ScrapKind[] = [
+  "lamp",
+  "coffee",
+  "sticky",
+  "washi",
+  "pencil",
+  "paperclip",
+  "coin",
+  "chart",
+  "tag",
+  "eraser",
+  "plant",
+  "key",
+  "ticket",
+  "stamp",
+  "ruler",
+  "pushpin",
+  "folder",
+  "leaf",
+  "bookmark",
+  "badge",
+];
+
+/** Deterministic shuffle from company id → always same 4 for that company. */
+function pickScrapSet(seed: string, count = 4): ScrapKind[] {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  const arr = [...SCRAP_POOL];
+  for (let i = arr.length - 1; i > 0; i--) {
+    h = (h * 1664525 + 1013904223) >>> 0;
+    const j = h % (i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr.slice(0, count);
+}
+
+function WashiTape({ className, tone = "green" }: { className?: string; tone?: "green" | "pink" | "cream" }) {
+  const bg =
+    tone === "pink"
+      ? "bg-[#f0c9c4]/90"
+      : tone === "cream"
+        ? "bg-[#e8dfc8]/90"
+        : "bg-[#c8e0d4]/90";
   return (
     <div
-      className={`h-[18px] w-[72px] rotate-[-18deg] rounded-[1px] border border-forest/10 bg-[#c8e0d4]/90 shadow-sm ${className ?? ""}`}
+      className={`h-[16px] w-[64px] rounded-[1px] border border-forest/10 shadow-sm ${bg} ${className ?? ""}`}
       aria-hidden
-    >
-      <div
-        className="h-full w-full opacity-40"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0,75,64,0.18) 6px, rgba(0,75,64,0.18) 7px)",
-        }}
-      />
-    </div>
+    />
   );
 }
 
-function MiniSticky({
-  className,
-  label,
-}: {
-  className?: string;
-  label?: string;
-}) {
+function MiniSticky({ className, label }: { className?: string; label?: string }) {
   return (
     <div
-      className={`flex h-[48px] w-[48px] items-start justify-center bg-[#f6e7a1] p-[5px] text-[7px] leading-tight text-forest/70 shadow-[1px_2px_6px_rgba(0,0,0,0.12)] ${className ?? ""}`}
+      className={`flex h-[44px] w-[44px] items-start justify-center bg-[#f6e7a1] p-[4px] text-[7px] leading-tight text-forest/70 shadow-[1px_2px_6px_rgba(0,0,0,0.12)] ${className ?? ""}`}
       aria-hidden
     >
-      <span className="font-medium italic">{label ?? "build · ship"}</span>
+      <span className="font-medium italic">{label ?? "notes"}</span>
     </div>
   );
 }
@@ -328,12 +378,7 @@ function MiniSticky({
 function DeskLamp({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 64 80" fill="none" aria-hidden>
-      <path
-        d="M28 78h20M38 78V52"
-        stroke="#8a7355"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
+      <path d="M28 78h20M38 78V52" stroke="#8a7355" strokeWidth="3" strokeLinecap="round" />
       <path
         d="M38 52c-14-2-22-12-20-24 1.5 6 8 12 20 14 12-2 18.5-8 20-14 2 12-6 22-20 24Z"
         fill="#c4a574"
@@ -349,91 +394,257 @@ function DeskLamp({ className }: { className?: string }) {
 function CoffeeCup({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 48 48" fill="none" aria-hidden>
-      <path
-        d="M10 16h22v18c0 4-3.5 7-8 7h-6c-4.5 0-8-3-8-7V16Z"
-        fill="#f4efe6"
-        stroke="#004b40"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M32 20h5c3 0 5 2.5 5 5.5S40 31 37 31h-5"
-        stroke="#004b40"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
+      <path d="M10 16h22v18c0 4-3.5 7-8 7h-6c-4.5 0-8-3-8-7V16Z" fill="#f4efe6" stroke="#004b40" strokeWidth="1.6" />
+      <path d="M32 20h5c3 0 5 2.5 5 5.5S40 31 37 31h-5" stroke="#004b40" strokeWidth="1.6" strokeLinecap="round" />
       <path d="M12 14h18c1 0 2 1 2 2H10c0-1 1-2 2-2Z" fill="#004b40" />
+    </svg>
+  );
+}
+
+function PencilProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 80 16" fill="none" aria-hidden>
+      <path d="M2 8 L58 8" stroke="#c4a035" strokeWidth="6" strokeLinecap="round" />
+      <path d="M58 8 L72 4 L72 12 Z" fill="#e8c07a" stroke="#004b40" strokeWidth="1" />
+      <path d="M72 8 L78 8" stroke="#333" strokeWidth="2" strokeLinecap="round" />
+      <rect x="4" y="5" width="10" height="6" fill="#e23d3d" opacity="0.85" />
+    </svg>
+  );
+}
+
+function PaperclipProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 40" fill="none" aria-hidden>
       <path
-        d="M16 10c0-2 1.5-3 2.5-3M22 9c0-2 1.5-3 2.5-3"
-        stroke="#004b40"
-        strokeWidth="1.3"
+        d="M8 12v14a4 4 0 0 0 8 0V10a3 3 0 0 0-6 0v14a2 2 0 0 0 4 0V12"
+        stroke="#6b7280"
+        strokeWidth="2.2"
         strokeLinecap="round"
-        opacity="0.55"
       />
     </svg>
   );
 }
 
-/** Theme accents that swap per company on scroll. */
-const ACCENT_LAYOUTS = [
-  {
-    // BSE — markets / desk
-    sticky: "indices · float",
-    lamp: "right-[-4%] top-[2%]",
-    coffee: "bottom-[8%] right-[6%] rotate-[-8deg]",
-    stickyPos: "bottom-[12%] left-[4%] rotate-[8deg]",
-    washi: "left-[6%] top-[8%] rotate-[-20deg]",
-  },
-  {
-    // Slikk — fashion / catalog
-    sticky: "PLP · CVR",
-    lamp: "left-[-6%] top-[6%] -scale-x-100",
-    coffee: "bottom-[6%] left-[8%] rotate-[10deg]",
-    stickyPos: "top-[10%] right-[6%] rotate-[-8deg]",
-    washi: "right-[8%] bottom-[20%] rotate-[14deg]",
-  },
-  {
-    // Times — CMS / newsroom
-    sticky: "CMS · UAT",
-    lamp: "right-[-2%] bottom-[16%]",
-    coffee: "top-[8%] left-[4%] rotate-[-6deg]",
-    stickyPos: "bottom-[8%] right-[10%] rotate-[12deg]",
-    washi: "left-[10%] top-[36%] rotate-[-10deg]",
-  },
-  {
-    // EMB — AI product
-    sticky: "AI · PRD",
-    lamp: "right-[0%] top-[0%]",
-    coffee: "bottom-[10%] right-[2%] rotate-[4deg]",
-    stickyPos: "top-[14%] left-[2%] rotate-[-10deg]",
-    washi: "left-[6%] bottom-[24%] rotate-[18deg]",
-  },
-  {
-    // Aarya — stays / hospitality
-    sticky: "OTA · stays",
-    lamp: "left-[-4%] bottom-[14%] -scale-x-100",
-    coffee: "top-[8%] right-[8%] rotate-[-12deg]",
-    stickyPos: "bottom-[6%] left-[10%] rotate-[6deg]",
-    washi: "right-[4%] top-[32%] rotate-[-16deg]",
-  },
-  {
-    // Unifly — founding
-    sticky: "GTM · GMV",
-    lamp: "right-[-6%] top-[8%]",
-    coffee: "bottom-[4%] left-[6%] rotate-[8deg]",
-    stickyPos: "top-[10%] left-[8%] rotate-[-4deg]",
-    washi: "right-[8%] bottom-[16%] rotate-[10deg]",
-  },
+function CoinProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 36 36" fill="none" aria-hidden>
+      <circle cx="18" cy="18" r="14" fill="#d4af37" stroke="#8a7355" strokeWidth="2" />
+      <circle cx="18" cy="18" r="9" stroke="#f0e2c4" strokeWidth="1.5" />
+      <text x="18" y="22" textAnchor="middle" fontSize="10" fill="#6b5420" fontWeight="700">₹</text>
+    </svg>
+  );
+}
+
+function ChartProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 36" fill="none" aria-hidden>
+      <rect x="2" y="2" width="44" height="32" rx="3" fill="#fff" stroke="#004b40" strokeWidth="1.4" />
+      <path d="M8 26 L16 18 L24 22 L36 10" stroke="#004b40" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="36" cy="10" r="2.5" fill="#e23d3d" />
+    </svg>
+  );
+}
+
+function TagProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 28" fill="none" aria-hidden>
+      <path d="M4 4h28l12 10-12 10H4V4Z" fill="#f4ecd4" stroke="#004b40" strokeWidth="1.4" />
+      <circle cx="12" cy="14" r="2.5" fill="#004b40" />
+    </svg>
+  );
+}
+
+function EraserProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 40 22" fill="none" aria-hidden>
+      <rect x="2" y="4" width="24" height="14" rx="2" fill="#f0a8b8" stroke="#004b40" strokeWidth="1.3" />
+      <rect x="22" y="4" width="14" height="14" rx="2" fill="#f4efe6" stroke="#004b40" strokeWidth="1.3" />
+    </svg>
+  );
+}
+
+function PlantProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 36 44" fill="none" aria-hidden>
+      <path d="M18 42V20" stroke="#004b40" strokeWidth="2" />
+      <ellipse cx="12" cy="16" rx="8" ry="5" fill="#6fa88a" transform="rotate(-25 12 16)" />
+      <ellipse cx="24" cy="14" rx="8" ry="5" fill="#4f8f6e" transform="rotate(20 24 14)" />
+      <path d="M10 42h16l-2-8H12l-2 8Z" fill="#c4a574" stroke="#8a7355" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function KeyProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 24" fill="none" aria-hidden>
+      <circle cx="10" cy="12" r="7" stroke="#c4a035" strokeWidth="2.2" />
+      <circle cx="10" cy="12" r="2.5" fill="#c4a035" />
+      <path d="M17 12h26M36 12v6M42 12v4" stroke="#c4a035" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function TicketProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 52 28" fill="none" aria-hidden>
+      <path
+        d="M2 6h48v6a4 4 0 0 0 0 8v6H2v-6a4 4 0 0 0 0-8V6Z"
+        fill="#fff7e8"
+        stroke="#004b40"
+        strokeWidth="1.4"
+      />
+      <path d="M18 8v12" stroke="#004b40" strokeWidth="1" strokeDasharray="2 2" />
+    </svg>
+  );
+}
+
+function StampProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 40 40" fill="none" aria-hidden>
+      <rect x="6" y="6" width="28" height="28" rx="3" stroke="#e23d3d" strokeWidth="2" strokeDasharray="3 2" />
+      <text x="20" y="24" textAnchor="middle" fontSize="8" fill="#e23d3d" fontWeight="700">OK</text>
+    </svg>
+  );
+}
+
+function RulerProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 72 16" fill="none" aria-hidden>
+      <rect x="1" y="3" width="70" height="10" rx="1.5" fill="#f4efe6" stroke="#004b40" strokeWidth="1.2" />
+      {[8, 16, 24, 32, 40, 48, 56, 64].map((x) => (
+        <path key={x} d={`M${x} 3v${x % 16 === 0 ? 7 : 4}`} stroke="#004b40" strokeWidth="1" />
+      ))}
+    </svg>
+  );
+}
+
+function PushpinProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 36" fill="none" aria-hidden>
+      <circle cx="12" cy="10" r="7" fill="#e23d3d" />
+      <path d="M12 17v16" stroke="#333" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function FolderProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 36" fill="none" aria-hidden>
+      <path d="M4 10h14l4 4h22v18H4V10Z" fill="#e8c07a" stroke="#8a7355" strokeWidth="1.4" />
+      <path d="M4 14h40" stroke="#8a7355" strokeWidth="1" opacity="0.5" />
+    </svg>
+  );
+}
+
+function LeafProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 32 44" fill="none" aria-hidden>
+      <path d="M16 40C16 40 4 28 4 16S16 2 16 2s12 2 12 14-12 24-12 24Z" fill="#6fa88a" stroke="#004b40" strokeWidth="1.2" />
+      <path d="M16 40V14" stroke="#004b40" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function BookmarkProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 40" fill="none" aria-hidden>
+      <path d="M4 2h16v34l-8-6-8 6V2Z" fill="#c8e0d4" stroke="#004b40" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function BadgeProp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 40 40" fill="none" aria-hidden>
+      <circle cx="20" cy="20" r="14" fill="#004b40" />
+      <circle cx="20" cy="20" r="9" fill="#FAF6EE" />
+      <path d="M20 12l2 5h5l-4 3 2 5-5-3-5 3 2-5-4-3h5l2-5Z" fill="#c4a035" />
+    </svg>
+  );
+}
+
+const STICKY_LABELS = [
+  "ship it",
+  "PM notes",
+  "WIP",
+  "priority",
+  "later",
+  "idea!",
 ] as const;
 
-/** Scrapbook clip: large overlapping polaroids on notebook, pin on front scrap. */
+function ScrapElement({
+  kind,
+  className,
+  stickyLabel,
+}: {
+  kind: ScrapKind;
+  className?: string;
+  stickyLabel?: string;
+}) {
+  switch (kind) {
+    case "lamp":
+      return <DeskLamp className={`h-[56px] w-[44px] drop-shadow-md sm:h-[68px] sm:w-[54px] ${className ?? ""}`} />;
+    case "coffee":
+      return <CoffeeCup className={`h-[38px] w-[38px] drop-shadow-sm sm:h-[44px] sm:w-[44px] ${className ?? ""}`} />;
+    case "sticky":
+      return <MiniSticky className={className} label={stickyLabel} />;
+    case "washi":
+      return <WashiTape className={className} tone="green" />;
+    case "pencil":
+      return <PencilProp className={`h-[14px] w-[70px] drop-shadow-sm ${className ?? ""}`} />;
+    case "paperclip":
+      return <PaperclipProp className={`h-[34px] w-[20px] drop-shadow-sm ${className ?? ""}`} />;
+    case "coin":
+      return <CoinProp className={`h-[32px] w-[32px] drop-shadow-sm ${className ?? ""}`} />;
+    case "chart":
+      return <ChartProp className={`h-[34px] w-[46px] drop-shadow-sm ${className ?? ""}`} />;
+    case "tag":
+      return <TagProp className={`h-[26px] w-[46px] drop-shadow-sm ${className ?? ""}`} />;
+    case "eraser":
+      return <EraserProp className={`h-[20px] w-[38px] drop-shadow-sm ${className ?? ""}`} />;
+    case "plant":
+      return <PlantProp className={`h-[42px] w-[34px] drop-shadow-sm ${className ?? ""}`} />;
+    case "key":
+      return <KeyProp className={`h-[22px] w-[46px] drop-shadow-sm ${className ?? ""}`} />;
+    case "ticket":
+      return <TicketProp className={`h-[26px] w-[50px] drop-shadow-sm ${className ?? ""}`} />;
+    case "stamp":
+      return <StampProp className={`h-[36px] w-[36px] drop-shadow-sm ${className ?? ""}`} />;
+    case "ruler":
+      return <RulerProp className={`h-[14px] w-[68px] drop-shadow-sm ${className ?? ""}`} />;
+    case "pushpin":
+      return <PushpinProp className={`h-[34px] w-[22px] drop-shadow-sm ${className ?? ""}`} />;
+    case "folder":
+      return <FolderProp className={`h-[32px] w-[44px] drop-shadow-sm ${className ?? ""}`} />;
+    case "leaf":
+      return <LeafProp className={`h-[40px] w-[30px] drop-shadow-sm ${className ?? ""}`} />;
+    case "bookmark":
+      return <BookmarkProp className={`h-[38px] w-[22px] drop-shadow-sm ${className ?? ""}`} />;
+    case "badge":
+      return <BadgeProp className={`h-[34px] w-[34px] drop-shadow-sm ${className ?? ""}`} />;
+    default:
+      return null;
+  }
+}
+
+/** Corner slots: first 2 ride on the front scrap (tilt with it); last 2 sit on the book. */
+const FRONT_SLOTS = [
+  "absolute -left-[10%] top-[8%] rotate-[-12deg]",
+  "absolute -right-[8%] bottom-[6%] rotate-[10deg]",
+] as const;
+const BOOK_SLOTS = [
+  "absolute left-[4%] bottom-[8%] rotate-[-8deg]",
+  "absolute right-[2%] top-[6%] rotate-[12deg]",
+] as const;
+
+/** Scrapbook clip: notebook + polaroids; 4 of 20 props per company. */
 function PolaroidClip({
   item,
-  itemIndex,
   height,
   fallback,
 }: {
   item: ExperienceItem;
-  itemIndex: number;
+  itemIndex?: number;
   height: number | null;
   fallback: CraftPolaroid[];
 }) {
@@ -448,9 +659,15 @@ function PolaroidClip({
       "/experience/craft/polaroid-desk.jpg",
   ];
 
-  const accents = ACCENT_LAYOUTS[itemIndex % ACCENT_LAYOUTS.length];
+  const scraps = pickScrapSet(item.id, 4);
+  const frontScraps = scraps.slice(0, 2);
+  const bookScraps = scraps.slice(2, 4);
+  const stickyLabel =
+    STICKY_LABELS[
+      Math.abs(item.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0)) %
+        STICKY_LABELS.length
+    ];
 
-  // Slightly smaller polaroids on the notebook
   const backShot = {
     src: images[0],
     restRotate: -5,
@@ -479,27 +696,28 @@ function PolaroidClip({
     >
       <NotebookBookBg />
 
+      {/* Book-level props (do not tilt with front scrap) */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={`accents-${item.id}`}
-          initial={{ opacity: 0, x: 12, y: 8 }}
-          animate={{ opacity: 1, x: 0, y: 0 }}
-          exit={{ opacity: 0, x: -10, y: -6 }}
-          transition={{ duration: 0.42, ease: "easeOut" }}
+          key={`book-scraps-${item.id}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="pointer-events-none absolute inset-0 z-[5]"
           aria-hidden
         >
-          <WashiTape className={`absolute z-[1] ${accents.washi}`} />
-          <MiniSticky
-            label={accents.sticky}
-            className={`absolute z-[4] ${accents.stickyPos}`}
-          />
-          <DeskLamp
-            className={`absolute z-[5] h-[68px] w-[54px] drop-shadow-md sm:h-[82px] sm:w-[66px] ${accents.lamp}`}
-          />
-          <CoffeeCup
-            className={`absolute z-[5] h-[42px] w-[42px] drop-shadow-sm sm:h-[50px] sm:w-[50px] ${accents.coffee}`}
-          />
+          {bookScraps.map((kind, i) => (
+            <motion.div
+              key={`${item.id}-book-${kind}`}
+              className={BOOK_SLOTS[i] ?? BOOK_SLOTS[0]}
+              initial={{ opacity: 0, scale: 0.85, rotate: -8 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ delay: 0.05 * i, duration: 0.35 }}
+            >
+              <ScrapElement kind={kind} stickyLabel={stickyLabel} />
+            </motion.div>
+          ))}
         </motion.div>
       </AnimatePresence>
 
@@ -512,7 +730,6 @@ function PolaroidClip({
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="absolute inset-0 z-[2]"
         >
-          {/* Back scrap — stays fully visible on hover */}
           <motion.div
             className="absolute rounded-[4px] bg-white p-[8px] pb-[22px] shadow-[0_8px_20px_rgba(0,40,30,0.15)]"
             style={{
@@ -536,7 +753,7 @@ function PolaroidClip({
             </div>
           </motion.div>
 
-          {/* Front scrap — pin attached; swings downward from top-right hinge */}
+          {/* Front scrap + attached props tilt together */}
           <motion.div
             className="absolute cursor-pointer rounded-[4px] bg-white p-[8px] pb-[22px] shadow-[0_10px_24px_rgba(0,40,30,0.18)]"
             style={{
@@ -547,7 +764,6 @@ function PolaroidClip({
               transformOrigin: "top right",
             }}
             animate={{
-              // Negative = counterclockwise = free edge drops DOWN when hinged top-right
               rotate: hovered ? -38 : frontShot.restRotate,
               y: hovered ? 18 : 0,
               x: hovered ? 6 : 0,
@@ -565,7 +781,16 @@ function PolaroidClip({
               />
             </div>
 
-            {/* Pin fixed to this scrap's top-right */}
+            {frontScraps.map((kind, i) => (
+              <div
+                key={`${item.id}-front-${kind}`}
+                className={`pointer-events-none z-[6] ${FRONT_SLOTS[i] ?? FRONT_SLOTS[0]}`}
+                aria-hidden
+              >
+                <ScrapElement kind={kind} stickyLabel={stickyLabel} />
+              </div>
+            ))}
+
             <div
               className="pointer-events-none absolute -right-[6px] -top-[18px] z-10"
               aria-hidden
