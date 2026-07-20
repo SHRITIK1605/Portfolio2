@@ -116,7 +116,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
             y: { ...floatTransition, delay: 0.4 },
             rotate: { ...floatTransition, delay: 0.4, duration: 4.2 },
           }}
-          className="absolute bottom-[1%] left-[-2%] z-[3] w-[clamp(170px,28.5%,369px)] sm:bottom-[3%] sm:left-[-1%]"
+          className="absolute bottom-[calc(1%+18px)] left-[-2%] z-[3] w-[clamp(170px,28.5%,369px)] sm:bottom-[calc(3%+18px)] sm:left-[-1%]"
         >
           <Image
             src="/hero/definition-scrap-clear.png"
@@ -142,7 +142,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
             y: { ...floatTransition, delay: 1.1, duration: 3.9 },
             rotate: { ...floatTransition, delay: 1.1, duration: 4.5 },
           }}
-          className="absolute bottom-[5%] right-[-3%] z-[3] w-[clamp(130px,21.5%,282px)] sm:bottom-[8%] sm:right-[-1%] md:right-[1%]"
+          className="absolute bottom-[calc(5%+18px)] right-[-3%] z-[3] w-[clamp(130px,21.5%,282px)] sm:bottom-[calc(8%+18px)] sm:right-[-1%] md:right-[1%]"
         >
           <Image
             src="/hero/sticky-note.svg"
