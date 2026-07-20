@@ -9,11 +9,19 @@ export async function POST(req: Request) {
     const pdf = formData.get("pdf");
     const resume = formData.get("resume");
     const knowledge = formData.get("file");
+    const craftImage = formData.get("craftImage");
 
     let coverImageUrl: string | undefined;
     let pdfUrl: string | undefined;
     let pdfFileName: string | undefined;
     let documentId: string | undefined;
+    let craftImageUrl: string | undefined;
+
+    if (craftImage instanceof File && craftImage.size > 0) {
+      const saved = await saveUploadedFile(craftImage, "craft");
+      craftImageUrl = saved.url;
+      return NextResponse.json({ craftImageUrl });
+    }
 
     if (coverImage instanceof File && coverImage.size > 0) {
       const saved = await saveUploadedFile(coverImage, "covers");

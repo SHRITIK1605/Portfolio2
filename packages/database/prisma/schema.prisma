@@ -135,6 +135,8 @@ model HomepageSettings {
   aboutMe      String?  @db.Text
   resumeUrl    String?
   socialLinks  Json?
+  /** Experience craft polaroids: [{ src, alt, caption, rotate? }] */
+  craftImages  Json?
   updatedAt    DateTime @updatedAt
 }
 
