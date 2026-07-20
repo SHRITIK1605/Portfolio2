@@ -377,16 +377,41 @@ function MiniSticky({ className, label }: { className?: string; label?: string }
 
 function DeskLamp({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 64 80" fill="none" aria-hidden>
-      <path d="M28 78h20M38 78V52" stroke="#8a7355" strokeWidth="3" strokeLinecap="round" />
+    <svg className={className} viewBox="0 0 72 96" fill="none" aria-hidden>
+      {/* Soft glow */}
+      <ellipse cx="48" cy="22" rx="14" ry="8" fill="#f7e7a8" opacity="0.55" />
+      {/* Cone shade */}
       <path
-        d="M38 52c-14-2-22-12-20-24 1.5 6 8 12 20 14 12-2 18.5-8 20-14 2 12-6 22-20 24Z"
-        fill="#c4a574"
-        stroke="#8a7355"
-        strokeWidth="1.5"
+        d="M28 10 L68 18 L58 36 L22 28 Z"
+        fill="#d4b483"
+        stroke="#6b5420"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
       />
-      <ellipse cx="38" cy="28" rx="10" ry="4" fill="#f0e2c4" opacity="0.85" />
-      <circle cx="38" cy="52" r="3" fill="#8a7355" />
+      <path d="M30 12 L64 19" stroke="#f0e2c4" strokeWidth="2" opacity="0.7" />
+      {/* Inner rim */}
+      <ellipse cx="40" cy="32" rx="16" ry="4" fill="#8a7355" opacity="0.35" />
+      {/* Upper arm */}
+      <path
+        d="M40 34 L28 52"
+        stroke="#5c4a32"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <circle cx="28" cy="52" r="3.2" fill="#8a7355" stroke="#5c4a32" strokeWidth="1" />
+      {/* Lower arm */}
+      <path
+        d="M28 52 L36 72"
+        stroke="#5c4a32"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <circle cx="36" cy="72" r="3.2" fill="#8a7355" stroke="#5c4a32" strokeWidth="1" />
+      {/* Stem to base */}
+      <path d="M36 72 V86" stroke="#5c4a32" strokeWidth="3" strokeLinecap="round" />
+      {/* Base */}
+      <ellipse cx="36" cy="90" rx="16" ry="4.5" fill="#8a7355" stroke="#5c4a32" strokeWidth="1.4" />
+      <ellipse cx="36" cy="88" rx="10" ry="2.5" fill="#c4a574" opacity="0.8" />
     </svg>
   );
 }
@@ -583,7 +608,11 @@ function ScrapElement({
 }) {
   switch (kind) {
     case "lamp":
-      return <DeskLamp className={`h-[56px] w-[44px] drop-shadow-md sm:h-[68px] sm:w-[54px] ${className ?? ""}`} />;
+      return (
+        <DeskLamp
+          className={`h-[72px] w-[54px] drop-shadow-md sm:h-[88px] sm:w-[66px] ${className ?? ""}`}
+        />
+      );
     case "coffee":
       return <CoffeeCup className={`h-[38px] w-[38px] drop-shadow-sm sm:h-[44px] sm:w-[44px] ${className ?? ""}`} />;
     case "sticky":
@@ -670,16 +699,16 @@ function PolaroidClip({
 
   const backShot = {
     src: images[0],
-    restRotate: -5,
-    left: "10%",
-    top: "12%",
+    restRotate: -4,
+    left: "8%",
+    top: "2%",
     width: "68%",
   };
   const frontShot = {
     src: images[1],
-    restRotate: 4,
-    left: "24%",
-    top: "24%",
+    restRotate: 5,
+    left: "30%",
+    top: "32%",
     width: "64%",
   };
 
