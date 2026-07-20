@@ -251,7 +251,7 @@ function CompanyBlock({
   );
 }
 
-/** Enlarged pinned polaroid pair — images swap with active internship. */
+/** Enlarged pinned polaroid pair only — no full-bleed photo, no captions. */
 function PolaroidClip({
   item,
   height,
@@ -262,38 +262,57 @@ function PolaroidClip({
   fallback: CraftPolaroid[];
 }) {
   const images: [string, string] = [
-    item.clipImages[0] || fallback[0]?.src || "/experience/craft/polaroid-notebook.jpg",
-    item.clipImages[1] || fallback[1]?.src || "/experience/craft/polaroid-desk.jpg",
+    item.clipImages[0] ||
+      fallback[0]?.src ||
+      "/experience/craft/polaroid-notebook.jpg",
+    item.clipImages[1] ||
+      fallback[1]?.src ||
+      "/experience/craft/polaroid-desk.jpg",
   ];
 
+  // Large overlapping frames — scrapbook pin UI fills the side column
   const shots = [
-    { src: images[0], rotate: -7, left: "4%", top: "8%", width: "72%", z: 1 },
-    { src: images[1], rotate: 6, left: "26%", top: "28%", width: "70%", z: 2 },
+    {
+      src: images[0],
+      rotate: -8,
+      left: "2%",
+      top: "10%",
+      width: "88%",
+      z: 1,
+    },
+    {
+      src: images[1],
+      rotate: 7,
+      left: "14%",
+      top: "34%",
+      width: "86%",
+      z: 2,
+    },
   ];
 
   return (
     <div
-      className="relative w-full select-none"
+      className="relative w-full select-none overflow-visible bg-transparent"
       style={
         height
           ? { height, minHeight: height }
-          : { minHeight: 280, aspectRatio: "4 / 5" }
+          : { minHeight: 320, aspectRatio: "3 / 4" }
       }
       aria-hidden
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={item.id}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.32, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 14, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -10, scale: 0.98 }}
+          transition={{ duration: 0.34, ease: "easeOut" }}
           className="absolute inset-0"
         >
           {shots.map((shot, i) => (
             <div
               key={`${item.id}-${i}`}
-              className="absolute rounded-[4px] bg-white p-[7px] pb-[22px] shadow-[0_8px_22px_rgba(0,40,30,0.14)]"
+              className="absolute rounded-[5px] bg-white p-[10px] pb-[28px] shadow-[0_10px_28px_rgba(0,40,30,0.16)]"
               style={{
                 width: shot.width,
                 left: shot.left,
@@ -308,7 +327,7 @@ function PolaroidClip({
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="280px"
+                  sizes="360px"
                   unoptimized
                 />
               </div>
@@ -317,8 +336,8 @@ function PolaroidClip({
         </motion.div>
       </AnimatePresence>
 
-      <RedStar className="absolute left-[46%] top-[2%] z-30 h-[28px] w-[28px] drop-shadow-md sm:h-[32px] sm:w-[32px]" />
-      <SafetyPin className="absolute left-[49%] top-[-2%] z-40 h-[38px] w-[22px] sm:h-[44px] sm:w-[24px]" />
+      <RedStar className="absolute left-[44%] top-[2%] z-30 h-[36px] w-[36px] drop-shadow-md sm:h-[42px] sm:w-[42px]" />
+      <SafetyPin className="absolute left-[48%] top-[-4%] z-40 h-[48px] w-[26px] sm:h-[56px] sm:w-[30px]" />
     </div>
   );
 }
@@ -481,10 +500,10 @@ export default function Experience({ craftImages }: ExperienceProps) {
           </div>
         </div>
 
-        <div className="flex min-w-0 flex-col gap-[16px] lg:flex-row lg:items-stretch lg:gap-[20px]">
+        <div className="flex min-w-0 flex-col gap-[16px] lg:flex-row lg:items-stretch lg:gap-[24px]">
           {/* White detail panel */}
           <div
-            className="flex min-w-0 flex-col overflow-hidden rounded-[20px] border-[2.5px] border-forest bg-white shadow-[0_4px_20px_rgba(0,75,64,0.06)] sm:rounded-[24px] sm:border-[3px] lg:w-[58%]"
+            className="flex min-w-0 flex-col overflow-hidden rounded-[20px] border-[2.5px] border-forest bg-white shadow-[0_4px_20px_rgba(0,75,64,0.06)] sm:rounded-[24px] sm:border-[3px] lg:w-[55%]"
             style={
               panelHeight
                 ? { height: panelHeight, maxHeight: panelHeight }
@@ -509,8 +528,8 @@ export default function Experience({ craftImages }: ExperienceProps) {
             </div>
           </div>
 
-          {/* Enlarged pinned polaroids */}
-          <div className="lg:w-[42%]">
+          {/* Pin + two polaroids only (no big photo card) */}
+          <div className="min-w-0 lg:w-[45%]">
             {activeItem ? (
               <PolaroidClip
                 item={activeItem}
