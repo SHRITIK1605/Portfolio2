@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-cream: #fcf8e8;
-  --color-forest: #004b40;
-  --color-btn-cream: #fef3c7;
+  --color-cream: #fffbf1;
+  --color-forest: #016146;
+  --color-btn-cream: #fff4d7;
   --color-tag-blue: #e0f2fe;
   --color-carousel-active: #e8f5e9;
   --font-sans: var(--font-poppins);
@@ -12,9 +12,9 @@
 }
 
 :root {
-  --portfolio-bg: #fcf8e8;
-  --portfolio-text: #004b40;
-  --portfolio-btn-bg: #fef3c7;
+  --portfolio-bg: #fffbf1;
+  --portfolio-text: #016146;
+  --portfolio-btn-bg: #fff4d7;
   --portfolio-tag-bg: #e0f2fe;
 }
 

@@ -8,117 +8,111 @@ interface HeroProps {
   homepage: HomepageSettings;
 }
 
-export default function Hero({ homepage }: HeroProps) {
-  const tagline =
-    homepage.heroSubtitle?.split("\n")[0]?.trim() ||
-    "AI & Digital Product Enthusiast";
+export default function Hero({ homepage: _homepage }: HeroProps) {
+  // Craft tagline from landing PDF (not the long heroSubtitle copy)
+  const tagline = "AI & Digital Product Enthusiast";
 
   return (
     <section
-      className="relative mx-auto max-w-[1100px] overflow-visible px-[16px] pb-[72px] pt-[20px] sm:px-[28px] sm:pb-[88px] sm:pt-[28px] md:px-[40px] md:pb-[110px] md:pt-[36px]"
+      className="relative mx-auto w-full max-w-[1310px] overflow-visible px-[clamp(16px,6.5vw,84px)] pb-[clamp(40px,5vw,64px)] pt-[clamp(4px,1vw,12px)]"
       aria-label="Introduction"
     >
-      {/* Giant watermark name */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-[18%] z-0 select-none overflow-hidden text-center"
-        aria-hidden
-      >
-        <span className="block text-[18vw] font-bold leading-none tracking-[-0.04em] text-[#f5e6a8]/70 sm:text-[140px] md:text-[180px] lg:text-[210px]">
-          SHRITIK
-        </span>
-      </div>
+      {/* Design canvas — proportions match portfolio landing.pdf */}
+      <div className="relative mx-auto aspect-[1310/860] w-full min-h-[500px] max-h-[min(860px,88vw)] sm:min-h-[600px]">
+        {/* Giant pale watermark — behind everything */}
+        <div
+          className="pointer-events-none absolute inset-x-[-4%] top-[4%] z-0 select-none overflow-visible text-center"
+          aria-hidden
+        >
+          <span className="block text-[clamp(80px,19vw,300px)] font-bold leading-[0.82] tracking-[-0.05em] text-[#F0E08A]/90">
+            SHRITIK
+          </span>
+        </div>
 
-      <div className="relative z-[1] flex flex-col items-center">
-        {/* Welcome tape */}
+        {/* Welcome tape — above portrait head */}
         <motion.div
           initial={{ opacity: 0, y: -8, rotate: -2 }}
           animate={{ opacity: 1, y: 0, rotate: -1.5 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="relative mb-[-6px] sm:mb-[-10px]"
+          className="absolute left-1/2 top-[11%] z-[5] -translate-x-1/2"
         >
-          <div className="bg-[#fde8a5] px-[18px] py-[7px] shadow-[1px_2px_0_rgba(0,75,64,0.08)] [clip-path:polygon(2%_8%,98%_0%,100%_92%,0%_100%)] sm:px-[22px] sm:py-[8px]">
-            <p className="m-0 font-[family-name:var(--font-caveat)] text-[16px] font-medium leading-none text-forest sm:text-[18px] md:text-[20px]">
+          <div
+            className="px-[clamp(16px,1.8vw,24px)] py-[clamp(7px,0.75vw,10px)] shadow-[1px_2px_3px_rgba(0,75,64,0.1)]"
+            style={{
+              background: "#F5D978",
+              clipPath: "polygon(1% 12%, 99% 0%, 100% 88%, 0% 100%)",
+            }}
+          >
+            <p className="m-0 whitespace-nowrap font-[family-name:var(--font-caveat)] text-[clamp(16px,1.6vw,21px)] font-semibold leading-none text-[#016146]">
               Welcome to my Portfolio..
             </p>
           </div>
         </motion.div>
 
-        {/* Name + portrait composition */}
-        <div className="relative flex w-full max-w-[720px] flex-col items-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.05 }}
-            className="relative z-[2] m-0 text-center text-[52px] font-bold uppercase leading-[0.92] tracking-[-0.03em] text-forest sm:text-[72px] md:text-[92px] lg:text-[104px]"
-          >
-            SHRITIK
-          </motion.h1>
+        {/* Portrait — centered */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.08 }}
+          className="absolute left-1/2 top-[14%] z-[2] w-[clamp(210px,34.5%,450px)] -translate-x-1/2"
+        >
+          <Image
+            src="/hero/portrait.png"
+            alt="Shritik"
+            width={450}
+            height={602}
+            priority
+            className="h-auto w-full object-contain"
+          />
+        </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.12 }}
-            className="relative z-[3] mt-[-18px] w-[min(58vw,280px)] sm:mt-[-28px] sm:w-[320px] md:mt-[-36px] md:w-[360px]"
-          >
-            <Image
-              src="/hero/portrait.png"
-              alt="Shritik"
-              width={450}
-              height={602}
-              priority
-              className="h-auto w-full object-contain drop-shadow-[0_12px_28px_rgba(0,40,30,0.12)]"
-            />
-          </motion.div>
+        {/* Tagline — right of face */}
+        <motion.p
+          initial={{ opacity: 0, x: 10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.18 }}
+          className="pointer-events-none absolute right-[1%] top-[40%] z-[4] hidden max-w-[min(260px,26%)] text-left font-[family-name:var(--font-caveat)] text-[clamp(18px,2.05vw,28px)] leading-[1.1] text-[#C4A035] sm:block md:right-[3%] lg:right-[5%]"
+        >
+          — {tagline}
+        </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="pointer-events-none absolute right-[-4%] top-[42%] z-[4] hidden max-w-[200px] text-right font-[family-name:var(--font-caveat)] text-[22px] leading-tight text-[#c4a035] sm:block md:right-[-2%] md:top-[38%] md:max-w-[240px] md:text-[26px] lg:right-[2%]"
-          >
-            — {tagline.replace(/^—\s*/, "")}
-          </motion.p>
-        </div>
+        {/* Definition scrap — bottom left, overlaps portrait */}
+        <motion.div
+          initial={{ opacity: 0, y: 18, rotate: -6 }}
+          animate={{ opacity: 1, y: 0, rotate: -3.5 }}
+          transition={{ duration: 0.55, delay: 0.2 }}
+          className="absolute bottom-[1%] left-[-2%] z-[3] w-[clamp(170px,28.5%,369px)] sm:bottom-[3%] sm:left-[-1%]"
+        >
+          <Image
+            src="/hero/definition-scrap.png"
+            alt="Definition of Shritik"
+            width={369}
+            height={297}
+            className="h-auto w-full object-contain drop-shadow-[0_8px_18px_rgba(0,40,30,0.12)]"
+          />
+        </motion.div>
 
-        {/* Scrap accents */}
-        <div className="relative mt-[-28px] flex w-full max-w-[900px] items-end justify-between gap-[12px] sm:mt-[-40px] md:mt-[-48px]">
-          <motion.div
-            initial={{ opacity: 0, y: 18, rotate: -8 }}
-            animate={{ opacity: 1, y: 0, rotate: -4 }}
-            transition={{ duration: 0.55, delay: 0.22 }}
-            className="relative z-[2] w-[48%] max-w-[300px] sm:w-[42%] md:max-w-[340px]"
-          >
-            <Image
-              src="/hero/definition-scrap.png"
-              alt="Definition of Shritik"
-              width={336}
-              height={271}
-              className="h-auto w-full object-contain drop-shadow-[0_6px_16px_rgba(0,40,30,0.1)]"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 18, rotate: 10 }}
-            animate={{ opacity: 1, y: 0, rotate: 6 }}
-            transition={{ duration: 0.55, delay: 0.28 }}
-            className="relative z-[2] mb-[8px] w-[38%] max-w-[220px] sm:mb-[16px] sm:w-[34%] md:max-w-[250px]"
-          >
-            {/* Prefer vector sticky when possible */}
-            <Image
-              src="/hero/sticky-note.png"
-              alt="Always: start with why, empathy first, clarity over clever"
-              width={282}
-              height={260}
-              className="h-auto w-full object-contain drop-shadow-[0_6px_14px_rgba(0,40,30,0.12)]"
-            />
-          </motion.div>
-        </div>
-
-        {/* Mobile tagline */}
-        <p className="mt-[12px] text-center font-[family-name:var(--font-caveat)] text-[20px] text-[#c4a035] sm:hidden">
-          — {tagline.replace(/^—\s*/, "")}
-        </p>
+        {/* Sticky note — bottom right */}
+        <motion.div
+          initial={{ opacity: 0, y: 18, rotate: 8 }}
+          animate={{ opacity: 1, y: 0, rotate: 5 }}
+          transition={{ duration: 0.55, delay: 0.26 }}
+          className="absolute bottom-[5%] right-[-3%] z-[3] w-[clamp(130px,21.5%,282px)] sm:bottom-[8%] sm:right-[-1%] md:right-[1%]"
+        >
+          <Image
+            src="/hero/sticky-note.svg"
+            alt="Always: start with why, empathy first, clarity over clever"
+            width={282}
+            height={260}
+            className="h-auto w-full object-contain drop-shadow-[0_6px_14px_rgba(0,40,30,0.12)]"
+          />
+        </motion.div>
       </div>
+
+      {/* Mobile tagline */}
+      <p className="mt-[-4px] text-center font-[family-name:var(--font-caveat)] text-[20px] text-[#C4A035] sm:hidden">
+        — {tagline}
+      </p>
     </section>
   );
 }
