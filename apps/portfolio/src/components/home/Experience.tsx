@@ -296,39 +296,27 @@ function CompanyBlock({
   const inView = useInView(ref, { amount: 0.35, margin: "-10% 0px" });
 
   return (
-    <motion.article
+    <article
       ref={ref}
       id={`exp-${item.id}`}
       data-exp-id={item.id}
-      initial={{ opacity: 0, y: 14 }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: active ? 1 : 0.992,
-      }}
-      transition={{ type: "spring", stiffness: 260, damping: 28 }}
       className="scroll-mt-[10px]"
     >
       <div
-        className={`rounded-[12px] px-[2px] transition-[background-color,box-shadow] duration-300 ${
+        className={`rounded-[12px] px-[2px] py-[2px] transition-[background-color,box-shadow] duration-300 ${
           active
-            ? "bg-[#f7f1e0]/55 shadow-[inset_0_0_0_1px_rgba(0,75,64,0.08)]"
+            ? "bg-[#f7f1e0]/70 shadow-[inset_0_0_0_1.5px_rgba(0,75,64,0.14)]"
             : ""
         }`}
       >
         <header className="mb-[12px] flex flex-col gap-[10px] sm:mb-[14px] sm:flex-row sm:items-start sm:justify-between sm:gap-[14px]">
           <div className="flex min-w-0 items-start gap-[12px]">
-            <motion.div
-              animate={
-                active
-                  ? { boxShadow: "0 0 0 3px rgba(0,75,64,0.14)" }
-                  : { boxShadow: "0 0 0 0 rgba(0,75,64,0)" }
-              }
+            <div
               className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
                 item.logoWide
                   ? "h-[42px] w-[76px] sm:h-[48px] sm:w-[86px]"
                   : "h-[46px] w-[46px] sm:h-[52px] sm:w-[52px]"
-              }`}
+              } ${active ? "ring-[3px] ring-forest/15" : ""}`}
               style={{ backgroundColor: item.logoBg ?? "#ffffff" }}
             >
               <Image
@@ -338,24 +326,19 @@ function CompanyBlock({
                 className="object-contain p-[3px]"
                 sizes={item.logoWide ? "86px" : "52px"}
                 unoptimized
-                priority={active}
               />
-            </motion.div>
+            </div>
             <div className="min-w-0 pt-[1px]">
-              <h3
-                className={`m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] sm:text-[16px] md:text-[17px] ${
-                  active ? "text-forest" : "text-forest/80"
-                }`}
-              >
+              <h3 className="m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
                 {item.company}
               </h3>
-              <p className="m-0 mt-[3px] text-[12px] font-medium leading-snug text-forest/75 sm:text-[13px]">
+              <p className="m-0 mt-[3px] text-[12px] font-medium leading-snug text-forest/80 sm:text-[13px]">
                 {item.role}
               </p>
             </div>
           </div>
 
-          <div className="flex shrink-0 flex-col gap-[5px] text-[12px] text-forest/80 sm:items-end sm:text-[13px]">
+          <div className="flex shrink-0 flex-col gap-[5px] text-[12px] text-forest/85 sm:items-end sm:text-[13px]">
             <span className="inline-flex items-center gap-[6px]">
               <CalendarDays
                 className="h-[13px] w-[13px] shrink-0 text-forest"
@@ -384,38 +367,20 @@ function CompanyBlock({
             className="absolute left-[2px] top-[3px] flex h-[14px] w-[14px] items-center justify-center rounded-full border-2 border-forest bg-white"
             aria-hidden
           >
-            <motion.span
-              className="h-[5px] w-[5px] rounded-full bg-forest"
-              animate={{ scale: active ? [1, 1.35, 1] : 1 }}
-              transition={{ duration: 0.5 }}
-            />
+            <span className="h-[5px] w-[5px] rounded-full bg-forest" />
           </span>
 
           <p className="m-0 mb-[8px] text-[12px] font-semibold uppercase tracking-[0.04em] text-forest sm:text-[13px]">
             {item.dates}
           </p>
-          <p
-            className={`m-0 mb-[10px] text-[13px] italic leading-relaxed sm:text-[14px] ${
-              active ? "text-forest/90" : "text-forest/70"
-            }`}
-          >
+          <p className="m-0 mb-[10px] text-[13px] italic leading-relaxed text-forest/90 sm:text-[14px]">
             {item.overview}
           </p>
-          <ul
-            className={`m-0 flex list-disc flex-col gap-[7px] pl-[18px] text-[13px] leading-relaxed sm:gap-[9px] sm:text-[14px] ${
-              active ? "text-forest/95" : "text-forest/75"
-            }`}
-          >
-            {item.bullets.map((bullet, i) => (
-              <motion.li
-                key={bullet}
-                initial={{ opacity: 0, x: 8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: active ? i * 0.04 : 0, duration: 0.28 }}
-                className="pl-[2px]"
-              >
+          <ul className="m-0 flex list-disc flex-col gap-[7px] pl-[18px] text-[13px] leading-relaxed text-forest sm:gap-[9px] sm:text-[14px]">
+            {item.bullets.map((bullet) => (
+              <li key={bullet} className="pl-[2px]">
                 {boldHighlights(bullet, item.highlights)}
-              </motion.li>
+              </li>
             ))}
           </ul>
         </div>
@@ -426,7 +391,7 @@ function CompanyBlock({
           <span className="h-px w-full bg-forest/14" />
         </div>
       ) : null}
-    </motion.article>
+    </article>
   );
 }
 
