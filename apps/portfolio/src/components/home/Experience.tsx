@@ -450,20 +450,20 @@ function PolaroidClip({
 
   const accents = ACCENT_LAYOUTS[itemIndex % ACCENT_LAYOUTS.length];
 
-  // ~80–85% of book; front shifted right + down so back stays visible
+  // Slightly smaller polaroids on the notebook
   const backShot = {
     src: images[0],
     restRotate: -5,
-    left: "6%",
-    top: "10%",
-    width: "78%",
+    left: "10%",
+    top: "12%",
+    width: "68%",
   };
   const frontShot = {
     src: images[1],
     restRotate: 4,
-    left: "20%",
-    top: "22%",
-    width: "74%",
+    left: "24%",
+    top: "24%",
+    width: "64%",
   };
 
   return (
