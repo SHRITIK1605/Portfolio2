@@ -124,7 +124,7 @@ function ExperienceNavItem({
         damping: 26,
         delay: active ? 0 : index * 0.03,
       }}
-      className={`relative flex min-h-[52px] w-full items-center gap-[12px] rounded-[14px] border px-[12px] py-[10px] text-left ${
+      className={`relative flex min-h-[44px] w-full items-center gap-[10px] rounded-[12px] border px-[10px] py-[8px] text-left ${
         active
           ? "border-forest bg-[#f4ecd4] shadow-[0_2px_12px_rgba(0,75,64,0.12)]"
           : "border-forest/22 bg-[#faf3df] hover:border-forest/45"
@@ -133,12 +133,12 @@ function ExperienceNavItem({
       {active ? (
         <motion.span
           layoutId="exp-active-glow"
-          className="pointer-events-none absolute inset-0 rounded-[14px] ring-2 ring-forest/30"
+          className="pointer-events-none absolute inset-0 rounded-[12px] ring-2 ring-forest/30"
           transition={{ type: "spring", stiffness: 360, damping: 28 }}
         />
       ) : null}
-      <NavLogo item={item} size={46} />
-      <span className="relative text-[12px] font-bold uppercase leading-snug tracking-[0.02em] text-forest md:text-[13px]">
+      <NavLogo item={item} size={36} />
+      <span className="relative text-[11px] font-bold uppercase leading-snug tracking-[0.02em] text-forest md:text-[12px]">
         {item.company}
       </span>
     </motion.button>
@@ -311,11 +311,59 @@ function WashiTape({ className }: { className?: string }) {
 function MiniSticky({ className }: { className?: string }) {
   return (
     <div
-      className={`flex h-[54px] w-[54px] rotate-[8deg] items-start justify-center bg-[#f6e7a1] p-[6px] text-[8px] leading-tight text-forest/70 shadow-[1px_2px_6px_rgba(0,0,0,0.12)] ${className ?? ""}`}
+      className={`flex h-[48px] w-[48px] rotate-[8deg] items-start justify-center bg-[#f6e7a1] p-[5px] text-[7px] leading-tight text-forest/70 shadow-[1px_2px_6px_rgba(0,0,0,0.12)] ${className ?? ""}`}
       aria-hidden
     >
-      <span className="font-medium italic">build · ship · learn</span>
+      <span className="font-medium italic">build · ship</span>
     </div>
+  );
+}
+
+function DeskLamp({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 64 80" fill="none" aria-hidden>
+      <path
+        d="M28 78h20M38 78V52"
+        stroke="#8a7355"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M38 52c-14-2-22-12-20-24 1.5 6 8 12 20 14 12-2 18.5-8 20-14 2 12-6 22-20 24Z"
+        fill="#c4a574"
+        stroke="#8a7355"
+        strokeWidth="1.5"
+      />
+      <ellipse cx="38" cy="28" rx="10" ry="4" fill="#f0e2c4" opacity="0.85" />
+      <circle cx="38" cy="52" r="3" fill="#8a7355" />
+    </svg>
+  );
+}
+
+function CoffeeCup({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" fill="none" aria-hidden>
+      <path
+        d="M10 16h22v18c0 4-3.5 7-8 7h-6c-4.5 0-8-3-8-7V16Z"
+        fill="#f4efe6"
+        stroke="#004b40"
+        strokeWidth="1.6"
+      />
+      <path
+        d="M32 20h5c3 0 5 2.5 5 5.5S40 31 37 31h-5"
+        stroke="#004b40"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path d="M12 14h18c1 0 2 1 2 2H10c0-1 1-2 2-2Z" fill="#004b40" />
+      <path
+        d="M16 10c0-2 1.5-3 2.5-3M22 9c0-2 1.5-3 2.5-3"
+        stroke="#004b40"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+    </svg>
   );
 }
 
@@ -338,21 +386,22 @@ function PolaroidClip({
       "/experience/craft/polaroid-desk.jpg",
   ];
 
+  // Smaller frames so ~70% of notebook grid stays visible
   const shots = [
     {
       src: images[0],
-      rotate: -7,
-      left: "8%",
-      top: "14%",
-      width: "78%",
+      rotate: -8,
+      left: "16%",
+      top: "18%",
+      width: "48%",
       z: 2,
     },
     {
       src: images[1],
-      rotate: 6,
-      left: "18%",
-      top: "38%",
-      width: "76%",
+      rotate: 7,
+      left: "36%",
+      top: "34%",
+      width: "46%",
       z: 3,
     },
   ];
@@ -369,27 +418,24 @@ function PolaroidClip({
     >
       <NotebookBookBg />
 
-      {/* Scrapbook accents on the notebook */}
-      <WashiTape className="absolute left-[6%] top-[8%] z-[4]" />
-      <MiniSticky className="absolute bottom-[10%] right-[4%] z-[4]" />
-      <div
-        className="absolute bottom-[16%] left-[5%] z-[4] h-[10px] w-[10px] rotate-12 rounded-full bg-[#e23d3d]/85 shadow-sm"
-        aria-hidden
-      />
+      <WashiTape className="absolute left-[8%] top-[10%] z-[1]" />
+      <MiniSticky className="absolute bottom-[12%] left-[8%] z-[4]" />
+      <DeskLamp className="absolute right-[-2%] top-[6%] z-[5] h-[72px] w-[58px] drop-shadow-md sm:h-[88px] sm:w-[70px]" />
+      <CoffeeCup className="absolute bottom-[8%] right-[6%] z-[5] h-[44px] w-[44px] rotate-[-8deg] drop-shadow-sm sm:h-[52px] sm:w-[52px]" />
 
       <AnimatePresence mode="wait">
         <motion.div
           key={item.id}
-          initial={{ opacity: 0, y: 14, scale: 0.97 }}
+          initial={{ opacity: 0, y: 12, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -10, scale: 0.98 }}
+          exit={{ opacity: 0, y: -8, scale: 0.98 }}
           transition={{ duration: 0.34, ease: "easeOut" }}
           className="absolute inset-0 z-[2]"
         >
           {shots.map((shot, i) => (
             <div
               key={`${item.id}-${i}`}
-              className="absolute rounded-[5px] bg-white p-[10px] pb-[28px] shadow-[0_10px_28px_rgba(0,40,30,0.16)]"
+              className="absolute rounded-[4px] bg-white p-[7px] pb-[20px] shadow-[0_8px_20px_rgba(0,40,30,0.15)]"
               style={{
                 width: shot.width,
                 left: shot.left,
@@ -404,7 +450,7 @@ function PolaroidClip({
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="360px"
+                  sizes="220px"
                   unoptimized
                 />
               </div>
@@ -413,8 +459,9 @@ function PolaroidClip({
         </motion.div>
       </AnimatePresence>
 
-      <RedStar className="absolute left-[44%] top-[6%] z-30 h-[36px] w-[36px] drop-shadow-md sm:h-[42px] sm:w-[42px]" />
-      <SafetyPin className="absolute left-[48%] top-[1%] z-40 h-[48px] w-[26px] sm:h-[56px] sm:w-[30px]" />
+      {/* Pin + star seated on the overlapping photo tops */}
+      <RedStar className="absolute left-[42%] top-[14%] z-30 h-[28px] w-[28px] drop-shadow-md sm:h-[32px] sm:w-[32px]" />
+      <SafetyPin className="absolute left-[45%] top-[12%] z-40 h-[42px] w-[22px] sm:h-[48px] sm:w-[24px]" />
     </div>
   );
 }
@@ -538,8 +585,8 @@ export default function Experience({ craftImages }: ExperienceProps) {
         </h2>
       </motion.div>
 
-      <div className="relative z-[1] grid gap-[16px] md:grid-cols-[minmax(220px,270px)_minmax(0,1fr)] md:items-start md:gap-[22px] lg:gap-[28px]">
-        <div ref={leftRef} className="min-w-0">
+      <div className="relative z-[1] grid gap-[16px] md:grid-cols-[minmax(160px,200px)_minmax(0,1fr)] md:items-start md:gap-[28px] lg:gap-[36px]">
+        <div ref={leftRef} className="min-w-0 md:ml-[12px] lg:ml-[20px]">
           <div className="mb-[4px] flex gap-[8px] overflow-x-auto pb-[6px] [-ms-overflow-style:none] [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
             {EXPERIENCES.map((item) => (
               <button
@@ -553,7 +600,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
                     : "border-forest/22 bg-[#faf3df] text-forest/70"
                 }`}
               >
-                <NavLogo item={item} size={30} />
+                <NavLogo item={item} size={28} />
                 <span className="whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.02em]">
                   {item.company}
                 </span>
@@ -562,7 +609,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
           </div>
 
           <div className="relative hidden md:block">
-            <ul className="m-0 flex list-none flex-col gap-[18px] p-0 sm:gap-[20px]">
+            <ul className="m-0 flex list-none flex-col gap-[16px] p-0 sm:gap-[18px]">
               {EXPERIENCES.map((item, index) => (
                 <li key={item.id}>
                   <ExperienceNavItem

@@ -38,7 +38,7 @@ export const EXPERIENCES: ExperienceItem[] = [
   {
     id: "bse",
     slug: "bombay-stock-exchange",
-    company: "Bombay Stock Exchange",
+    company: "BSE",
     role: "Product Management and Data Modelling Intern",
     location: "Mumbai",
     dates: "May 2025 – Jul 2025",
@@ -119,7 +119,7 @@ export const EXPERIENCES: ExperienceItem[] = [
   {
     id: "emb",
     slug: "expand-my-business",
-    company: "Expand My Business Global",
+    company: "EMB Global",
     role: "AI Product Management Intern",
     location: "Gurgaon",
     dates: "Sep 2024 – Dec 2024",
