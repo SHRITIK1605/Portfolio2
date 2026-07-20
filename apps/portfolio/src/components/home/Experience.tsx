@@ -117,14 +117,14 @@ function CraftPolaroidDecor({ polaroids }: { polaroids: CraftPolaroid[] }) {
 function SketchLogo({ item, size }: { item: ExperienceItem; size: number }) {
   return (
     <span
-      className="relative shrink-0 overflow-hidden rounded-[10px] border border-forest/18 bg-white shadow-[inset_0_0_0_1px_rgba(0,75,64,0.04)]"
+      className="relative shrink-0 overflow-hidden rounded-[10px] border-2 border-forest/25 bg-white"
       style={{ width: size, height: size }}
     >
       <Image
         src={item.sketchLogoUrl}
         alt=""
         fill
-        className="object-contain p-[2px] contrast-[1.15] saturate-[1.05]"
+        className="object-contain p-[1px] contrast-[1.35] brightness-[0.92] saturate-[1.2]"
         sizes={`${size}px`}
         unoptimized
       />
@@ -177,7 +177,7 @@ function ExperienceNavItem({
         animate={{ rotate: active ? [-2, 2, 0] : 0 }}
         transition={{ duration: 0.45 }}
       >
-        <SketchLogo item={item} size={40} />
+        <SketchLogo item={item} size={44} />
       </motion.span>
       <span className="relative text-[11px] font-bold uppercase leading-snug tracking-[0.02em] text-forest sm:text-[12px] md:text-[13px]">
         {item.company}
