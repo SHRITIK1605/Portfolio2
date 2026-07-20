@@ -126,8 +126,8 @@ function ExperienceNavItem({
       }}
       className={`relative flex min-h-[44px] w-full items-center gap-[10px] rounded-[12px] border px-[10px] py-[8px] text-left ${
         active
-          ? "border-forest bg-[#f4ecd4] shadow-[0_2px_12px_rgba(0,75,64,0.12)]"
-          : "border-forest/22 bg-[#faf3df] hover:border-forest/45"
+          ? "border-forest bg-[#FAF6EE] shadow-[0_2px_12px_rgba(0,75,64,0.12)]"
+          : "border-forest/22 bg-[#FAF6EE] hover:border-forest/45"
       }`}
     >
       {active ? (
@@ -373,53 +373,59 @@ function CoffeeCup({ className }: { className?: string }) {
   );
 }
 
-/** Per-company desk accent layouts that animate on scroll change. */
+/** Theme accents that swap per company on scroll. */
 const ACCENT_LAYOUTS = [
   {
-    sticky: "build · ship",
-    lamp: "right-[-4%] top-[4%]",
-    coffee: "bottom-[10%] right-[8%] rotate-[-10deg]",
-    stickyPos: "bottom-[14%] left-[6%] rotate-[10deg]",
-    washi: "left-[10%] top-[12%] rotate-[-22deg]",
+    // BSE — markets / desk
+    sticky: "indices · float",
+    lamp: "right-[-4%] top-[2%]",
+    coffee: "bottom-[8%] right-[6%] rotate-[-8deg]",
+    stickyPos: "bottom-[12%] left-[4%] rotate-[8deg]",
+    washi: "left-[6%] top-[8%] rotate-[-20deg]",
   },
   {
-    sticky: "ship fast",
-    lamp: "left-[-6%] top-[8%] -scale-x-100",
-    coffee: "bottom-[8%] left-[10%] rotate-[12deg]",
-    stickyPos: "top-[14%] right-[8%] rotate-[-6deg]",
-    washi: "right-[12%] bottom-[22%] rotate-[16deg]",
+    // Slikk — fashion / catalog
+    sticky: "PLP · CVR",
+    lamp: "left-[-6%] top-[6%] -scale-x-100",
+    coffee: "bottom-[6%] left-[8%] rotate-[10deg]",
+    stickyPos: "top-[10%] right-[6%] rotate-[-8deg]",
+    washi: "right-[8%] bottom-[20%] rotate-[14deg]",
   },
   {
-    sticky: "clarify",
-    lamp: "right-[-2%] bottom-[18%]",
-    coffee: "top-[12%] left-[6%] rotate-[-6deg]",
-    stickyPos: "bottom-[10%] right-[14%] rotate-[14deg]",
-    washi: "left-[14%] top-[40%] rotate-[-8deg]",
+    // Times — CMS / newsroom
+    sticky: "CMS · UAT",
+    lamp: "right-[-2%] bottom-[16%]",
+    coffee: "top-[8%] left-[4%] rotate-[-6deg]",
+    stickyPos: "bottom-[8%] right-[10%] rotate-[12deg]",
+    washi: "left-[10%] top-[36%] rotate-[-10deg]",
   },
   {
-    sticky: "iterate",
-    lamp: "right-[2%] top-[2%]",
-    coffee: "bottom-[12%] right-[4%] rotate-[4deg]",
-    stickyPos: "top-[18%] left-[4%] rotate-[-12deg]",
-    washi: "left-[8%] bottom-[28%] rotate-[20deg]",
+    // EMB — AI product
+    sticky: "AI · PRD",
+    lamp: "right-[0%] top-[0%]",
+    coffee: "bottom-[10%] right-[2%] rotate-[4deg]",
+    stickyPos: "top-[14%] left-[2%] rotate-[-10deg]",
+    washi: "left-[6%] bottom-[24%] rotate-[18deg]",
   },
   {
-    sticky: "own it",
-    lamp: "left-[-4%] bottom-[16%] -scale-x-100",
-    coffee: "top-[10%] right-[10%] rotate-[-14deg]",
-    stickyPos: "bottom-[8%] left-[12%] rotate-[6deg]",
-    washi: "right-[6%] top-[36%] rotate-[-18deg]",
+    // Aarya — stays / hospitality
+    sticky: "OTA · stays",
+    lamp: "left-[-4%] bottom-[14%] -scale-x-100",
+    coffee: "top-[8%] right-[8%] rotate-[-12deg]",
+    stickyPos: "bottom-[6%] left-[10%] rotate-[6deg]",
+    washi: "right-[4%] top-[32%] rotate-[-16deg]",
   },
   {
-    sticky: "launch",
-    lamp: "right-[-6%] top-[10%]",
-    coffee: "bottom-[6%] left-[8%] rotate-[8deg]",
-    stickyPos: "top-[12%] left-[10%] rotate-[-4deg]",
-    washi: "right-[10%] bottom-[18%] rotate-[12deg]",
+    // Unifly — founding
+    sticky: "GTM · GMV",
+    lamp: "right-[-6%] top-[8%]",
+    coffee: "bottom-[4%] left-[6%] rotate-[8deg]",
+    stickyPos: "top-[10%] left-[8%] rotate-[-4deg]",
+    washi: "right-[8%] bottom-[16%] rotate-[10deg]",
   },
 ] as const;
 
-/** Scrapbook clip: notebook grid behind, pinned polaroids on top. */
+/** Scrapbook clip: large overlapping polaroids on notebook, pin on front scrap. */
 function PolaroidClip({
   item,
   itemIndex,
@@ -444,20 +450,20 @@ function PolaroidClip({
 
   const accents = ACCENT_LAYOUTS[itemIndex % ACCENT_LAYOUTS.length];
 
-  // Compact polaroids — leave most of the notebook visible
+  // ~80–85% of book; front shifted right + down so back stays visible
   const backShot = {
     src: images[0],
-    restRotate: -6,
-    left: "18%",
-    top: "20%",
-    width: "40%",
+    restRotate: -5,
+    left: "6%",
+    top: "10%",
+    width: "78%",
   };
   const frontShot = {
     src: images[1],
-    restRotate: 5,
-    left: "38%",
-    top: "30%",
-    width: "38%",
+    restRotate: 4,
+    left: "20%",
+    top: "22%",
+    width: "74%",
   };
 
   return (
@@ -476,10 +482,10 @@ function PolaroidClip({
       <AnimatePresence mode="wait">
         <motion.div
           key={`accents-${item.id}`}
-          initial={{ opacity: 0, scale: 0.9, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: -8 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          initial={{ opacity: 0, x: 12, y: 8 }}
+          animate={{ opacity: 1, x: 0, y: 0 }}
+          exit={{ opacity: 0, x: -10, y: -6 }}
+          transition={{ duration: 0.42, ease: "easeOut" }}
           className="pointer-events-none absolute inset-0 z-[5]"
           aria-hidden
         >
@@ -500,28 +506,23 @@ function PolaroidClip({
       <AnimatePresence mode="wait">
         <motion.div
           key={item.id}
-          initial={{ opacity: 0, y: 16, rotate: -2 }}
-          animate={{ opacity: 1, y: 0, rotate: 0 }}
-          exit={{ opacity: 0, y: -12, rotate: 2 }}
-          transition={{ duration: 0.38, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -14 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="absolute inset-0 z-[2]"
         >
+          {/* Back scrap — stays fully visible on hover */}
           <motion.div
-            className="absolute rounded-[4px] bg-white p-[6px] pb-[18px] shadow-[0_8px_20px_rgba(0,40,30,0.15)]"
+            className="absolute rounded-[4px] bg-white p-[8px] pb-[22px] shadow-[0_8px_20px_rgba(0,40,30,0.15)]"
             style={{
               width: backShot.width,
               left: backShot.left,
               top: backShot.top,
               zIndex: 2,
-              transformOrigin: "top right",
             }}
-            animate={{
-              rotate: hovered ? -1 : backShot.restRotate,
-              y: hovered ? -8 : 0,
-              scale: hovered ? 0.9 : 1,
-              opacity: hovered ? 0 : 1,
-            }}
-            transition={{ type: "spring", stiffness: 280, damping: 22 }}
+            animate={{ rotate: backShot.restRotate }}
+            transition={{ type: "spring", stiffness: 280, damping: 24 }}
           >
             <div className="relative aspect-square w-full overflow-hidden bg-[#eee6d4]">
               <Image
@@ -529,14 +530,15 @@ function PolaroidClip({
                 alt=""
                 fill
                 className="object-cover"
-                sizes="200px"
+                sizes="320px"
                 unoptimized
               />
             </div>
           </motion.div>
 
+          {/* Front scrap — pin attached; swings downward from top-right hinge */}
           <motion.div
-            className="absolute cursor-pointer rounded-[4px] bg-white p-[6px] pb-[18px] shadow-[0_8px_20px_rgba(0,40,30,0.15)]"
+            className="absolute cursor-pointer rounded-[4px] bg-white p-[8px] pb-[22px] shadow-[0_10px_24px_rgba(0,40,30,0.18)]"
             style={{
               width: frontShot.width,
               left: frontShot.left,
@@ -545,11 +547,12 @@ function PolaroidClip({
               transformOrigin: "top right",
             }}
             animate={{
-              rotate: hovered ? 48 : frontShot.restRotate,
-              y: hovered ? 36 : 0,
-              x: hovered ? 14 : 0,
+              // Negative = counterclockwise = free edge drops DOWN when hinged top-right
+              rotate: hovered ? -38 : frontShot.restRotate,
+              y: hovered ? 18 : 0,
+              x: hovered ? 6 : 0,
             }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            transition={{ type: "spring", stiffness: 240, damping: 20 }}
           >
             <div className="relative aspect-square w-full overflow-hidden bg-[#eee6d4]">
               <Image
@@ -557,23 +560,22 @@ function PolaroidClip({
                 alt=""
                 fill
                 className="object-cover"
-                sizes="200px"
+                sizes="320px"
                 unoptimized
               />
+            </div>
+
+            {/* Pin fixed to this scrap's top-right */}
+            <div
+              className="pointer-events-none absolute -right-[6px] -top-[18px] z-10"
+              aria-hidden
+            >
+              <RedStar className="absolute -left-[12px] -top-[8px] h-[24px] w-[24px] drop-shadow-md sm:h-[28px] sm:w-[28px]" />
+              <SafetyPin className="relative h-[40px] w-[22px] sm:h-[46px] sm:w-[24px]" />
             </div>
           </motion.div>
         </motion.div>
       </AnimatePresence>
-
-      <motion.div
-        className="pointer-events-none absolute left-[58%] top-[17%] z-40"
-        animate={{ y: hovered ? 1 : 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 24 }}
-        aria-hidden
-      >
-        <RedStar className="absolute -left-[14px] -top-[10px] h-[26px] w-[26px] drop-shadow-md sm:h-[30px] sm:w-[30px]" />
-        <SafetyPin className="relative h-[40px] w-[22px] sm:h-[46px] sm:w-[24px]" />
-      </motion.div>
     </div>
   );
 }
@@ -703,8 +705,8 @@ export default function Experience({ craftImages }: ExperienceProps) {
                 aria-pressed={item.id === activeId}
                 className={`flex min-h-[44px] shrink-0 items-center gap-[8px] rounded-full border px-[12px] py-[7px] transition ${
                   item.id === activeId
-                    ? "border-forest bg-[#f4ecd4] font-semibold text-forest"
-                    : "border-forest/22 bg-[#faf3df] text-forest/70"
+                    ? "border-forest bg-[#FAF6EE] font-semibold text-forest"
+                    : "border-forest/22 bg-[#FAF6EE] text-forest/70"
                 }`}
               >
                 <NavLogo item={item} size={28} />
