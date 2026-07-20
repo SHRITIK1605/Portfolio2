@@ -39,103 +39,6 @@ function boldHighlights(text: string, highlights: string[] = []) {
   });
 }
 
-type ArrowKind = "curve-right" | "curve-left" | "gentle-s" | "soft-zig" | "lean-right";
-
-/** Dotted connectors that stay between nav boxes and tip into the next box. */
-const ARROW_SEQUENCE: ArrowKind[] = [
-  "curve-right",
-  "curve-left",
-  "gentle-s",
-  "soft-zig",
-  "lean-right",
-];
-
-function CraftArrow({
-  kind,
-  markerId,
-}: {
-  kind: ArrowKind;
-  markerId: string;
-}) {
-  // Paths start under previous box center and end at top-center of next box
-  const paths: Record<
-    ArrowKind,
-    { d: string; viewBox: string; w: number; h: number }
-  > = {
-    "curve-right": {
-      d: "M40 2 C58 6, 66 14, 40 26",
-      viewBox: "0 0 80 30",
-      w: 72,
-      h: 28,
-    },
-    "curve-left": {
-      d: "M40 2 C22 6, 14 14, 40 26",
-      viewBox: "0 0 80 30",
-      w: 72,
-      h: 28,
-    },
-    "gentle-s": {
-      d: "M40 2 C54 8, 26 16, 40 26",
-      viewBox: "0 0 80 30",
-      w: 72,
-      h: 28,
-    },
-    "soft-zig": {
-      d: "M40 2 C50 7, 50 12, 40 14 C30 16, 30 21, 40 26",
-      viewBox: "0 0 80 30",
-      w: 72,
-      h: 28,
-    },
-    "lean-right": {
-      d: "M40 2 C62 8, 58 18, 40 26",
-      viewBox: "0 0 80 30",
-      w: 72,
-      h: 28,
-    },
-  };
-
-  const cfg = paths[kind];
-
-  return (
-    <div className="flex justify-center overflow-visible py-[2px] text-forest" aria-hidden>
-      <svg
-        width={cfg.w}
-        height={cfg.h}
-        viewBox={cfg.viewBox}
-        fill="none"
-        overflow="visible"
-      >
-        <defs>
-          <marker
-            id={markerId}
-            markerWidth="8"
-            markerHeight="8"
-            refX="6.5"
-            refY="4"
-            orient="auto"
-            markerUnits="userSpaceOnUse"
-          >
-            <path d="M0.5 0.5 L7 4 L0.5 7.5 Z" fill="currentColor" />
-          </marker>
-        </defs>
-        <motion.path
-          d={cfg.d}
-          stroke="currentColor"
-          strokeWidth="1.85"
-          strokeDasharray="1.8 3.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          markerEnd={`url(#${markerId})`}
-          initial={{ pathLength: 0, opacity: 0.4 }}
-          whileInView={{ pathLength: 1, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-        />
-      </svg>
-    </div>
-  );
-}
-
 function SafetyPin({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 40" fill="none" aria-hidden>
@@ -537,7 +440,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
           </div>
 
           <div className="relative hidden md:block">
-            <ul className="m-0 flex list-none flex-col p-0">
+            <ul className="m-0 flex list-none flex-col gap-[10px] p-0">
               {EXPERIENCES.map((item, index) => (
                 <li key={item.id} className="relative">
                   <ExperienceNavItem
@@ -546,12 +449,6 @@ export default function Experience({ craftImages }: ExperienceProps) {
                     onSelect={() => scrollToCompany(item.id)}
                     index={index}
                   />
-                  {index < EXPERIENCES.length - 1 ? (
-                    <CraftArrow
-                      kind={ARROW_SEQUENCE[index] ?? "curve-right"}
-                      markerId={`exp-arrow-${index}`}
-                    />
-                  ) : null}
                 </li>
               ))}
             </ul>
