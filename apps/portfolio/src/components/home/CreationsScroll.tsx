@@ -88,6 +88,8 @@ const SHOWCASE_PROJECTS = [
 const COUNT = SHOWCASE_PROJECTS.length;
 /** Block further steps for this long after a step (covers slide + trackpad burst). */
 const STEP_LOCK_MS = 780;
+/** After landing on 1st/4th card, absorb leftover flick before allowing section exit. */
+const EDGE_SETTLE_MS = 420;
 /** Accumulated delta before one step. */
 const WHEEL_THRESHOLD = 28;
 /** Horizontal slide duration. */
@@ -254,6 +256,9 @@ export default function CreationsScroll() {
   const accumRef = useRef(0);
   const snapTimerRef = useRef<number | null>(null);
   const programmaticRef = useRef(false);
+  /** False right after arriving on card 1 or 4 — blocks exit until settle. */
+  const edgeReadyRef = useRef(true);
+  const edgeTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     indexRef.current = index;
@@ -262,6 +267,7 @@ export default function CreationsScroll() {
   useEffect(
     () => () => {
       if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+      if (edgeTimerRef.current) window.clearTimeout(edgeTimerRef.current);
     },
     []
   );
@@ -280,9 +286,17 @@ export default function CreationsScroll() {
     };
   }, []);
 
-  const armLock = useCallback(() => {
-    lockUntilRef.current = performance.now() + STEP_LOCK_MS;
+  const armLock = useCallback((ms = STEP_LOCK_MS) => {
+    lockUntilRef.current = performance.now() + ms;
     accumRef.current = 0;
+  }, []);
+
+  const requireEdgeSettle = useCallback(() => {
+    edgeReadyRef.current = false;
+    if (edgeTimerRef.current) window.clearTimeout(edgeTimerRef.current);
+    edgeTimerRef.current = window.setTimeout(() => {
+      edgeReadyRef.current = true;
+    }, EDGE_SETTLE_MS);
   }, []);
 
   const scrollToIndex = useCallback(
@@ -292,6 +306,7 @@ export default function CreationsScroll() {
       const next = Math.max(0, Math.min(COUNT - 1, i));
       if (next === indexRef.current && !opts?.fromDot) {
         armLock();
+        if (next === 0 || next === COUNT - 1) requireEdgeSettle();
         return;
       }
       programmaticRef.current = true;
@@ -299,12 +314,15 @@ export default function CreationsScroll() {
       setIndex(next);
       setPinMode("pin");
       window.scrollTo({ top: m.start + next * m.slot, behavior: "auto" });
-      armLock();
+      const atEdge = next === 0 || next === COUNT - 1;
+      armLock(atEdge ? STEP_LOCK_MS + 220 : STEP_LOCK_MS);
+      if (atEdge) requireEdgeSettle();
+      else edgeReadyRef.current = true;
       window.setTimeout(() => {
         programmaticRef.current = false;
       }, 50);
     },
-    [armLock, metrics]
+    [armLock, metrics, requireEdgeSettle]
   );
 
   const syncFromScroll = useCallback(() => {
@@ -338,8 +356,9 @@ export default function CreationsScroll() {
     if (i !== indexRef.current) {
       indexRef.current = i;
       setIndex(i);
+      if (i === 0 || i === COUNT - 1) requireEdgeSettle();
     }
-  }, [metrics]);
+  }, [metrics, requireEdgeSettle]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -421,13 +440,32 @@ export default function CreationsScroll() {
 
       const cur = indexRef.current;
 
-      // Ends → let the page scroll normally
+      // First / last: stay put until edge settle (stops long-flick skip of 1 & 4)
       if (up && cur === 0) {
         accumRef.current = 0;
+        if (!edgeReadyRef.current || isLocked()) {
+          e.preventDefault();
+          e.stopPropagation();
+          const m2 = metrics();
+          if (m2) window.scrollTo({ top: m2.start, behavior: "auto" });
+          return;
+        }
         return;
       }
       if (down && cur === COUNT - 1) {
         accumRef.current = 0;
+        if (!edgeReadyRef.current || isLocked()) {
+          e.preventDefault();
+          e.stopPropagation();
+          const m2 = metrics();
+          if (m2) {
+            window.scrollTo({
+              top: m2.start + (COUNT - 1) * m2.slot,
+              behavior: "auto",
+            });
+          }
+          return;
+        }
         return;
       }
 
