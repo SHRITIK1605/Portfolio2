@@ -86,14 +86,14 @@ const SHOWCASE_PROJECTS = [
 ] as const;
 
 const COUNT = SHOWCASE_PROJECTS.length;
-/** Block further steps for this long after a step (covers slide + trackpad burst). */
-const STEP_LOCK_MS = 780;
-/** After landing on 1st/4th card, absorb leftover flick before allowing section exit. */
-const EDGE_SETTLE_MS = 420;
-/** Smooth handoff duration to/from adjacent page sections. */
-const HANDOFF_MS = 720;
+/** Block further steps after a card change (must clear; reverse can cancel). */
+const STEP_LOCK_MS = 900;
+/** After landing on 1st/4th card, absorb leftover flick before section exit. */
+const EDGE_SETTLE_MS = 550;
+/** Smooth handoff to Cases / Experience (slower exit from project 4). */
+const HANDOFF_MS = 1250;
 /** Accumulated delta before one step. */
-const WHEEL_THRESHOLD = 28;
+const WHEEL_THRESHOLD = 42;
 /** Horizontal slide duration. */
 const SLIDE_MS = 850;
 
@@ -262,6 +262,7 @@ export default function CreationsScroll() {
   /** False right after arriving on card 1 or 4 — blocks exit until settle. */
   const edgeReadyRef = useRef(true);
   const edgeTimerRef = useRef<number | null>(null);
+  const lastDirRef = useRef<1 | -1>(1);
 
   useEffect(() => {
     indexRef.current = index;
@@ -282,16 +283,25 @@ export default function CreationsScroll() {
     const section = sectionRef.current;
     if (!section) return null;
     const vh = window.innerHeight;
+    const start = section.offsetTop;
+    const slot = vh;
     return {
       section,
-      start: section.offsetTop,
+      start,
       vh,
-      slot: vh,
+      slot,
+      /** Last scrollY that still counts as "inside" projects (card 4). */
+      maxPinY: start + (COUNT - 1) * slot,
     };
   }, []);
 
   const armLock = useCallback((ms = STEP_LOCK_MS) => {
     lockUntilRef.current = performance.now() + ms;
+    accumRef.current = 0;
+  }, []);
+
+  const clearLock = useCallback(() => {
+    lockUntilRef.current = 0;
     accumRef.current = 0;
   }, []);
 
@@ -307,16 +317,17 @@ export default function CreationsScroll() {
     (top: number, duration = HANDOFF_MS) => {
       handoffRef.current = true;
       programmaticRef.current = true;
-      armLock(duration + 120);
+      armLock(duration + 160);
       const clamped = Math.max(0, top);
       window.scrollTo({ top: clamped, behavior: "smooth" });
       window.setTimeout(() => {
         window.scrollTo({ top: clamped, behavior: "auto" });
         handoffRef.current = false;
         programmaticRef.current = false;
+        clearLock();
       }, duration);
     },
-    [armLock]
+    [armLock, clearLock]
   );
 
   const scrollToIndex = useCallback(
@@ -335,11 +346,11 @@ export default function CreationsScroll() {
       setPinMode("pin");
       const atEdge = next === 0 || next === COUNT - 1;
       if (opts?.smooth) {
-        animateScrollTo(target, HANDOFF_MS);
+        animateScrollTo(target, atEdge ? HANDOFF_MS : Math.min(HANDOFF_MS, 900));
       } else {
         programmaticRef.current = true;
         window.scrollTo({ top: target, behavior: "auto" });
-        armLock(atEdge ? STEP_LOCK_MS + 220 : STEP_LOCK_MS);
+        armLock(atEdge ? STEP_LOCK_MS + 280 : STEP_LOCK_MS);
         window.setTimeout(() => {
           programmaticRef.current = false;
         }, 50);
@@ -384,11 +395,11 @@ export default function CreationsScroll() {
 
   const syncFromScroll = useCallback(() => {
     const m = metrics();
-    if (!m || programmaticRef.current) return;
-    const { section, start, vh, slot } = m;
-    const rect = section.getBoundingClientRect();
+    if (!m || programmaticRef.current || handoffRef.current) return;
+    const { start, maxPinY, slot } = m;
+    const y = window.scrollY;
 
-    if (rect.top > 1) {
+    if (y < start - 2) {
       setPinMode("before");
       if (indexRef.current !== 0) {
         indexRef.current = 0;
@@ -396,7 +407,7 @@ export default function CreationsScroll() {
       }
       return;
     }
-    if (rect.bottom <= vh + 1) {
+    if (y > maxPinY + 2) {
       setPinMode("after");
       if (indexRef.current !== COUNT - 1) {
         indexRef.current = COUNT - 1;
@@ -408,7 +419,7 @@ export default function CreationsScroll() {
     setPinMode("pin");
     const i = Math.max(
       0,
-      Math.min(COUNT - 1, Math.round((window.scrollY - start) / slot))
+      Math.min(COUNT - 1, Math.round((y - start) / slot))
     );
     if (i !== indexRef.current) {
       indexRef.current = i;
@@ -422,18 +433,18 @@ export default function CreationsScroll() {
       syncFromScroll();
       if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
       snapTimerRef.current = window.setTimeout(() => {
-        if (programmaticRef.current || isLocked()) return;
+        if (programmaticRef.current || handoffRef.current || isLocked()) return;
         const m = metrics();
         if (!m) return;
-        const { start, slot, section, vh } = m;
-        const rect = section.getBoundingClientRect();
-        if (rect.top > 1 || rect.bottom <= vh + 1) return;
+        const { start, slot, maxPinY } = m;
+        const y = window.scrollY;
+        if (y < start - 2 || y > maxPinY + 2) return;
         const nearest = Math.max(
           0,
-          Math.min(COUNT - 1, Math.round((window.scrollY - start) / slot))
+          Math.min(COUNT - 1, Math.round((y - start) / slot))
         );
         const target = start + nearest * slot;
-        if (Math.abs(window.scrollY - target) > 12) {
+        if (Math.abs(y - target) > 12) {
           programmaticRef.current = true;
           indexRef.current = nearest;
           setIndex(nearest);
@@ -458,23 +469,41 @@ export default function CreationsScroll() {
     const onWheel = (e: WheelEvent) => {
       const m = metrics();
       if (!m) return;
-      const { section, vh } = m;
-      const rect = section.getBoundingClientRect();
+      const { start, vh, maxPinY } = m;
+      const y = window.scrollY;
       const down = e.deltaY > 0;
       const up = e.deltaY < 0;
       if (!down && !up) return;
 
+      const dir: 1 | -1 = down ? 1 : -1;
+      const rect = m.section.getBoundingClientRect();
+
+      // Pin by scroll position so card 4 stays hijacked (rect.bottom === vh at last slot)
+      const pinned = y >= start - 2 && y <= maxPinY + 2;
       const approachingFromAbove =
         down && rect.top > 0 && rect.top < vh * 0.72;
       const approachingFromBelow =
-        up && rect.bottom < vh && rect.bottom > vh * 0.28;
-      const pinned = rect.top <= 1 && rect.bottom > vh + 1;
+        up && !pinned && rect.bottom < vh && rect.bottom > vh * 0.2;
 
       if (!approachingFromAbove && !approachingFromBelow && !pinned) {
         return;
       }
 
-      // Locked: swallow wheel so trackpad can't skip, but don't extend lock
+      // Direction change: clear stale accum + allow reverse to break a stuck lock
+      if (dir !== lastDirRef.current) {
+        accumRef.current = 0;
+        lastDirRef.current = dir;
+        if (!handoffRef.current && isLocked()) {
+          clearLock();
+        }
+      }
+
+      if (handoffRef.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
       if (isLocked()) {
         e.preventDefault();
         e.stopPropagation();
@@ -497,58 +526,65 @@ export default function CreationsScroll() {
 
       const cur = indexRef.current;
 
-      // First / last: settle, then hand off to adjacent section
+      // Card 1 up → Experience (after settle)
       if (up && cur === 0) {
         accumRef.current = 0;
-        if (!edgeReadyRef.current || isLocked()) {
-          e.preventDefault();
-          e.stopPropagation();
-          const m2 = metrics();
-          if (m2) window.scrollTo({ top: m2.start, behavior: "auto" });
-          return;
-        }
         e.preventDefault();
         e.stopPropagation();
+        if (!edgeReadyRef.current) {
+          window.scrollTo({ top: start, behavior: "auto" });
+          return;
+        }
         exitToExperience();
         return;
       }
+
+      // Card 4 down → Cases (after settle) — never native-skip past 4
       if (down && cur === COUNT - 1) {
         accumRef.current = 0;
-        if (!edgeReadyRef.current || isLocked()) {
-          e.preventDefault();
-          e.stopPropagation();
-          const m2 = metrics();
-          if (m2) {
-            window.scrollTo({
-              top: m2.start + (COUNT - 1) * m2.slot,
-              behavior: "auto",
-            });
-          }
-          return;
-        }
         e.preventDefault();
         e.stopPropagation();
+        if (!edgeReadyRef.current) {
+          window.scrollTo({ top: maxPinY, behavior: "auto" });
+          return;
+        }
         exitToCases();
         return;
       }
 
       e.preventDefault();
       e.stopPropagation();
+
+      // Keep page stuck on current slot while accumulating
+      window.scrollTo({
+        top: start + cur * m.slot,
+        behavior: "auto",
+      });
+
       accumRef.current += e.deltaY;
       if (Math.abs(accumRef.current) < WHEEL_THRESHOLD) return;
 
-      const dir: 1 | -1 = accumRef.current > 0 ? 1 : -1;
+      const stepDir: 1 | -1 = accumRef.current > 0 ? 1 : -1;
       accumRef.current = 0;
-      scrollToIndex(cur + dir);
+      lastDirRef.current = stepDir;
+      // Lock immediately so the same gesture can't double-step
+      armLock(STEP_LOCK_MS);
+      scrollToIndex(cur + stepDir);
     };
 
-    // Capture phase = same behavior over card, link, or empty stage
     window.addEventListener("wheel", onWheel, { passive: false, capture: true });
     return () =>
       window.removeEventListener("wheel", onWheel, {
         capture: true,
       } as EventListenerOptions);
-  }, [exitToCases, exitToExperience, metrics, scrollToIndex]);
+  }, [
+    armLock,
+    clearLock,
+    exitToCases,
+    exitToExperience,
+    metrics,
+    scrollToIndex,
+  ]);
 
   useEffect(() => {
     const stage = stageRef.current;
