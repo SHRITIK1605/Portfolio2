@@ -30,7 +30,7 @@ body {
   color: var(--portfolio-text);
   font-family: var(--font-poppins), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  /* clip (not hidden) so position:sticky still works for CreationsScroll */
+  /* clip (not hidden) so decorative card tilts aren't clipped oddly */
   overflow-x: clip;
 }
 
