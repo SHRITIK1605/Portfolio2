@@ -86,14 +86,14 @@ const SHOWCASE_PROJECTS = [
 ] as const;
 
 const COUNT = SHOWCASE_PROJECTS.length;
-/** Min time between card steps (also covers slide animation). */
-const STEP_LOCK_MS = 900;
-/** Require wheel idle this long before accepting another step (kills trackpad burst). */
-const GESTURE_IDLE_MS = 160;
-/** Accumulated delta before one step fires. */
-const WHEEL_THRESHOLD = 40;
-/** Horizontal slide duration (ms) — slower, calmer. */
-const SLIDE_MS = 900;
+/** Min time between card steps. */
+const STEP_LOCK_MS = 850;
+/** Require wheel idle before next step (trackpad burst kill). */
+const GESTURE_IDLE_MS = 140;
+/** Accumulated delta before one step. */
+const WHEEL_THRESHOLD = 36;
+/** Horizontal slide duration. */
+const SLIDE_MS = 850;
 
 function PaintSplash({ color, n }: { color: string; n: number }) {
   return (
@@ -240,38 +240,53 @@ function ProjectCard({
 }
 
 /**
- * PROJECTS — one landscape card at a time.
- * Wheel/touch: one gesture → one card. Exit freely at 1 (up) and 4 (down).
+ * PROJECTS — tall scroll runway + pinned stage.
+ * Long page scrolls get caught here; one wheel gesture → one card;
+ * exit freely at card 1 (up) and card 4 (down).
  */
 export default function CreationsScroll() {
   const sectionRef = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(0);
+  const [pinMode, setPinMode] = useState<"before" | "pin" | "after">(
+    "before"
+  );
   const indexRef = useRef(0);
   const touchY = useRef<number | null>(null);
-
-  /** True while a step animation / cooldown is active — eat wheel, don't step again. */
   const lockedRef = useRef(false);
   const lockUntilRef = useRef(0);
   const accumRef = useRef(0);
   const idleTimerRef = useRef<number | null>(null);
   const unlockTimerRef = useRef<number | null>(null);
+  const snapTimerRef = useRef<number | null>(null);
+  const programmaticRef = useRef(false);
 
   useEffect(() => {
     indexRef.current = index;
   }, [index]);
 
   const clearTimers = useCallback(() => {
-    if (idleTimerRef.current) {
-      window.clearTimeout(idleTimerRef.current);
-      idleTimerRef.current = null;
-    }
-    if (unlockTimerRef.current) {
-      window.clearTimeout(unlockTimerRef.current);
-      unlockTimerRef.current = null;
-    }
+    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    if (unlockTimerRef.current) window.clearTimeout(unlockTimerRef.current);
+    if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+    idleTimerRef.current = null;
+    unlockTimerRef.current = null;
+    snapTimerRef.current = null;
   }, []);
 
   useEffect(() => () => clearTimers(), [clearTimers]);
+
+  const metrics = useCallback(() => {
+    const section = sectionRef.current;
+    if (!section) return null;
+    const vh = window.innerHeight;
+    return {
+      section,
+      start: section.offsetTop,
+      vh,
+      // one viewport of scroll per card
+      slot: vh,
+    };
+  }, []);
 
   const armLock = useCallback(() => {
     lockedRef.current = true;
@@ -285,107 +300,186 @@ export default function CreationsScroll() {
         accumRef.current = 0;
       }, GESTURE_IDLE_MS);
     }, STEP_LOCK_MS);
+    // Hard safety — never stay locked forever
+    window.setTimeout(() => {
+      if (performance.now() >= lockUntilRef.current) {
+        lockedRef.current = false;
+      }
+    }, STEP_LOCK_MS + GESTURE_IDLE_MS + 80);
   }, []);
 
-  const step = useCallback(
-    (dir: 1 | -1) => {
-      if (lockedRef.current) return false;
-      const cur = indexRef.current;
-      const next = cur + dir;
-      if (next < 0 || next >= COUNT) return false;
+  const bumpIdleRelease = useCallback(() => {
+    const remaining = lockUntilRef.current - performance.now();
+    if (remaining > 0) {
+      if (unlockTimerRef.current) window.clearTimeout(unlockTimerRef.current);
+      unlockTimerRef.current = window.setTimeout(() => {
+        idleTimerRef.current = window.setTimeout(() => {
+          lockedRef.current = false;
+          accumRef.current = 0;
+        }, GESTURE_IDLE_MS);
+      }, remaining);
+      return;
+    }
+    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = window.setTimeout(() => {
+      lockedRef.current = false;
+      accumRef.current = 0;
+    }, GESTURE_IDLE_MS);
+  }, []);
+
+  const scrollToIndex = useCallback(
+    (i: number) => {
+      const m = metrics();
+      if (!m) return;
+      const next = Math.max(0, Math.min(COUNT - 1, i));
+      programmaticRef.current = true;
+      indexRef.current = next;
       setIndex(next);
+      window.scrollTo({ top: m.start + next * m.slot, behavior: "auto" });
+      window.setTimeout(() => {
+        programmaticRef.current = false;
+      }, 40);
       armLock();
-      return true;
     },
-    [armLock]
+    [armLock, metrics]
   );
 
+  const syncFromScroll = useCallback(() => {
+    const m = metrics();
+    if (!m || programmaticRef.current) return;
+    const { section, start, vh, slot } = m;
+    const rect = section.getBoundingClientRect();
+    const y = window.scrollY;
+
+    if (rect.top > 1) {
+      setPinMode("before");
+      if (indexRef.current !== 0) {
+        indexRef.current = 0;
+        setIndex(0);
+      }
+      return;
+    }
+    if (rect.bottom <= vh + 1) {
+      setPinMode("after");
+      if (indexRef.current !== COUNT - 1) {
+        indexRef.current = COUNT - 1;
+        setIndex(COUNT - 1);
+      }
+      return;
+    }
+
+    setPinMode("pin");
+    const raw = (y - start) / slot;
+    const i = Math.max(0, Math.min(COUNT - 1, Math.round(raw)));
+    if (i !== indexRef.current) {
+      indexRef.current = i;
+      setIndex(i);
+    }
+  }, [metrics]);
+
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    let wasInZone = false;
-
-    const inProjectsZone = () => {
-      const rect = section.getBoundingClientRect();
-      return (
-        rect.top <= window.innerHeight * 0.2 &&
-        rect.bottom >= window.innerHeight * 0.55
-      );
+    const onScroll = () => {
+      syncFromScroll();
+      if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+      snapTimerRef.current = window.setTimeout(() => {
+        if (programmaticRef.current || lockedRef.current) return;
+        const m = metrics();
+        if (!m) return;
+        const { start, slot, section } = m;
+        const rect = section.getBoundingClientRect();
+        // Only snap while pinned inside the runway
+        if (rect.top > 1 || rect.bottom <= m.vh + 1) return;
+        const nearest = Math.max(
+          0,
+          Math.min(COUNT - 1, Math.round((window.scrollY - start) / slot))
+        );
+        const target = start + nearest * slot;
+        if (Math.abs(window.scrollY - target) > 10) {
+          programmaticRef.current = true;
+          indexRef.current = nearest;
+          setIndex(nearest);
+          window.scrollTo({ top: target, behavior: "auto" });
+          window.setTimeout(() => {
+            programmaticRef.current = false;
+          }, 40);
+        }
+      }, 100);
     };
 
-    const bumpIdleRelease = () => {
-      // Only allow unlock after the hard lock window
-      const remaining = lockUntilRef.current - performance.now();
-      if (remaining > 0) {
-        if (unlockTimerRef.current) window.clearTimeout(unlockTimerRef.current);
-        unlockTimerRef.current = window.setTimeout(() => {
-          idleTimerRef.current = window.setTimeout(() => {
-            lockedRef.current = false;
-            accumRef.current = 0;
-          }, GESTURE_IDLE_MS);
-        }, remaining);
-        return;
-      }
-      if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-      idleTimerRef.current = window.setTimeout(() => {
-        lockedRef.current = false;
-        accumRef.current = 0;
-      }, GESTURE_IDLE_MS);
+    syncFromScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", syncFromScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", syncFromScroll);
     };
+  }, [metrics, syncFromScroll]);
 
+  useEffect(() => {
     const onWheel = (e: WheelEvent) => {
-      const nowIn = inProjectsZone();
-
-      if (nowIn && !wasInZone) {
-        wasInZone = true;
-        lockedRef.current = true;
-        lockUntilRef.current = performance.now() + 450;
-        accumRef.current = 0;
-        bumpIdleRelease();
-        e.preventDefault();
-        return;
-      }
-      if (!nowIn) {
-        wasInZone = false;
-        return;
-      }
-
-      const cur = indexRef.current;
+      const m = metrics();
+      if (!m) return;
+      const { section, vh } = m;
+      const rect = section.getBoundingClientRect();
       const down = e.deltaY > 0;
       const up = e.deltaY < 0;
       if (!down && !up) return;
 
-      if (lockedRef.current) {
-        bumpIdleRelease();
+      // Catch long scrolls from above — land on project 1 instead of flying past
+      if (down && rect.top > 0 && rect.top < vh * 0.72) {
         e.preventDefault();
+        if (!lockedRef.current) {
+          scrollToIndex(0);
+        } else {
+          bumpIdleRelease();
+        }
         return;
       }
 
+      // Catch scrolls coming up from below — land on project 4
+      if (up && rect.bottom < vh && rect.bottom > vh * 0.28) {
+        e.preventDefault();
+        if (!lockedRef.current) {
+          scrollToIndex(COUNT - 1);
+        } else {
+          bumpIdleRelease();
+        }
+        return;
+      }
+
+      // Not in the pinned runway
+      if (rect.top > 1 || rect.bottom <= vh + 1) return;
+
+      const cur = indexRef.current;
+
+      // Boundaries → release to normal page scroll
       if (up && cur === 0) {
         accumRef.current = 0;
-        wasInZone = false;
         return;
       }
       if (down && cur === COUNT - 1) {
         accumRef.current = 0;
-        wasInZone = false;
         return;
       }
 
       e.preventDefault();
-      accumRef.current += e.deltaY;
 
+      if (lockedRef.current) {
+        bumpIdleRelease();
+        return;
+      }
+
+      accumRef.current += e.deltaY;
       if (Math.abs(accumRef.current) < WHEEL_THRESHOLD) return;
 
       const dir: 1 | -1 = accumRef.current > 0 ? 1 : -1;
       accumRef.current = 0;
-      step(dir);
+      scrollToIndex(cur + dir);
     };
 
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => window.removeEventListener("wheel", onWheel);
-  }, [step]);
+  }, [bumpIdleRelease, metrics, scrollToIndex]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -399,22 +493,19 @@ export default function CreationsScroll() {
       const y = e.changedTouches[0]?.clientY ?? touchY.current;
       const dy = touchY.current - y;
       touchY.current = null;
-      if (Math.abs(dy) < 48) return;
+      if (Math.abs(dy) < 48 || lockedRef.current) return;
 
       const rect = section.getBoundingClientRect();
-      const inZone =
-        rect.top <= window.innerHeight * 0.25 &&
-        rect.bottom >= window.innerHeight * 0.5;
-      if (!inZone) return;
-      if (lockedRef.current) return;
+      const vh = window.innerHeight;
+      if (rect.top > vh * 0.25 || rect.bottom < vh * 0.5) return;
 
       const cur = indexRef.current;
       if (dy > 0) {
-        if (cur >= COUNT - 1) return; // let page continue down
-        step(1);
+        if (cur >= COUNT - 1) return;
+        scrollToIndex(cur + 1);
       } else {
-        if (cur <= 0) return; // let page continue up
-        step(-1);
+        if (cur <= 0) return;
+        scrollToIndex(cur - 1);
       }
     };
 
@@ -424,17 +515,31 @@ export default function CreationsScroll() {
       section.removeEventListener("touchstart", onStart);
       section.removeEventListener("touchend", onEnd);
     };
-  }, [step]);
+  }, [scrollToIndex]);
+
+  const panelPosition =
+    pinMode === "pin" ? ("fixed" as const) : ("absolute" as const);
+  const panelInset =
+    pinMode === "after"
+      ? { top: "auto" as const, bottom: 0 }
+      : { top: 0, bottom: "auto" as const };
 
   return (
     <section
       ref={sectionRef}
-      className="relative h-[100dvh] w-full"
+      className="relative w-full"
+      style={{ height: `${COUNT * 100}vh` }}
       aria-labelledby="projects-scroll-heading"
     >
       <div
         className="flex h-[100dvh] w-full flex-col overflow-hidden"
         style={{
+          position: panelPosition,
+          left: 0,
+          right: 0,
+          ...panelInset,
+          height: "100vh",
+          zIndex: pinMode === "pin" ? 20 : 1,
           backgroundColor: "#fffbf1",
           backgroundImage: `
             linear-gradient(rgba(1, 97, 70, 0.07) 1px, transparent 1px),
