@@ -92,11 +92,14 @@ export default function LandingIntro({
   useLayoutEffect(() => {
     if (phase === "done") {
       document.body.style.overflow = "";
+      document.body.style.overflowY = "";
       return;
     }
-    document.body.style.overflow = "hidden";
+    // Lock vertical scroll only — keep overflow-x: clip from CSS so sticky works
+    document.body.style.overflowY = "hidden";
     return () => {
       document.body.style.overflow = "";
+      document.body.style.overflowY = "";
     };
   }, [phase]);
 

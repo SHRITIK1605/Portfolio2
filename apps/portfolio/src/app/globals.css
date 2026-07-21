@@ -30,7 +30,8 @@ body {
   color: var(--portfolio-text);
   font-family: var(--font-poppins), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* clip (not hidden) so position:sticky still works for CreationsScroll */
+  overflow-x: clip;
 }
 
 html {
