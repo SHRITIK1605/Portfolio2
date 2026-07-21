@@ -34,34 +34,67 @@ export default function Navbar({ homepage }: NavbarProps) {
         </Link>
 
         <div className="flex h-[55px] min-w-0 items-center gap-[10px] sm:gap-[12px]">
-          {/* Resume — exact btn-resume.svg artwork; hover overlays preserved */}
+          {/* Resume — PDF layout + zigzag/underline hover motion */}
           <button
             type="button"
             onClick={() => setResumeOpen(true)}
             aria-label="Open resume"
-            className="group relative h-[55px] w-[194px] shrink-0 overflow-hidden rounded-[12px] active:scale-[0.98]"
+            className="group relative h-[55px] w-[194px] shrink-0 overflow-hidden rounded-[12px] border-2 border-[#016146] bg-white active:scale-[0.98]"
           >
-            <Image
-              src="/hero/btn-resume.svg"
-              alt=""
-              width={194}
-              height={55}
-              unoptimized
-              priority
-              className="pointer-events-none relative z-[2] h-[55px] w-[194px] select-none"
+            <span
+              className="pointer-events-none absolute -bottom-1 -right-1 z-0 h-[220%] w-[220%] origin-bottom-right scale-0 rounded-full bg-[#FFE566] transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-100"
+              aria-hidden
+            />
+            <span
+              className="pointer-events-none absolute inset-0 z-0 opacity-0 group-hover:animate-[cta-pulse_0.9s_ease-out_infinite] group-hover:opacity-100"
+              aria-hidden
+            />
+            <span
+              className="pointer-events-none absolute inset-y-0 -left-1/2 z-[1] w-1/2 -skew-x-12 bg-white/50 opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
+              aria-hidden
             />
 
-            {/* Hover: yellow burst from bottom-right (under accents via multiply) */}
+            {/* Top-left zigzag — wiggles on hover */}
+            <svg
+              width="32"
+              height="8"
+              viewBox="0 0 30 7"
+              fill="none"
+              aria-hidden
+              className="pointer-events-none absolute left-[12px] top-[10px] z-[2] group-hover:animate-[cta-wiggle_0.45s_ease-in-out_infinite]"
+            >
+              <path
+                d="M0 6L7.4 0L12.5 6L18.8 0L23.9 6L29.6 0"
+                stroke="#F8C547"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+
+            {/* Centered label + underline that expands on hover */}
+            <span className="relative z-[2] flex h-full w-full items-center justify-center">
+              <span className="relative text-[16px] font-medium leading-none tracking-[-0.01em] text-[#016146]">
+                Resume
+                <span
+                  className="pointer-events-none absolute -bottom-[5px] left-[38%] h-[2.5px] w-[58%] rounded-full bg-[#F8C547] transition-all duration-300 group-hover:left-0 group-hover:w-full"
+                  aria-hidden
+                />
+              </span>
+            </span>
+
+            {/* Two-tone dog-ear */}
             <span
-              className="pointer-events-none absolute -bottom-1 -right-1 z-[3] h-[220%] w-[220%] origin-bottom-right scale-0 rounded-full bg-[#FFE566] mix-blend-multiply transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-100"
+              className="pointer-events-none absolute bottom-0 right-0 z-[3] h-[23px] w-[22px] bg-[#FFE7AB] transition-colors duration-300 group-hover:bg-[#F5B800]"
+              style={{
+                clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 0%)",
+                borderBottomRightRadius: "10px",
+              }}
               aria-hidden
             />
             <span
-              className="pointer-events-none absolute inset-0 z-[3] opacity-0 mix-blend-multiply group-hover:animate-[cta-pulse_0.9s_ease-out_infinite] group-hover:opacity-100"
-              aria-hidden
-            />
-            <span
-              className="pointer-events-none absolute inset-y-0 -left-1/2 z-[4] w-1/2 -skew-x-12 bg-white/50 opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
+              className="pointer-events-none absolute bottom-0 right-0 z-[4] h-[23px] w-[22px] bg-[#FFF4DA]"
+              style={{ clipPath: "polygon(100% 0, 0 100%, 100% 100%)" }}
               aria-hidden
             />
           </button>

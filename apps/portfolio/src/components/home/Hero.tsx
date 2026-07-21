@@ -26,7 +26,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
       <div className="relative mx-auto aspect-[1310/860] w-full min-h-[500px] max-h-[min(860px,88vw)] sm:min-h-[600px]">
         {/* Giant forest-green name — behind paint + portrait */}
         <div
-          className="pointer-events-none absolute inset-x-[-4%] top-[6%] z-0 select-none overflow-visible text-center"
+          className="pointer-events-none absolute inset-x-[-4%] top-[calc(6%-15px)] z-0 select-none overflow-visible text-center"
           aria-hidden
         >
           <span className="block text-[clamp(80px,19vw,300px)] font-bold leading-[0.82] tracking-[-0.05em] text-[#016146]">
@@ -34,7 +34,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           </span>
         </div>
 
-        {/* Portrait + brush (brush only ~25% beyond portrait) */}
+        {/* Portrait + static zigzag paint */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -73,12 +73,12 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           </div>
         </motion.div>
 
-        {/* Welcome tape — shifted up clear of hair */}
+        {/* Welcome tape */}
         <motion.div
           initial={{ opacity: 0, y: -8, rotate: -2 }}
           animate={{ opacity: 1, y: 0, rotate: -1.5 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="absolute left-1/2 top-[4.5%] z-[5] -translate-x-1/2"
+          className="absolute left-1/2 top-[calc(4.5%-15px)] z-[5] -translate-x-1/2"
         >
           <div
             className="px-[clamp(16px,1.8vw,24px)] py-[clamp(7px,0.75vw,10px)] shadow-[1px_2px_3px_rgba(0,75,64,0.1)]"
@@ -129,7 +129,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           />
         </motion.div>
 
-        {/* Sticky note — float (offset phase) */}
+        {/* Sticky note — float */}
         <motion.div
           initial={{ opacity: 0, y: 18, rotate: 5 }}
           animate={{

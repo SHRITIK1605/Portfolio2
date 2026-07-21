@@ -106,3 +106,60 @@ html {
   }
 }
 
+/* Before React: solid black on first land / reload */
+html.intro-boot,
+html.intro-boot body {
+  background: #000 !important;
+}
+
+/* Full-page intro: zigzag mask opens the black curtain onto the real page */
+@keyframes landing-intro-stroke {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.landing-intro-stroke {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: landing-intro-stroke 3.4s cubic-bezier(0.45, 0.02, 0.2, 1) forwards;
+}
+
+.landing-intro {
+  background: transparent;
+  transition: opacity 0.5s ease;
+}
+
+.landing-intro--fade {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.landing-intro-text {
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.landing-intro-text--in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.landing-intro-text--out {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-intro,
+  .landing-intro-stroke,
+  .landing-intro-text {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+

@@ -31,7 +31,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Before paint: keep home black so the page never flashes under the intro */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=location.pathname;if(p!=="/"&&p!=="")return;var k="shritik-landing-intro-seen";var n=performance.getEntriesByType("navigation")[0];var play=(n&&n.type==="reload")||sessionStorage.getItem(k)!=="1";if(play){document.documentElement.classList.add("intro-boot");document.documentElement.style.background="#000";}}catch(e){document.documentElement.classList.add("intro-boot");document.documentElement.style.background="#000";}})();`,
+          }}
+        />
+      </head>
       <body className={`${poppins.variable} ${caveat.variable} antialiased`}>
         <ChatProvider>
           <ChatLayoutShell>{children}</ChatLayoutShell>
