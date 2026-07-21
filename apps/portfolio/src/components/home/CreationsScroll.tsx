@@ -90,6 +90,8 @@ const COUNT = SHOWCASE_PROJECTS.length;
 const STEP_LOCK_MS = 780;
 /** After landing on 1st/4th card, absorb leftover flick before allowing section exit. */
 const EDGE_SETTLE_MS = 420;
+/** Smooth handoff duration to/from adjacent page sections. */
+const HANDOFF_MS = 720;
 /** Accumulated delta before one step. */
 const WHEEL_THRESHOLD = 28;
 /** Horizontal slide duration. */
@@ -256,6 +258,7 @@ export default function CreationsScroll() {
   const accumRef = useRef(0);
   const snapTimerRef = useRef<number | null>(null);
   const programmaticRef = useRef(false);
+  const handoffRef = useRef(false);
   /** False right after arriving on card 1 or 4 — blocks exit until settle. */
   const edgeReadyRef = useRef(true);
   const edgeTimerRef = useRef<number | null>(null);
@@ -272,7 +275,8 @@ export default function CreationsScroll() {
     []
   );
 
-  const isLocked = () => performance.now() < lockUntilRef.current;
+  const isLocked = () =>
+    performance.now() < lockUntilRef.current || handoffRef.current;
 
   const metrics = useCallback(() => {
     const section = sectionRef.current;
@@ -299,31 +303,84 @@ export default function CreationsScroll() {
     }, EDGE_SETTLE_MS);
   }, []);
 
+  const animateScrollTo = useCallback(
+    (top: number, duration = HANDOFF_MS) => {
+      handoffRef.current = true;
+      programmaticRef.current = true;
+      armLock(duration + 120);
+      const clamped = Math.max(0, top);
+      window.scrollTo({ top: clamped, behavior: "smooth" });
+      window.setTimeout(() => {
+        window.scrollTo({ top: clamped, behavior: "auto" });
+        handoffRef.current = false;
+        programmaticRef.current = false;
+      }, duration);
+    },
+    [armLock]
+  );
+
   const scrollToIndex = useCallback(
-    (i: number, opts?: { fromDot?: boolean }) => {
+    (i: number, opts?: { fromDot?: boolean; smooth?: boolean }) => {
       const m = metrics();
       if (!m) return;
       const next = Math.max(0, Math.min(COUNT - 1, i));
+      const target = m.start + next * m.slot;
       if (next === indexRef.current && !opts?.fromDot) {
         armLock();
         if (next === 0 || next === COUNT - 1) requireEdgeSettle();
         return;
       }
-      programmaticRef.current = true;
       indexRef.current = next;
       setIndex(next);
       setPinMode("pin");
-      window.scrollTo({ top: m.start + next * m.slot, behavior: "auto" });
       const atEdge = next === 0 || next === COUNT - 1;
-      armLock(atEdge ? STEP_LOCK_MS + 220 : STEP_LOCK_MS);
+      if (opts?.smooth) {
+        animateScrollTo(target, HANDOFF_MS);
+      } else {
+        programmaticRef.current = true;
+        window.scrollTo({ top: target, behavior: "auto" });
+        armLock(atEdge ? STEP_LOCK_MS + 220 : STEP_LOCK_MS);
+        window.setTimeout(() => {
+          programmaticRef.current = false;
+        }, 50);
+      }
       if (atEdge) requireEdgeSettle();
       else edgeReadyRef.current = true;
-      window.setTimeout(() => {
-        programmaticRef.current = false;
-      }, 50);
     },
-    [armLock, metrics, requireEdgeSettle]
+    [animateScrollTo, armLock, metrics, requireEdgeSettle]
   );
+
+  /** Leave projects downward — settle with Cases heading at top. */
+  const exitToCases = useCallback(() => {
+    const el =
+      document.getElementById("selected-product-cases-heading") ||
+      document.getElementById("selected-product-cases");
+    const m = metrics();
+    if (!el || !m) return;
+    indexRef.current = COUNT - 1;
+    setIndex(COUNT - 1);
+    setPinMode("after");
+    edgeReadyRef.current = true;
+    const top = el.getBoundingClientRect().top + window.scrollY - 24;
+    animateScrollTo(top, HANDOFF_MS);
+  }, [animateScrollTo, metrics]);
+
+  /** Leave projects upward — settle back into Experience. */
+  const exitToExperience = useCallback(() => {
+    const heading = document.getElementById("experience-heading");
+    const m = metrics();
+    indexRef.current = 0;
+    setIndex(0);
+    setPinMode("before");
+    edgeReadyRef.current = true;
+    if (heading) {
+      const top =
+        heading.getBoundingClientRect().top + window.scrollY - 28;
+      animateScrollTo(Math.max(0, top), HANDOFF_MS);
+      return;
+    }
+    if (m) animateScrollTo(Math.max(0, m.start - m.vh * 0.35), HANDOFF_MS);
+  }, [animateScrollTo, metrics]);
 
   const syncFromScroll = useCallback(() => {
     const m = metrics();
@@ -427,20 +484,20 @@ export default function CreationsScroll() {
       if (approachingFromAbove) {
         e.preventDefault();
         e.stopPropagation();
-        scrollToIndex(0);
+        scrollToIndex(0, { smooth: true });
         return;
       }
 
       if (approachingFromBelow) {
         e.preventDefault();
         e.stopPropagation();
-        scrollToIndex(COUNT - 1);
+        scrollToIndex(COUNT - 1, { smooth: true });
         return;
       }
 
       const cur = indexRef.current;
 
-      // First / last: stay put until edge settle (stops long-flick skip of 1 & 4)
+      // First / last: settle, then hand off to adjacent section
       if (up && cur === 0) {
         accumRef.current = 0;
         if (!edgeReadyRef.current || isLocked()) {
@@ -450,6 +507,9 @@ export default function CreationsScroll() {
           if (m2) window.scrollTo({ top: m2.start, behavior: "auto" });
           return;
         }
+        e.preventDefault();
+        e.stopPropagation();
+        exitToExperience();
         return;
       }
       if (down && cur === COUNT - 1) {
@@ -466,6 +526,9 @@ export default function CreationsScroll() {
           }
           return;
         }
+        e.preventDefault();
+        e.stopPropagation();
+        exitToCases();
         return;
       }
 
@@ -485,7 +548,7 @@ export default function CreationsScroll() {
       window.removeEventListener("wheel", onWheel, {
         capture: true,
       } as EventListenerOptions);
-  }, [metrics, scrollToIndex]);
+  }, [exitToCases, exitToExperience, metrics, scrollToIndex]);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -509,8 +572,11 @@ export default function CreationsScroll() {
       const cur = indexRef.current;
       if (dy > 0) {
         if (cur < COUNT - 1) scrollToIndex(cur + 1);
+        else if (edgeReadyRef.current) exitToCases();
       } else if (cur > 0) {
         scrollToIndex(cur - 1);
+      } else if (edgeReadyRef.current) {
+        exitToExperience();
       }
     };
 
@@ -520,7 +586,7 @@ export default function CreationsScroll() {
       stage.removeEventListener("touchstart", onStart);
       stage.removeEventListener("touchend", onEnd);
     };
-  }, [metrics, scrollToIndex]);
+  }, [exitToCases, exitToExperience, metrics, scrollToIndex]);
 
   const panelPosition =
     pinMode === "pin" ? ("fixed" as const) : ("absolute" as const);

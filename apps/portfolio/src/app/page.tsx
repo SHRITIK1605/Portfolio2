@@ -89,9 +89,12 @@ export default async function HomePage() {
           <CreationsScroll />
           <section
             id="selected-product-cases"
-            className="mx-auto max-w-[1100px] scroll-mt-[24px] px-[20px] pb-[64px] pt-[48px] sm:px-[32px] sm:pb-[80px] sm:pt-[56px] md:px-[48px] md:pb-[96px]"
+            className="mx-auto max-w-[1100px] scroll-mt-[28px] px-[20px] pb-[64px] pt-[48px] sm:px-[32px] sm:pb-[80px] sm:pt-[56px] md:px-[48px] md:pb-[96px]"
           >
-            <h2 className="m-0 mb-[20px] text-[22px] font-bold leading-tight tracking-[-0.02em] text-forest sm:mb-[28px] sm:text-[24px] md:mb-[32px] md:text-[26px]">
+            <h2
+              id="selected-product-cases-heading"
+              className="m-0 mb-[20px] text-[22px] font-bold leading-tight tracking-[-0.02em] text-forest sm:mb-[28px] sm:text-[24px] md:mb-[32px] md:text-[26px]"
+            >
               Selected Product Cases
             </h2>
             <ProjectCards projects={projects} />
