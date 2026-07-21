@@ -164,3 +164,120 @@ html.intro-boot body {
   }
 }
 
+/* Projects showcase — scraps + CTA hover */
+@keyframes projects-scrap-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.projects-card--active .projects-scrap--tape {
+  animation: projects-scrap-float 3.6s ease-in-out infinite;
+}
+
+.projects-card--active .projects-scrap--dot {
+  animation: projects-scrap-float 2.8s ease-in-out infinite 0.4s;
+}
+
+.projects-card--active .projects-scrap--chip {
+  animation: projects-scrap-float 3.2s ease-in-out infinite 0.2s;
+}
+
+.projects-cta {
+  overflow: hidden;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.projects-cta-burst {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    var(--cta-panel) 0%,
+    var(--cta-accent) 48%,
+    var(--cta-panel) 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.2);
+  transform-origin: left center;
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.projects-cta-shine {
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  transform: skewX(-18deg);
+  opacity: 0;
+}
+
+.projects-cta:hover {
+  color: #111;
+  box-shadow: 5px 5px 0 #000 !important;
+  transform: translate(-1px, -1px);
+}
+
+.projects-cta:hover .projects-cta-burst {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.projects-cta:hover .projects-cta-shine {
+  opacity: 1;
+  animation: projects-cta-shine 0.7s ease forwards;
+}
+
+.projects-cta:hover .projects-cta-icon {
+  animation: projects-cta-icon 0.55s ease;
+}
+
+@keyframes projects-cta-shine {
+  from {
+    left: -40%;
+  }
+  to {
+    left: 120%;
+  }
+}
+
+@keyframes projects-cta-icon {
+  0% {
+    transform: translate(0, 0);
+  }
+  40% {
+    transform: translate(3px, -3px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projects-scrap--tape,
+  .projects-scrap--dot,
+  .projects-scrap--chip,
+  .projects-cta:hover .projects-cta-shine,
+  .projects-cta:hover .projects-cta-icon {
+    animation: none !important;
+  }
+}
+
+
