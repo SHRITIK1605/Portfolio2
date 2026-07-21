@@ -930,7 +930,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
 
   return (
     <section
-      className="relative mx-auto max-w-[1320px] overflow-visible rounded-[28px] bg-[#EAECE2] px-[16px] pb-[56px] pt-[28px] sm:px-[28px] sm:pb-[72px] sm:pt-[32px] md:px-[36px] md:pb-[88px] lg:px-[40px]"
+      className="relative mx-auto -mt-[80px] max-w-[1320px] overflow-visible rounded-[28px] bg-[#EAECE2] px-[16px] pb-[56px] pt-[28px] sm:px-[28px] sm:pb-[72px] sm:pt-[32px] md:px-[36px] md:pb-[88px] lg:px-[40px]"
       aria-labelledby="experience-heading"
     >
       <motion.div

@@ -12,10 +12,8 @@ interface NavbarProps {
   homepage: HomepageSettings;
 }
 
-/** Proportional to original SVG CTAs at 60px height */
-const RESUME_W = 212;
-const TALK_W = 337;
-const BTN_H = 60;
+/** Shared nav control height — Resume SVG is 55×194 */
+const BTN_H = 55;
 
 export default function Navbar({ homepage }: NavbarProps) {
   const { openChat } = useChatContext();
@@ -30,72 +28,51 @@ export default function Navbar({ homepage }: NavbarProps) {
             alt="Shritik"
             width={56}
             height={56}
-            className="h-[52px] w-[52px] sm:h-[56px] sm:w-[56px]"
+            className="h-[52px] w-[52px]"
             priority
           />
         </Link>
 
-        <div className="flex min-w-0 items-center gap-[12px] sm:gap-[16px]">
-          {/* Resume — yellow crazy fill on hover; layout locked */}
+        <div className="flex h-[55px] min-w-0 items-center gap-[10px] sm:gap-[12px]">
+          {/* Resume — exact btn-resume.svg artwork; hover overlays preserved */}
           <button
             type="button"
             onClick={() => setResumeOpen(true)}
             aria-label="Open resume"
-            style={{ width: RESUME_W, height: BTN_H }}
-            className="group relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[12px] border-2 border-[#016146] bg-white active:scale-[0.98]"
+            className="group relative h-[55px] w-[194px] shrink-0 overflow-hidden rounded-[12px] active:scale-[0.98]"
           >
-            <span
-              className="pointer-events-none absolute -bottom-1 -right-1 z-0 h-[220%] w-[220%] origin-bottom-right scale-0 rounded-full bg-[#FFE566] transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-100"
-              aria-hidden
-            />
-            <span
-              className="pointer-events-none absolute inset-0 z-0 opacity-0 group-hover:animate-[cta-pulse_0.9s_ease-out_infinite] group-hover:opacity-100"
-              aria-hidden
-            />
-            <span
-              className="pointer-events-none absolute inset-y-0 -left-1/2 z-[1] w-1/2 -skew-x-12 bg-white/50 opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
-              aria-hidden
+            <Image
+              src="/hero/btn-resume.svg"
+              alt=""
+              width={194}
+              height={55}
+              unoptimized
+              priority
+              className="pointer-events-none relative z-[2] h-[55px] w-[194px] select-none"
             />
 
-            <span className="relative z-[2] inline-flex h-full w-full items-center justify-center gap-[10px] px-[18px]">
-              <svg
-                width="22"
-                height="12"
-                viewBox="0 0 22 12"
-                fill="none"
-                aria-hidden
-                className="shrink-0 group-hover:animate-[cta-wiggle_0.45s_ease-in-out_infinite]"
-              >
-                <path
-                  d="M1 8C3 4 5 10 7 6C9 2 11 9 13 5C15 1 17 8 21 3"
-                  stroke="#F5B800"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="relative text-[16px] font-medium leading-none tracking-[-0.01em] text-[#016146]">
-                Resume
-                <span
-                  className="absolute -bottom-[4px] left-[55%] h-[2.5px] w-[42%] rounded-full bg-[#F5B800] transition-all duration-300 group-hover:left-0 group-hover:w-full"
-                  aria-hidden
-                />
-              </span>
-            </span>
-
+            {/* Hover: yellow burst from bottom-right (under accents via multiply) */}
             <span
-              className="pointer-events-none absolute bottom-0 right-0 z-[3] h-[16px] w-[18px] bg-[#FFE7AB] transition-colors duration-300 group-hover:bg-[#F5B800]"
-              style={{ clipPath: "polygon(100% 0, 0 100%, 100% 100%)" }}
+              className="pointer-events-none absolute -bottom-1 -right-1 z-[3] h-[220%] w-[220%] origin-bottom-right scale-0 rounded-full bg-[#FFE566] mix-blend-multiply transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-100"
+              aria-hidden
+            />
+            <span
+              className="pointer-events-none absolute inset-0 z-[3] opacity-0 mix-blend-multiply group-hover:animate-[cta-pulse_0.9s_ease-out_infinite] group-hover:opacity-100"
+              aria-hidden
+            />
+            <span
+              className="pointer-events-none absolute inset-y-0 -left-1/2 z-[4] w-1/2 -skew-x-12 bg-white/50 opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
               aria-hidden
             />
           </button>
 
-          {/* Talk — gradient fill on hover; same layout always */}
+          {/* Talk — content-width, equal L/R padding; gradient on hover */}
           <button
             type="button"
             onClick={() => openChat()}
             aria-label="Talk with virtual me"
-            style={{ width: TALK_W, height: BTN_H }}
-            className="group relative inline-flex max-w-[min(337px,calc(100vw-200px))] shrink-0 items-center justify-center overflow-hidden rounded-[12px] border-2 border-[#016146] bg-white active:scale-[0.98]"
+            style={{ height: BTN_H }}
+            className="group relative inline-flex shrink-0 items-center overflow-hidden rounded-[12px] border-2 border-[#016146] bg-white active:scale-[0.98]"
           >
             <span
               className="pointer-events-none absolute inset-0 z-0 origin-left scale-x-0 bg-[linear-gradient(110deg,#016146_0%,#0a7a64_45%,#c4a035_100%)] transition-transform duration-500 ease-out group-hover:scale-x-100"
@@ -106,15 +83,15 @@ export default function Navbar({ homepage }: NavbarProps) {
               aria-hidden
             />
 
-            <span className="relative z-[2] inline-flex h-full w-full items-center justify-center gap-[12px] px-[20px]">
+            <span className="relative z-[2] inline-flex h-full items-center gap-[8px] px-[14px]">
               <Image
                 src="/hero/icon-34.svg"
                 alt=""
                 width={40}
                 height={39}
-                className="h-[28px] w-[28px] shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110"
+                className="mb-[2px] -ml-[2px] h-[28px] w-[28px] shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110"
               />
-              <span className="truncate text-[15px] font-medium leading-none tracking-[-0.01em] text-[#016146] transition-colors duration-300 group-hover:text-white sm:text-[16px]">
+              <span className="whitespace-nowrap text-[14px] font-medium leading-none tracking-[-0.01em] text-[#016146] transition-colors duration-300 group-hover:text-white sm:text-[15px]">
                 <span className="sm:hidden">Talk to me</span>
                 <span className="hidden sm:inline">Talk with virtual me!</span>
               </span>

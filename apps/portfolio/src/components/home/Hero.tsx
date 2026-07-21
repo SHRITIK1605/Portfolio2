@@ -43,7 +43,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
         >
           <div className="relative mx-auto w-full">
             <div
-              className="pointer-events-none absolute left-1/2 top-[48%] z-0 w-[122%] -translate-x-1/2"
+              className="pointer-events-none absolute left-1/2 top-[calc(48%-90px)] z-0 w-[122%] -translate-x-1/2"
               aria-hidden
             >
               <Image
@@ -87,7 +87,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
               clipPath: "polygon(1% 12%, 99% 0%, 100% 88%, 0% 100%)",
             }}
           >
-            <p className="m-0 whitespace-nowrap font-[family-name:var(--font-caveat)] text-[clamp(16px,1.6vw,21px)] font-semibold leading-none text-[#016146]">
+            <p className="m-0 whitespace-nowrap font-[family-name:var(--font-caveat)] text-[clamp(18px,1.8vw,24px)] font-semibold leading-none text-[#016146]">
               Welcome to my Portfolio..
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.18 }}
-          className="pointer-events-none absolute right-[0%] top-[40%] z-[4] hidden whitespace-nowrap text-left font-[family-name:var(--font-caveat)] text-[clamp(16px,1.7vw,24px)] leading-none text-[#C4A035] sm:block md:right-[2%] lg:right-[4%]"
+          className="pointer-events-none absolute right-[0%] top-[40%] z-[4] hidden whitespace-nowrap text-left font-[family-name:var(--font-caveat)] text-[clamp(18px,1.95vw,28px)] leading-none text-[#C4A035] sm:block md:right-[2%] lg:right-[4%]"
         >
           — {tagline}
         </motion.p>
@@ -116,7 +116,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
             y: { ...floatTransition, delay: 0.4 },
             rotate: { ...floatTransition, delay: 0.4, duration: 4.2 },
           }}
-          className="absolute bottom-[calc(1%+38px)] left-[-2%] z-[3] w-[clamp(170px,28.5%,369px)] sm:bottom-[calc(3%+38px)] sm:left-[-1%]"
+          className="absolute bottom-[calc(1%+88px)] left-[calc(-2%-20px)] z-[3] w-[clamp(171px,28.8%,369px)] sm:bottom-[calc(3%+88px)] sm:left-[calc(-1%-20px)]"
         >
           <Image
             src="/hero/definition-scrap-clear.png"
@@ -142,7 +142,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
             y: { ...floatTransition, delay: 1.1, duration: 3.9 },
             rotate: { ...floatTransition, delay: 1.1, duration: 4.5 },
           }}
-          className="absolute bottom-[calc(5%+38px)] right-[-3%] z-[3] w-[clamp(130px,21.5%,282px)] sm:bottom-[calc(8%+38px)] sm:right-[-1%] md:right-[1%]"
+          className="absolute bottom-[calc(5%+38px)] right-[-3%] z-[3] w-[clamp(148px,24.5%,318px)] sm:bottom-[calc(8%+38px)] sm:right-[-1%] md:right-[1%]"
         >
           <Image
             src="/hero/sticky-note.svg"
@@ -156,7 +156,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
         </motion.div>
       </div>
 
-      <p className="mt-[-4px] whitespace-nowrap text-center font-[family-name:var(--font-caveat)] text-[18px] text-[#C4A035] sm:hidden">
+      <p className="mt-[-4px] whitespace-nowrap text-center font-[family-name:var(--font-caveat)] text-[20px] text-[#C4A035] sm:hidden">
         — {tagline}
       </p>
     </section>
