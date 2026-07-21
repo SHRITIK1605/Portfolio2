@@ -86,7 +86,14 @@ const SHOWCASE_PROJECTS = [
 ] as const;
 
 const COUNT = SHOWCASE_PROJECTS.length;
-const STEP_MS = 650;
+/** Min time between card steps (also covers slide animation). */
+const STEP_LOCK_MS = 900;
+/** Require wheel idle this long before accepting another step (kills trackpad burst). */
+const GESTURE_IDLE_MS = 160;
+/** Accumulated delta before one step fires. */
+const WHEEL_THRESHOLD = 40;
+/** Horizontal slide duration (ms) — slower, calmer. */
+const SLIDE_MS = 900;
 
 function PaintSplash({ color, n }: { color: string; n: number }) {
   return (
@@ -234,99 +241,146 @@ function ProjectCard({
 
 /**
  * PROJECTS — one landscape card at a time.
- * Wheel/touch down → next (right); up → previous (left).
- * After the 4th card, further down-scroll releases smoothly into cases.
+ * Wheel/touch: one gesture → one card. Exit freely at 1 (up) and 4 (down).
  */
 export default function CreationsScroll() {
   const sectionRef = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(0);
-  const [pinned, setPinned] = useState(false);
-  const lockRef = useRef(false);
   const indexRef = useRef(0);
   const touchY = useRef<number | null>(null);
+
+  /** True while a step animation / cooldown is active — eat wheel, don't step again. */
+  const lockedRef = useRef(false);
+  const lockUntilRef = useRef(0);
+  const accumRef = useRef(0);
+  const idleTimerRef = useRef<number | null>(null);
+  const unlockTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     indexRef.current = index;
   }, [index]);
 
-  const goToCases = useCallback(() => {
-    const cases = document.getElementById("selected-product-cases");
-    if (cases) {
-      cases.scrollIntoView({ behavior: "smooth", block: "start" });
+  const clearTimers = useCallback(() => {
+    if (idleTimerRef.current) {
+      window.clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = null;
     }
+    if (unlockTimerRef.current) {
+      window.clearTimeout(unlockTimerRef.current);
+      unlockTimerRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => () => clearTimers(), [clearTimers]);
+
+  const armLock = useCallback(() => {
+    lockedRef.current = true;
+    lockUntilRef.current = performance.now() + STEP_LOCK_MS;
+    accumRef.current = 0;
+    if (unlockTimerRef.current) window.clearTimeout(unlockTimerRef.current);
+    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    unlockTimerRef.current = window.setTimeout(() => {
+      idleTimerRef.current = window.setTimeout(() => {
+        lockedRef.current = false;
+        accumRef.current = 0;
+      }, GESTURE_IDLE_MS);
+    }, STEP_LOCK_MS);
   }, []);
 
   const step = useCallback(
     (dir: 1 | -1) => {
-      if (lockRef.current) return;
+      if (lockedRef.current) return false;
       const cur = indexRef.current;
-
-      if (dir === 1 && cur >= COUNT - 1) {
-        lockRef.current = true;
-        goToCases();
-        window.setTimeout(() => {
-          lockRef.current = false;
-        }, 900);
-        return;
-      }
-      if (dir === -1 && cur <= 0) return;
-
-      lockRef.current = true;
-      setIndex(cur + dir);
-      window.setTimeout(() => {
-        lockRef.current = false;
-      }, STEP_MS);
+      const next = cur + dir;
+      if (next < 0 || next >= COUNT) return false;
+      setIndex(next);
+      armLock();
+      return true;
     },
-    [goToCases]
+    [armLock]
   );
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        const ratio = entry.intersectionRatio;
-        const top = entry.boundingClientRect.top;
-        // Pin while the section owns the viewport
-        setPinned(ratio > 0.55 && top < window.innerHeight * 0.35);
-      },
-      { threshold: [0.35, 0.55, 0.7, 0.9] }
-    );
-    io.observe(section);
-    return () => io.disconnect();
-  }, []);
+    let wasInZone = false;
 
-  useEffect(() => {
-    const onWheel = (e: WheelEvent) => {
-      const section = sectionRef.current;
-      if (!section) return;
-
+    const inProjectsZone = () => {
       const rect = section.getBoundingClientRect();
-      const inZone =
-        rect.top <= 80 && rect.bottom >= window.innerHeight * 0.55;
-      if (!inZone) return;
+      return (
+        rect.top <= window.innerHeight * 0.2 &&
+        rect.bottom >= window.innerHeight * 0.55
+      );
+    };
+
+    const bumpIdleRelease = () => {
+      // Only allow unlock after the hard lock window
+      const remaining = lockUntilRef.current - performance.now();
+      if (remaining > 0) {
+        if (unlockTimerRef.current) window.clearTimeout(unlockTimerRef.current);
+        unlockTimerRef.current = window.setTimeout(() => {
+          idleTimerRef.current = window.setTimeout(() => {
+            lockedRef.current = false;
+            accumRef.current = 0;
+          }, GESTURE_IDLE_MS);
+        }, remaining);
+        return;
+      }
+      if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = window.setTimeout(() => {
+        lockedRef.current = false;
+        accumRef.current = 0;
+      }, GESTURE_IDLE_MS);
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      const nowIn = inProjectsZone();
+
+      if (nowIn && !wasInZone) {
+        wasInZone = true;
+        lockedRef.current = true;
+        lockUntilRef.current = performance.now() + 450;
+        accumRef.current = 0;
+        bumpIdleRelease();
+        e.preventDefault();
+        return;
+      }
+      if (!nowIn) {
+        wasInZone = false;
+        return;
+      }
 
       const cur = indexRef.current;
-      const goingDown = e.deltaY > 0;
-      const goingUp = e.deltaY < 0;
+      const down = e.deltaY > 0;
+      const up = e.deltaY < 0;
+      if (!down && !up) return;
 
-      // At first card scrolling up → leave section
-      if (goingUp && cur === 0 && rect.top >= -2) {
+      if (lockedRef.current) {
+        bumpIdleRelease();
+        e.preventDefault();
         return;
       }
 
-      // At last card scrolling down → release to cases (still prevent jumpiness once)
-      if (goingDown && cur >= COUNT - 1) {
-        e.preventDefault();
-        step(1);
+      if (up && cur === 0) {
+        accumRef.current = 0;
+        wasInZone = false;
+        return;
+      }
+      if (down && cur === COUNT - 1) {
+        accumRef.current = 0;
+        wasInZone = false;
         return;
       }
 
-      if (goingDown || goingUp) {
-        e.preventDefault();
-        step(goingDown ? 1 : -1);
-      }
+      e.preventDefault();
+      accumRef.current += e.deltaY;
+
+      if (Math.abs(accumRef.current) < WHEEL_THRESHOLD) return;
+
+      const dir: 1 | -1 = accumRef.current > 0 ? 1 : -1;
+      accumRef.current = 0;
+      step(dir);
     };
 
     window.addEventListener("wheel", onWheel, { passive: false });
@@ -345,16 +399,23 @@ export default function CreationsScroll() {
       const y = e.changedTouches[0]?.clientY ?? touchY.current;
       const dy = touchY.current - y;
       touchY.current = null;
-      if (Math.abs(dy) < 40) return;
+      if (Math.abs(dy) < 48) return;
 
       const rect = section.getBoundingClientRect();
       const inZone =
-        rect.top <= 100 && rect.bottom >= window.innerHeight * 0.45;
+        rect.top <= window.innerHeight * 0.25 &&
+        rect.bottom >= window.innerHeight * 0.5;
       if (!inZone) return;
+      if (lockedRef.current) return;
 
       const cur = indexRef.current;
-      if (dy > 0) step(1);
-      else if (cur > 0) step(-1);
+      if (dy > 0) {
+        if (cur >= COUNT - 1) return; // let page continue down
+        step(1);
+      } else {
+        if (cur <= 0) return; // let page continue up
+        step(-1);
+      }
     };
 
     section.addEventListener("touchstart", onStart, { passive: true });
@@ -364,17 +425,6 @@ export default function CreationsScroll() {
       section.removeEventListener("touchend", onEnd);
     };
   }, [step]);
-
-  // Keep section aligned when pinned so Experience doesn't peek oddly
-  useEffect(() => {
-    if (!pinned) return;
-    const section = sectionRef.current;
-    if (!section) return;
-    const top = section.getBoundingClientRect().top + window.scrollY;
-    if (Math.abs(window.scrollY - top) > 4) {
-      window.scrollTo({ top, behavior: "auto" });
-    }
-  }, [pinned, index]);
 
   return (
     <section
@@ -407,10 +457,11 @@ export default function CreationsScroll() {
 
         <div className="relative min-h-0 w-full flex-1 overflow-hidden">
           <div
-            className="flex h-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+            className="flex h-full will-change-transform"
             style={{
               width: `${COUNT * 100}vw`,
               transform: `translate3d(-${index * 100}vw, 0, 0)`,
+              transition: `transform ${SLIDE_MS}ms cubic-bezier(0.25, 0.1, 0.25, 1)`,
             }}
           >
             {SHOWCASE_PROJECTS.map((project, i) => (
