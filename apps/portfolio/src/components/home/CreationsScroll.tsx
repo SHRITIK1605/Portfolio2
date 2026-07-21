@@ -86,12 +86,10 @@ const SHOWCASE_PROJECTS = [
 ] as const;
 
 const COUNT = SHOWCASE_PROJECTS.length;
-/** Min time between card steps. */
-const STEP_LOCK_MS = 850;
-/** Require wheel idle before next step (trackpad burst kill). */
-const GESTURE_IDLE_MS = 140;
+/** Block further steps for this long after a step (covers slide + trackpad burst). */
+const STEP_LOCK_MS = 780;
 /** Accumulated delta before one step. */
-const WHEEL_THRESHOLD = 36;
+const WHEEL_THRESHOLD = 28;
 /** Horizontal slide duration. */
 const SLIDE_MS = 850;
 
@@ -241,22 +239,19 @@ function ProjectCard({
 
 /**
  * PROJECTS — tall scroll runway + pinned stage.
- * Long page scrolls get caught here; one wheel gesture → one card;
- * exit freely at card 1 (up) and card 4 (down).
+ * Same wheel behavior over cards or empty stage; dash nav for direct jumps.
  */
 export default function CreationsScroll() {
   const sectionRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const [pinMode, setPinMode] = useState<"before" | "pin" | "after">(
     "before"
   );
   const indexRef = useRef(0);
   const touchY = useRef<number | null>(null);
-  const lockedRef = useRef(false);
   const lockUntilRef = useRef(0);
   const accumRef = useRef(0);
-  const idleTimerRef = useRef<number | null>(null);
-  const unlockTimerRef = useRef<number | null>(null);
   const snapTimerRef = useRef<number | null>(null);
   const programmaticRef = useRef(false);
 
@@ -264,16 +259,14 @@ export default function CreationsScroll() {
     indexRef.current = index;
   }, [index]);
 
-  const clearTimers = useCallback(() => {
-    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-    if (unlockTimerRef.current) window.clearTimeout(unlockTimerRef.current);
-    if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
-    idleTimerRef.current = null;
-    unlockTimerRef.current = null;
-    snapTimerRef.current = null;
-  }, []);
+  useEffect(
+    () => () => {
+      if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+    },
+    []
+  );
 
-  useEffect(() => () => clearTimers(), [clearTimers]);
+  const isLocked = () => performance.now() < lockUntilRef.current;
 
   const metrics = useCallback(() => {
     const section = sectionRef.current;
@@ -283,63 +276,33 @@ export default function CreationsScroll() {
       section,
       start: section.offsetTop,
       vh,
-      // one viewport of scroll per card
       slot: vh,
     };
   }, []);
 
   const armLock = useCallback(() => {
-    lockedRef.current = true;
     lockUntilRef.current = performance.now() + STEP_LOCK_MS;
     accumRef.current = 0;
-    if (unlockTimerRef.current) window.clearTimeout(unlockTimerRef.current);
-    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-    unlockTimerRef.current = window.setTimeout(() => {
-      idleTimerRef.current = window.setTimeout(() => {
-        lockedRef.current = false;
-        accumRef.current = 0;
-      }, GESTURE_IDLE_MS);
-    }, STEP_LOCK_MS);
-    // Hard safety — never stay locked forever
-    window.setTimeout(() => {
-      if (performance.now() >= lockUntilRef.current) {
-        lockedRef.current = false;
-      }
-    }, STEP_LOCK_MS + GESTURE_IDLE_MS + 80);
-  }, []);
-
-  const bumpIdleRelease = useCallback(() => {
-    const remaining = lockUntilRef.current - performance.now();
-    if (remaining > 0) {
-      if (unlockTimerRef.current) window.clearTimeout(unlockTimerRef.current);
-      unlockTimerRef.current = window.setTimeout(() => {
-        idleTimerRef.current = window.setTimeout(() => {
-          lockedRef.current = false;
-          accumRef.current = 0;
-        }, GESTURE_IDLE_MS);
-      }, remaining);
-      return;
-    }
-    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-    idleTimerRef.current = window.setTimeout(() => {
-      lockedRef.current = false;
-      accumRef.current = 0;
-    }, GESTURE_IDLE_MS);
   }, []);
 
   const scrollToIndex = useCallback(
-    (i: number) => {
+    (i: number, opts?: { fromDot?: boolean }) => {
       const m = metrics();
       if (!m) return;
       const next = Math.max(0, Math.min(COUNT - 1, i));
+      if (next === indexRef.current && !opts?.fromDot) {
+        armLock();
+        return;
+      }
       programmaticRef.current = true;
       indexRef.current = next;
       setIndex(next);
+      setPinMode("pin");
       window.scrollTo({ top: m.start + next * m.slot, behavior: "auto" });
+      armLock();
       window.setTimeout(() => {
         programmaticRef.current = false;
-      }, 40);
-      armLock();
+      }, 50);
     },
     [armLock, metrics]
   );
@@ -349,7 +312,6 @@ export default function CreationsScroll() {
     if (!m || programmaticRef.current) return;
     const { section, start, vh, slot } = m;
     const rect = section.getBoundingClientRect();
-    const y = window.scrollY;
 
     if (rect.top > 1) {
       setPinMode("before");
@@ -369,8 +331,10 @@ export default function CreationsScroll() {
     }
 
     setPinMode("pin");
-    const raw = (y - start) / slot;
-    const i = Math.max(0, Math.min(COUNT - 1, Math.round(raw)));
+    const i = Math.max(
+      0,
+      Math.min(COUNT - 1, Math.round((window.scrollY - start) / slot))
+    );
     if (i !== indexRef.current) {
       indexRef.current = i;
       setIndex(i);
@@ -382,28 +346,27 @@ export default function CreationsScroll() {
       syncFromScroll();
       if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
       snapTimerRef.current = window.setTimeout(() => {
-        if (programmaticRef.current || lockedRef.current) return;
+        if (programmaticRef.current || isLocked()) return;
         const m = metrics();
         if (!m) return;
-        const { start, slot, section } = m;
+        const { start, slot, section, vh } = m;
         const rect = section.getBoundingClientRect();
-        // Only snap while pinned inside the runway
-        if (rect.top > 1 || rect.bottom <= m.vh + 1) return;
+        if (rect.top > 1 || rect.bottom <= vh + 1) return;
         const nearest = Math.max(
           0,
           Math.min(COUNT - 1, Math.round((window.scrollY - start) / slot))
         );
         const target = start + nearest * slot;
-        if (Math.abs(window.scrollY - target) > 10) {
+        if (Math.abs(window.scrollY - target) > 12) {
           programmaticRef.current = true;
           indexRef.current = nearest;
           setIndex(nearest);
           window.scrollTo({ top: target, behavior: "auto" });
           window.setTimeout(() => {
             programmaticRef.current = false;
-          }, 40);
+          }, 50);
         }
-      }, 100);
+      }, 120);
     };
 
     syncFromScroll();
@@ -425,34 +388,40 @@ export default function CreationsScroll() {
       const up = e.deltaY < 0;
       if (!down && !up) return;
 
-      // Catch long scrolls from above — land on project 1 instead of flying past
-      if (down && rect.top > 0 && rect.top < vh * 0.72) {
-        e.preventDefault();
-        if (!lockedRef.current) {
-          scrollToIndex(0);
-        } else {
-          bumpIdleRelease();
-        }
+      const approachingFromAbove =
+        down && rect.top > 0 && rect.top < vh * 0.72;
+      const approachingFromBelow =
+        up && rect.bottom < vh && rect.bottom > vh * 0.28;
+      const pinned = rect.top <= 1 && rect.bottom > vh + 1;
+
+      if (!approachingFromAbove && !approachingFromBelow && !pinned) {
         return;
       }
 
-      // Catch scrolls coming up from below — land on project 4
-      if (up && rect.bottom < vh && rect.bottom > vh * 0.28) {
+      // Locked: swallow wheel so trackpad can't skip, but don't extend lock
+      if (isLocked()) {
         e.preventDefault();
-        if (!lockedRef.current) {
-          scrollToIndex(COUNT - 1);
-        } else {
-          bumpIdleRelease();
-        }
+        e.stopPropagation();
         return;
       }
 
-      // Not in the pinned runway
-      if (rect.top > 1 || rect.bottom <= vh + 1) return;
+      if (approachingFromAbove) {
+        e.preventDefault();
+        e.stopPropagation();
+        scrollToIndex(0);
+        return;
+      }
+
+      if (approachingFromBelow) {
+        e.preventDefault();
+        e.stopPropagation();
+        scrollToIndex(COUNT - 1);
+        return;
+      }
 
       const cur = indexRef.current;
 
-      // Boundaries → release to normal page scroll
+      // Ends → let the page scroll normally
       if (up && cur === 0) {
         accumRef.current = 0;
         return;
@@ -463,12 +432,7 @@ export default function CreationsScroll() {
       }
 
       e.preventDefault();
-
-      if (lockedRef.current) {
-        bumpIdleRelease();
-        return;
-      }
-
+      e.stopPropagation();
       accumRef.current += e.deltaY;
       if (Math.abs(accumRef.current) < WHEEL_THRESHOLD) return;
 
@@ -477,45 +441,48 @@ export default function CreationsScroll() {
       scrollToIndex(cur + dir);
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, [bumpIdleRelease, metrics, scrollToIndex]);
+    // Capture phase = same behavior over card, link, or empty stage
+    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    return () =>
+      window.removeEventListener("wheel", onWheel, {
+        capture: true,
+      } as EventListenerOptions);
+  }, [metrics, scrollToIndex]);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    const stage = stageRef.current;
+    if (!stage) return;
 
     const onStart = (e: TouchEvent) => {
       touchY.current = e.touches[0]?.clientY ?? null;
     };
     const onEnd = (e: TouchEvent) => {
-      if (touchY.current == null) return;
+      if (touchY.current == null || isLocked()) return;
       const y = e.changedTouches[0]?.clientY ?? touchY.current;
       const dy = touchY.current - y;
       touchY.current = null;
-      if (Math.abs(dy) < 48 || lockedRef.current) return;
+      if (Math.abs(dy) < 40) return;
 
-      const rect = section.getBoundingClientRect();
-      const vh = window.innerHeight;
-      if (rect.top > vh * 0.25 || rect.bottom < vh * 0.5) return;
+      const m = metrics();
+      if (!m) return;
+      const rect = m.section.getBoundingClientRect();
+      if (rect.top > m.vh * 0.25 || rect.bottom < m.vh * 0.5) return;
 
       const cur = indexRef.current;
       if (dy > 0) {
-        if (cur >= COUNT - 1) return;
-        scrollToIndex(cur + 1);
-      } else {
-        if (cur <= 0) return;
+        if (cur < COUNT - 1) scrollToIndex(cur + 1);
+      } else if (cur > 0) {
         scrollToIndex(cur - 1);
       }
     };
 
-    section.addEventListener("touchstart", onStart, { passive: true });
-    section.addEventListener("touchend", onEnd, { passive: true });
+    stage.addEventListener("touchstart", onStart, { passive: true });
+    stage.addEventListener("touchend", onEnd, { passive: true });
     return () => {
-      section.removeEventListener("touchstart", onStart);
-      section.removeEventListener("touchend", onEnd);
+      stage.removeEventListener("touchstart", onStart);
+      stage.removeEventListener("touchend", onEnd);
     };
-  }, [scrollToIndex]);
+  }, [metrics, scrollToIndex]);
 
   const panelPosition =
     pinMode === "pin" ? ("fixed" as const) : ("absolute" as const);
@@ -532,6 +499,7 @@ export default function CreationsScroll() {
       aria-labelledby="projects-scroll-heading"
     >
       <div
+        ref={stageRef}
         className="flex h-[100dvh] w-full flex-col overflow-hidden"
         style={{
           position: panelPosition,
@@ -582,6 +550,36 @@ export default function CreationsScroll() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Progress dashes — 4 steps, clickable */}
+        <div
+          className="relative z-[5] flex shrink-0 items-center justify-center gap-[10px] pb-[22px] pt-[8px] sm:pb-[28px]"
+          role="tablist"
+          aria-label="Project slides"
+        >
+          {SHOWCASE_PROJECTS.map((project, i) => {
+            const active = i === index;
+            return (
+              <button
+                key={project.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                aria-label={`Project ${i + 1}`}
+                onClick={() => scrollToIndex(i, { fromDot: true })}
+                className="group flex h-[28px] items-center justify-center border-0 bg-transparent p-0"
+              >
+                <span
+                  className={`block h-[3px] rounded-full transition-all duration-300 ${
+                    active
+                      ? "w-[28px] bg-forest"
+                      : "w-[14px] bg-forest/25 group-hover:bg-forest/45"
+                  }`}
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>
