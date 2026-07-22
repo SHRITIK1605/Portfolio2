@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { Project } from "@/types";
 import { projectPath } from "@/lib/slug";
 
@@ -13,7 +13,7 @@ interface ProjectCardsProps {
 export default function ProjectCards({ projects }: ProjectCardsProps) {
   if (projects.length === 0) {
     return (
-      <div className="rounded-[24px] border border-dashed border-forest/20 bg-white/40 px-[24px] py-[48px] text-center text-[15px] text-forest/60">
+      <div className="rounded-2xl border border-forest/15 bg-white px-[24px] py-[48px] text-center text-[15px] text-forest/60">
         No projects published yet. Add projects from the{" "}
         <a
           href={process.env.NEXT_PUBLIC_ADMIN_URL ?? "http://localhost:3001"}
@@ -29,20 +29,21 @@ export default function ProjectCards({ projects }: ProjectCardsProps) {
   }
 
   return (
-    <div className="grid gap-[24px] md:grid-cols-2">
+    <div className="grid gap-6 md:grid-cols-2 md:gap-7">
       {projects.map((project, index) => (
         <motion.article
           key={project.id}
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ delay: index * 0.06, duration: 0.4 }}
-          whileHover={{ y: -4 }}
-          className="group overflow-hidden rounded-[24px] border border-forest/10 bg-white shadow-[0_1px_8px_rgba(0,75,64,0.05)] transition-shadow hover:shadow-[0_8px_24px_rgba(0,75,64,0.1)]"
+          transition={{ delay: index * 0.05, duration: 0.35 }}
+          whileHover={{ y: -3 }}
+          className="group overflow-hidden rounded-[20px] border border-forest/12 bg-white shadow-[0_8px_28px_rgba(1,97,70,0.08)] transition-shadow duration-300 hover:shadow-[0_12px_36px_rgba(1,97,70,0.12)]"
         >
           <Link
             href={projectPath(project.slug)}
             className="block"
+            aria-label={`View project: ${project.title}`}
             onClick={() => {
               fetch("/api/analytics", {
                 method: "POST",
@@ -54,40 +55,31 @@ export default function ProjectCards({ projects }: ProjectCardsProps) {
               }).catch(() => {});
             }}
           >
-            <div className="aspect-[16/10] overflow-hidden bg-forest/[0.04]">
+            <div className="aspect-[16/10] overflow-hidden bg-[#f3f6f1]">
               {project.coverImageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={project.coverImageUrl}
+                      src={project.coverImageUrl}
                   alt={project.title}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
               ) : (
-                <div className="flex h-full items-center justify-center text-[14px] text-forest/30">
+                <div className="flex h-full items-center justify-center text-[14px] text-forest/35">
                   No cover image
                 </div>
               )}
             </div>
-            <div className="p-[18px] sm:p-[24px]">
-              <h3 className="m-0 text-[20px] font-bold leading-tight tracking-[-0.02em] text-forest sm:text-[22px]">
+
+            <div className="flex items-start justify-between gap-3 bg-white px-4 py-4 sm:gap-4 sm:px-5 sm:py-5">
+              <h3 className="m-0 min-w-0 flex-1 line-clamp-2 text-[16px] font-bold leading-[1.3] tracking-[-0.02em] text-black sm:text-[18px]">
                 {project.title}
               </h3>
-              <p className="mt-[10px] line-clamp-2 text-[14px] leading-[1.5] text-forest/75 sm:mt-[12px]">
-                {project.shortDescription}
-              </p>
-              <div className="mt-[14px] flex flex-nowrap items-center gap-[8px] overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-[16px]">
-                {project.tags.slice(0, 4).map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex shrink-0 items-center rounded-full bg-tag-blue px-[12px] py-[6px] text-[12px] font-medium text-forest"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <span className="mt-[16px] inline-flex items-center gap-[6px] text-[14px] font-semibold text-forest transition-all group-hover:gap-[10px] sm:mt-[20px]">
-                View project
-                <ArrowRight className="h-[16px] w-[16px]" />
+
+              <span
+                className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-forest text-[#fffbf1] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:size-10"
+                aria-hidden
+              >
+                <ArrowUpRight className="h-[16px] w-[16px]" strokeWidth={2.25} />
               </span>
             </div>
           </Link>

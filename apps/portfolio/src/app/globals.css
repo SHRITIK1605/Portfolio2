@@ -249,6 +249,18 @@ html.intro-boot body {
   animation: projects-cta-icon 0.55s ease;
 }
 
+/* Hide scrollbar inside retro TV PDF screens */
+.tv-screen {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tv-screen::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 @keyframes projects-cta-shine {
   from {
     left: -40%;

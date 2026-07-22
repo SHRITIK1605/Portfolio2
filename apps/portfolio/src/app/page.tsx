@@ -70,10 +70,30 @@ export default async function HomePage() {
     projects = demoProjectsAsDb();
   }
 
-  projects = projects.map((project) => ({
-    ...project,
-    coverImageUrl: resolveProjectCoverUrl(project),
-  }));
+  projects = projects
+    .filter(
+      (project) =>
+        project.id !== "slikk" && project.slug !== "slikk-ai-catalog",
+    )
+    .map((project) => {
+      const demo = DEMO_PROJECTS.find((d) => d.slug === project.slug);
+      const enriched = demo
+        ? {
+            ...project,
+            title: demo.name,
+            shortDescription:
+              (project.shortDescription?.length ?? 0) <
+              (demo.overview[0]?.length ?? 0)
+                ? (demo.overview[0] ?? project.shortDescription)
+                : project.shortDescription,
+          }
+        : project;
+
+      return {
+        ...enriched,
+        coverImageUrl: resolveProjectCoverUrl(enriched),
+      };
+    });
 
   const craftImages = Array.isArray(homepage?.craftImages)
     ? (homepage.craftImages as unknown as CraftPolaroid[])
@@ -89,13 +109,13 @@ export default async function HomePage() {
           <CreationsScroll />
           <section
             id="selected-product-cases"
-            className="mx-auto max-w-[1100px] scroll-mt-[28px] px-[20px] pb-[64px] pt-[48px] sm:px-[32px] sm:pb-[80px] sm:pt-[56px] md:px-[48px] md:pb-[96px]"
+            className="relative mx-auto max-w-[1320px] scroll-mt-[28px] overflow-x-clip bg-cream px-[16px] pb-[64px] pt-[48px] sm:px-[28px] sm:pb-[80px] sm:pt-[56px] md:px-[36px] md:pb-[96px] lg:px-[40px]"
           >
             <h2
               id="selected-product-cases-heading"
-              className="m-0 mb-[20px] text-[22px] font-bold leading-tight tracking-[-0.02em] text-forest sm:mb-[28px] sm:text-[24px] md:mb-[32px] md:text-[26px]"
+              className="m-0 mb-[28px] text-[28px] font-bold tracking-[-0.02em] text-forest sm:mb-[32px] sm:text-[32px] md:mb-[40px] md:text-[36px]"
             >
-              Selected Product Cases
+              SELECTED PRODUCT CASES
             </h2>
             <ProjectCards projects={projects} />
           </section>

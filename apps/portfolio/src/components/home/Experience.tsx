@@ -944,7 +944,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
           id="experience-heading"
           className="m-0 text-[28px] font-bold tracking-[-0.02em] text-forest sm:text-[32px] md:text-[36px]"
         >
-          Experience
+          EXPERIENCE
         </h2>
       </motion.div>
 
