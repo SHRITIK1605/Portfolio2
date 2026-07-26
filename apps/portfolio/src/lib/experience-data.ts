@@ -65,8 +65,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     logoBg: "#FFFFFF",
     logoWide: true,
     clipImages: [
-      "/experience/craft/polaroid-notebook.jpg",
-      "/experience/craft/polaroid-desk.jpg",
+      "/experience/craft/bse-gong-back.jpg?v=2",
+      "/experience/craft/bse-bull-front.jpg?v=2",
     ],
   },
   {
@@ -112,8 +112,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     sketchLogoUrl: "/experience/sketches/times.jpg?v=4",
     logoBg: "#1A1E4E",
     clipImages: [
-      "/experience/craft/polaroid-books.jpg",
-      "/experience/craft/polaroid-notebook.jpg",
+      "/experience/craft/times-building.jpg?v=2",
+      "/experience/craft/times-bccl-front.jpg?v=3",
     ],
   },
   {
