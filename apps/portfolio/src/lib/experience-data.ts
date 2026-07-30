@@ -135,8 +135,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     sketchLogoUrl: "/experience/sketches/emb.jpg?v=4",
     logoBg: "#FFFFFF",
     clipImages: [
-      "/experience/craft/polaroid-craft.jpg",
-      "/experience/craft/polaroid-books.jpg",
+      "/experience/craft/emb-team-back.jpg?v=1",
+      "/experience/craft/emb-portrait-front.jpg?v=1",
     ],
   },
   {

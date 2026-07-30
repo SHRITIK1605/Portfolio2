@@ -29,16 +29,16 @@ export default function ProjectCards({ projects }: ProjectCardsProps) {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 md:gap-7">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-5">
       {projects.map((project, index) => (
         <motion.article
           key={project.id}
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ delay: index * 0.05, duration: 0.35 }}
+          transition={{ delay: index * 0.04, duration: 0.35 }}
           whileHover={{ y: -3 }}
-          className="group overflow-hidden rounded-[20px] border border-forest/12 bg-white shadow-[0_8px_28px_rgba(1,97,70,0.08)] transition-shadow duration-300 hover:shadow-[0_12px_36px_rgba(1,97,70,0.12)]"
+          className="group overflow-hidden rounded-[14px] border border-forest/12 bg-white shadow-[0_6px_20px_rgba(1,97,70,0.07)] transition-shadow duration-300 hover:shadow-[0_10px_28px_rgba(1,97,70,0.11)]"
         >
           <Link
             href={projectPath(project.slug)}
@@ -59,27 +59,27 @@ export default function ProjectCards({ projects }: ProjectCardsProps) {
               {project.coverImageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                      src={project.coverImageUrl}
+                  src={project.coverImageUrl}
                   alt={project.title}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
               ) : (
-                <div className="flex h-full items-center justify-center text-[14px] text-forest/35">
+                <div className="flex h-full items-center justify-center text-[12px] text-forest/35">
                   No cover image
                 </div>
               )}
             </div>
 
-            <div className="flex items-start justify-between gap-3 bg-white px-4 py-4 sm:gap-4 sm:px-5 sm:py-5">
-              <h3 className="m-0 min-w-0 flex-1 line-clamp-2 text-[16px] font-bold leading-[1.3] tracking-[-0.02em] text-black sm:text-[18px]">
+            <div className="flex items-start justify-between gap-2 bg-white px-3 py-3 sm:gap-2.5 sm:px-3.5 sm:py-3.5">
+              <h3 className="m-0 min-w-0 flex-1 line-clamp-2 text-[13px] font-bold leading-[1.3] tracking-[-0.02em] text-black sm:text-[14px]">
                 {project.title}
               </h3>
 
               <span
-                className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-forest text-[#fffbf1] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:size-10"
+                className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-forest text-[#fffbf1] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:size-8"
                 aria-hidden
               >
-                <ArrowUpRight className="h-[16px] w-[16px]" strokeWidth={2.25} />
+                <ArrowUpRight className="h-[13px] w-[13px]" strokeWidth={2.25} />
               </span>
             </div>
           </Link>
