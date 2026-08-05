@@ -19,7 +19,7 @@ export const IMPACT_ITEMS = [
   },
   {
     title:
-      "Free Float Factor Automation & BSE Sector Rotation Index (BSRI) Sales Decks",
+      "Automation & Analytical Enhancement of Free Float Factor & BSE Sector Rotation Index (BSRI)",
     body: "At BSE Index Services, automated Free Float Factor shareholder classification with an Excel–SQL rule engine (Promoter / Strategic / Doubtful / Public), cutting quarterly work from 20 days × 3 FTEs to 1 day × 1 FTE (~80× faster), eliminating 1–5% free-float errors on 300 of 4,800+ stocks, and supporting ~₹700 Cr daily trade-volume lift. Also automated branded sales PDFs across 101 indices — 90% less manual prep, 30+ hrs/month saved, and 20% faster client turnaround.",
     tags: ["Index Analytics", "Automation", "Free Float"],
     pdfUrl: "/impact/bse-intern-work.pdf?v=3",
