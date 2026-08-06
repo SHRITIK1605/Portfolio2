@@ -3,14 +3,23 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Project } from "@/types";
 import { projectPath } from "@/lib/slug";
 
+export interface ProjectCarouselItem {
+  id: string;
+  slug: string;
+  title: string;
+}
+
 interface ProjectCarouselProps {
-  projects: Project[];
+  projects: ProjectCarouselItem[];
   activeSlug: string;
   /** Client-side switch without full page reload (project detail navigator). */
   onNavigate?: (slug: string) => void;
+  /** Path builder for Link fallback (defaults to /project/[slug]). */
+  hrefForSlug?: (slug: string) => string;
+  /** Optional leading label; defaults to "View more". */
+  leadingLabel?: string;
 }
 
 const SCROLL_STEP = 220;
@@ -19,6 +28,8 @@ export default function ProjectCarousel({
   projects,
   activeSlug,
   onNavigate,
+  hrefForSlug = projectPath,
+  leadingLabel = "View more",
 }: ProjectCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -74,7 +85,7 @@ export default function ProjectCarousel({
     <div className="mx-auto mt-[32px] max-w-[1100px] rounded-[28px] border border-forest/[0.1] bg-white/80 px-[10px] py-[10px] shadow-[0_1px_8px_rgba(0,75,64,0.05)] backdrop-blur-sm sm:mt-[40px] sm:rounded-full sm:px-[14px] sm:py-[12px] md:mt-[48px] md:px-[16px]">
       <div className="flex items-center gap-[8px] sm:gap-[12px]">
         <span className="hidden shrink-0 pl-[4px] text-[14px] font-medium text-forest/60 sm:inline">
-          View more
+          {leadingLabel}
         </span>
 
         <button
@@ -105,7 +116,7 @@ export default function ProjectCarousel({
             ) : (
               <Link
                 key={project.id}
-                href={projectPath(project.slug)}
+                href={hrefForSlug(project.slug)}
                 prefetch
                 scroll={false}
                 data-active={project.slug === activeSlug}

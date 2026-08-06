@@ -17,3 +17,12 @@ export function decodeSlugParam(slug: string): string {
 export function projectPath(slug: string): string {
   return `/project/${encodeURIComponent(slug)}`;
 }
+
+/** Stable IMPACT detail slug from company/logo label (e.g. "EMB Global" → "emb-global"). */
+export function impactSlugFromLogoAlt(logoAlt: string): string {
+  return slugify(logoAlt);
+}
+
+export function impactPath(slug: string): string {
+  return `/impact/${encodeURIComponent(slug)}`;
+}

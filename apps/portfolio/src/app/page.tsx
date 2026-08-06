@@ -12,8 +12,10 @@ import { resolveProjectCoverUrl } from "@/lib/pdf";
 import { DEMO_PROJECTS } from "@/lib/demo-data";
 import {
   DEMO_IMPACT_ITEMS,
+  resolveImpactDetailUrl,
   type ImpactShowcaseItem,
 } from "@/lib/impact-data";
+import { toTvPdfUrl } from "@/lib/tv-pdf";
 import type { CraftPolaroid } from "@/lib/experience-data";
 import type { HomepageSettings, ImpactItem, Project } from "@/types";
 
@@ -53,8 +55,8 @@ function toImpactShowcase(items: ImpactItem[]): ImpactShowcaseItem[] {
     title: item.title,
     body: item.body,
     tags: item.tags,
-    pdfUrl: item.pdfUrl ?? "",
-    detailUrl: item.detailUrl,
+    pdfUrl: toTvPdfUrl(item.pdfUrl),
+    detailUrl: resolveImpactDetailUrl(item.logoAlt, item.detailUrl),
     logo: {
       src: item.logoSrc,
       bg: item.logoBg,

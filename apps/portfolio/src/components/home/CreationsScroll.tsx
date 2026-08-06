@@ -1,13 +1,24 @@
 "use client";
 
 import { type CSSProperties } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import TvPdfScreen from "@/components/home/TvPdfScreen";
 import {
   DEMO_IMPACT_ITEMS,
+  resolveImpactDetailUrl,
   type ImpactShowcaseItem,
 } from "@/lib/impact-data";
+
+const TvPdfScreen = dynamic(() => import("@/components/home/TvPdfScreen"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full items-center justify-center rounded-[14px] bg-[#f7f3ea] text-[11px] text-black/45">
+      Warming up…
+    </div>
+  ),
+});
 
 function ProjectCard({
   project,
@@ -18,7 +29,7 @@ function ProjectCard({
 }) {
   const tilt = index % 2 === 0 ? 2.4 : -2.4;
   const { theme, logo } = project;
-  const detailHref = project.detailUrl?.trim() || null;
+  const detailHref = resolveImpactDetailUrl(logo.alt, project.detailUrl);
 
   return (
     <article
@@ -102,47 +113,25 @@ function ProjectCard({
             ))}
           </div>
 
-          {detailHref ? (
-            <a
-              href={detailHref}
-              className="projects-cta relative z-[1] mt-auto inline-flex w-full max-w-[240px] items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px]"
-              style={
-                {
-                  boxShadow: "4px 4px 0 #000",
-                  ["--cta-accent" as string]: theme.accent,
-                  ["--cta-panel" as string]: theme.panel,
-                } as CSSProperties
-              }
-            >
-              <span className="relative z-[1]">View Detailed Project</span>
-              <ExternalLink
-                className="projects-cta-icon relative z-[1] h-[14px] w-[14px] shrink-0"
-                strokeWidth={2.25}
-              />
-              <span className="projects-cta-burst" aria-hidden />
-              <span className="projects-cta-shine" aria-hidden />
-            </a>
-          ) : (
-            <span
-              className="projects-cta relative z-[1] mt-auto inline-flex w-full max-w-[240px] cursor-default items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black opacity-70 sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px]"
-              style={
-                {
-                  boxShadow: "4px 4px 0 #000",
-                  ["--cta-accent" as string]: theme.accent,
-                  ["--cta-panel" as string]: theme.panel,
-                } as CSSProperties
-              }
-              aria-disabled
-            >
-              <span className="relative z-[1]">View Detailed Project</span>
-              <ExternalLink
-                className="projects-cta-icon relative z-[1] h-[14px] w-[14px] shrink-0"
-                strokeWidth={2.25}
-              />
-              <span className="projects-cta-burst" aria-hidden />
-              <span className="projects-cta-shine" aria-hidden />
-            </span>
-          )}
+          <Link
+            href={detailHref}
+            className="projects-cta relative z-[1] mt-auto inline-flex w-full max-w-[240px] items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px]"
+            style={
+              {
+                boxShadow: "4px 4px 0 #000",
+                ["--cta-accent" as string]: theme.accent,
+                ["--cta-panel" as string]: theme.panel,
+              } as CSSProperties
+            }
+          >
+            <span className="relative z-[1]">View Detailed Project</span>
+            <ExternalLink
+              className="projects-cta-icon relative z-[1] h-[14px] w-[14px] shrink-0"
+              strokeWidth={2.25}
+            />
+            <span className="projects-cta-burst" aria-hidden />
+            <span className="projects-cta-shine" aria-hidden />
+          </Link>
 
           <PaintSplash color={theme.splash} n={index + 1} />
         </div>
