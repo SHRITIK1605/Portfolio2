@@ -60,26 +60,42 @@ async function main() {
   });
 
   const suggestedQuestions = [
-    { text: "Tell me about Shritik's background", category: "general", order: 0 },
-    { text: "What are his strongest product skills?", category: "general", order: 1 },
-    { text: "Walk me through his top projects", category: "projects", order: 2 },
-    { text: "How can I contact him?", category: "contact", order: 3 },
+    { text: "What's your background?", category: "general", order: 0 },
+    { text: "Tell me about your impact at BSE", category: "general", order: 1 },
+    { text: "Walk me through your top projects", category: "projects", order: 2 },
+    { text: "How can I contact you?", category: "contact", order: 3 },
   ];
+
+  // Retire third-person / name-based starter chips (visitor talks TO Shritik with "your")
+  await prisma.suggestedQuestion.updateMany({
+    where: {
+      text: {
+        in: [
+          "Tell me about Shritik",
+          "Tell me about Shritik's background",
+          "What are his strongest product skills?",
+          "Walk me through his top projects",
+          "How can I contact him?",
+          "Help me find Shritik's resume",
+        ],
+      },
+    },
+    data: { active: false },
+  });
 
   for (const q of suggestedQuestions) {
     const existing = await prisma.suggestedQuestion.findFirst({
       where: { text: q.text },
     });
-    if (!existing) {
+    if (existing) {
+      await prisma.suggestedQuestion.update({
+        where: { id: existing.id },
+        data: { active: true, category: q.category, order: q.order },
+      });
+    } else {
       await prisma.suggestedQuestion.create({ data: q });
     }
   }
-
-  // Deactivate old resume-focused suggested question if present
-  await prisma.suggestedQuestion.updateMany({
-    where: { text: "Help me find Shritik's resume" },
-    data: { active: false },
-  });
 
   for (const project of PROJECTS) {
     await prisma.project.upsert({

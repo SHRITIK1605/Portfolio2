@@ -80,10 +80,10 @@ export const HERO = {
 };
 
 export const SUGGESTED_PROMPTS = [
-  "Tell me about Shritik",
-  "Walk me through his top projects",
-  "What are his strongest product skills?",
-  "How can I contact him?",
+  "What's your background?",
+  "Tell me about your impact at BSE",
+  "Walk me through your top projects",
+  "How can I contact you?",
 ];
 
 export const RESUME_URL = "#";
