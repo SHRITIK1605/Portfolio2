@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
+import { toFullImpactPdfUrl } from "@/lib/tv-pdf";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -12,6 +13,8 @@ const PAGE_PARALLAX = 0.28;
 /** Ignore page-driven motion briefly after the user wheels the screen. */
 const USER_SCROLL_LOCK_MS = 850;
 const MAX_TV_PAGES = 12;
+/** First paint: fewer pages, then expand once the first page is ready. */
+const INITIAL_TV_PAGES = 2;
 /** Lower = slower, creamier glide. */
 const SCROLL_SMOOTH = 4.2;
 
@@ -37,12 +40,15 @@ export default function TvPdfScreen({
   const lastFrame = useRef(0);
   const [visible, setVisible] = useState(false);
   const [numPages, setNumPages] = useState(0);
+  const [pagesToRender, setPagesToRender] = useState(INITIAL_TV_PAGES);
   const [pageWidth, setPageWidth] = useState(220);
   const [error, setError] = useState(false);
   const [ready, setReady] = useState(false);
+  const fullPdfUrl = toFullImpactPdfUrl(url) || url;
 
   useEffect(() => {
     setNumPages(0);
+    setPagesToRender(INITIAL_TV_PAGES);
     setError(false);
     setReady(false);
     targetY.current = 0;
@@ -58,13 +64,23 @@ export default function TvPdfScreen({
     if (!shell) return;
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) setVisible(true);
+        // Mount Document only while near viewport — unload when scrolled away
+        setVisible(Boolean(entry?.isIntersecting));
       },
-      { rootMargin: "220px 0px", threshold: 0.05 }
+      { rootMargin: "100px 0px", threshold: 0.08 }
     );
     io.observe(shell);
     return () => io.disconnect();
   }, []);
+
+  // After first paint is ready, expand toward the rest of the deck
+  useEffect(() => {
+    if (!ready || !visible || numPages <= INITIAL_TV_PAGES) return;
+    const id = window.setTimeout(() => {
+      setPagesToRender(Math.min(numPages, MAX_TV_PAGES));
+    }, 120);
+    return () => window.clearTimeout(id);
+  }, [ready, visible, numPages]);
 
   const measure = useCallback(() => {
     const viewport = viewportRef.current;
@@ -86,7 +102,7 @@ export default function TvPdfScreen({
     ro.observe(viewport);
     if (contentRef.current) ro.observe(contentRef.current);
     return () => ro.disconnect();
-  }, [visible, ready, numPages, measure]);
+  }, [visible, ready, numPages, pagesToRender, measure]);
 
   const updateTargetFromPage = useCallback(() => {
     const shell = shellRef.current;
@@ -115,7 +131,6 @@ export default function TvPdfScreen({
       if (content) {
         const alpha = 1 - Math.exp(-dt * SCROLL_SMOOTH);
         currentY.current += (targetY.current - currentY.current) * alpha;
-        // GPU transform — no scrollTop thrash / frame jump
         content.style.transform = `translate3d(0, ${-currentY.current}px, 0)`;
       }
       rafRef.current = requestAnimationFrame(tick);
@@ -146,8 +161,6 @@ export default function TvPdfScreen({
         maxY.current,
         Math.max(0, targetY.current + e.deltaY * 0.5)
       );
-      // Ease toward manual target instead of hard snap
-      // (currentY keeps lerping in the rAF loop)
     };
 
     viewport.addEventListener("wheel", onWheel, { passive: false });
@@ -162,7 +175,6 @@ export default function TvPdfScreen({
       className="tv-shell relative mx-auto flex h-full w-full flex-col"
       style={{ maxHeight: "100%" }}
     >
-      {/* Antenna nub */}
       <div
         className="pointer-events-none relative z-[2] mx-auto mb-[-2px] h-[12px] w-[40%]"
         aria-hidden
@@ -175,7 +187,6 @@ export default function TvPdfScreen({
         <span className="absolute bottom-[5px] right-[36%] h-[12px] w-[1.5px] origin-bottom rotate-[26deg] rounded-full bg-[#2a2a28]" />
       </div>
 
-      {/* Chunky CRT shell — thick top/left like references */}
       <div
         className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[18px] border border-black/20 sm:rounded-[22px]"
         style={{
@@ -188,10 +199,8 @@ export default function TvPdfScreen({
             "0 10px 22px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.08)",
         }}
       >
-        {/* Thick frame padding: top/left heavier */}
         <div className="relative z-[1] flex min-h-0 flex-1 gap-[6px] pb-[8px] pl-[14px] pr-[8px] pt-[15px] sm:gap-[8px] sm:pb-[9px] sm:pl-[16px] sm:pr-[9px] sm:pt-[17px]">
           <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-            {/* Cream recessed inner + thin black CRT gasket */}
             <div
               className="relative min-h-0 flex-1 rounded-[14px] p-[5px] sm:rounded-[16px] sm:p-[6px]"
               style={{
@@ -237,7 +246,7 @@ export default function TvPdfScreen({
                     <div className="flex h-full flex-col items-center justify-center gap-[8px] p-[10px] text-center text-[10px] text-black/60">
                       <span>Preview unavailable</span>
                       <a
-                        href={url}
+                        href={fullPdfUrl}
                         target="_blank"
                         rel="noreferrer"
                         className="underline"
@@ -268,7 +277,13 @@ export default function TvPdfScreen({
                         className="flex flex-col items-center"
                       >
                         {Array.from(
-                          { length: Math.min(numPages, MAX_TV_PAGES) },
+                          {
+                            length: Math.min(
+                              numPages,
+                              pagesToRender,
+                              MAX_TV_PAGES
+                            ),
+                          },
                           (_, i) => (
                             <Page
                               key={`tv-page-${i + 1}`}
@@ -288,7 +303,6 @@ export default function TvPdfScreen({
             </div>
           </div>
 
-          {/* Right control column */}
           <div
             className="flex w-[28px] shrink-0 flex-col items-center gap-[7px] rounded-[10px] py-[8px] sm:w-[32px] sm:gap-[8px] sm:rounded-[12px] sm:py-[10px]"
             style={{
@@ -320,7 +334,6 @@ export default function TvPdfScreen({
                         : "translate(2px, -1px) rotate(32deg)",
                   }}
                 />
-                {/* ridged ring */}
                 <span
                   className="absolute inset-[-2px] rounded-full opacity-40"
                   style={{
@@ -337,7 +350,6 @@ export default function TvPdfScreen({
               className="h-[5px] w-[5px] rounded-full border border-black/20 bg-[#2a2a28]"
               style={{ boxShadow: "inset 0 1px 1px rgba(255,255,255,0.25)" }}
             />
-            {/* Vertical speaker slats */}
             <div
               className="mt-auto w-[70%] flex-1 overflow-hidden rounded-[3px]"
               style={{
@@ -356,7 +368,6 @@ export default function TvPdfScreen({
           </div>
         </div>
 
-        {/* Bottom speaker grille — horizontal slits across face */}
         <div
           className="relative z-[1] mx-[11px] mb-[6px] flex h-[11px] shrink-0 items-stretch gap-[6px] sm:mx-[13px] sm:mb-[7px] sm:h-[12px]"
           aria-hidden
@@ -391,7 +402,6 @@ export default function TvPdfScreen({
           />
         </div>
 
-        {/* Peg feet */}
         <div
           className="flex shrink-0 justify-between px-[16px] pb-[5px]"
           aria-hidden

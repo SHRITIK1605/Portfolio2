@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useChatContext } from "@/context/ChatContext";
 import MenuButton from "@/components/layout/MenuButton";
-import ResumeOverlay from "@/components/resume/ResumeOverlay";
 import type { HomepageSettings } from "@/types";
+
+const ResumeOverlay = dynamic(
+  () => import("@/components/resume/ResumeOverlay"),
+  { ssr: false }
+);
 
 interface NavbarProps {
   homepage: HomepageSettings;
@@ -135,11 +140,13 @@ export default function Navbar({ homepage }: NavbarProps) {
         </div>
       </div>
 
-      <ResumeOverlay
-        open={resumeOpen}
-        onClose={() => setResumeOpen(false)}
-        fallbackUrl={homepage.resumeUrl}
-      />
+      {resumeOpen ? (
+        <ResumeOverlay
+          open={resumeOpen}
+          onClose={() => setResumeOpen(false)}
+          fallbackUrl={homepage.resumeUrl}
+        />
+      ) : null}
     </header>
   );
 }

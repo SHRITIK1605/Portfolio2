@@ -55,7 +55,7 @@ export async function GET(req: Request) {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${EXPORT_FILENAME}"`,
-      "Cache-Control": "private, max-age=300",
+      "Cache-Control": "private, max-age=3600, stale-while-revalidate=86400",
     },
   });
 }

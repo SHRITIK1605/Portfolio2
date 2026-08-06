@@ -794,6 +794,7 @@ function PolaroidClip({
                 fill
                 className="object-cover"
                 sizes="320px"
+                loading="lazy"
                 unoptimized
               />
             </div>
@@ -823,6 +824,7 @@ function PolaroidClip({
                 fill
                 className="object-cover"
                 sizes="320px"
+                loading="lazy"
                 unoptimized
               />
             </div>

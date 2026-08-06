@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { ArrowUpRight, Check, Copy } from "lucide-react";
-import ResumeOverlay from "@/components/resume/ResumeOverlay";
 import { CONTACT } from "@/lib/demo-data";
 import type { HomepageSettings } from "@/types";
+
+const ResumeOverlay = dynamic(
+  () => import("@/components/resume/ResumeOverlay"),
+  { ssr: false }
+);
 
 interface FooterProps {
   homepage?: HomepageSettings;
@@ -146,11 +151,13 @@ export default function Footer({ homepage }: FooterProps) {
         </div>
       </footer>
 
-      <ResumeOverlay
-        open={resumeOpen}
-        onClose={() => setResumeOpen(false)}
-        fallbackUrl={homepage?.resumeUrl}
-      />
+      {resumeOpen ? (
+        <ResumeOverlay
+          open={resumeOpen}
+          onClose={() => setResumeOpen(false)}
+          fallbackUrl={homepage?.resumeUrl}
+        />
+      ) : null}
     </>
   );
 }

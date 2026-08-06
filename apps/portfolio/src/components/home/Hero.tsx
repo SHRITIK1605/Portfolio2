@@ -60,13 +60,13 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
 
             <div className="relative z-[1] w-full">
               <Image
-                src="/hero/portrait.png?v=cream-shirt-fade-5"
+                src="/hero/portrait.webp?v=cream-shirt-fade-6"
                 alt="Shritik"
                 width={450}
-                height={675}
+                height={563}
                 priority
                 unoptimized
-                quality={100}
+                quality={85}
                 className="h-auto w-full object-contain"
               />
             </div>

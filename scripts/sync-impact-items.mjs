@@ -1,9 +1,14 @@
-/** Default IMPACT CREATED showcase cards for seed. */
-export const IMPACT_ITEMS = [
+/**
+ * Sync IMPACT CREATED cards to Neon from packages/database/prisma/impact-data.ts defaults.
+ * Run: node --env-file=.env scripts/sync-impact-items.mjs
+ */
+import { PrismaClient } from "@prisma/client";
+
+const IMPACT_ITEMS = [
   {
     title:
       "Slikk Aspect Ratio Fix — CV Pipeline Standardizing Fashion Catalog Thumbnails to 0.75",
-    body: "Slikk’s fashion catalog images arrive from many vendors with inconsistent aspect ratios, backgrounds, framing, and positioning — hurting PLP scanability and trust. Built a two-stage computer-vision pipeline (product/background segmentation, safe crop, then background stretch) targeting a 0.75 container ratio, with hard constraints that keep the product mask immutable. MVP model fixes ~97% of images while cutting cropped/whitespace thumbnails that suppressed conversion.",
+    body: "Slikk’s fashion catalog images arrive from many vendors with inconsistent aspect ratios, backgrounds, framing, and positioning — hurting PLP scanability and trust. Built a two-stage computer-vision pipeline (product/background segmentation, safe crop, then background stretch) targeting a 0.75 container ratio, with hard constraints that keep the product mask immutable. MVP fixes reached ~97% of images while cutting cropped/whitespace thumbnails that suppressed conversion.",
     tags: ["Computer Vision", "Catalog QA", "Aspect Ratio"],
     pdfUrl: "/impact/tv/slikk-aspect-ratio-fix.pdf?v=4",
     logoSrc: "/experience/logos/slikk.png",
@@ -37,7 +42,7 @@ export const IMPACT_ITEMS = [
   {
     title:
       "EMB Global Client Dashboard — Projects, Commercials & Staff Augmentation Portal",
-    body: "Designed and shipped EMB Global’s client-facing dashboard: landing feed with meetings and tasks, company/team/compliance profiles, project list & delivery views with milestones, account-level commercials (collaboration value, paid, outstanding), past-project deliverables, and staff-augmentation views covering attendance, leave, timesheets, and invoicing — so clients can track delivery, money, and resources in one place.",
+    body: "Designed and shipped EMB Global’s client-facing dashboard: landing feed with meetings and tasks, company/team/compliance profiles, project list & grid views with milestones, account-level commercials (collaboration value, paid, outstanding), past-project deliverables, and staff-augmentation views covering attendance, leave, timesheets, and invoicing — so clients can track delivery, money, and resources in one place.",
     tags: ["Client Portal", "Dashboard UX", "Project Ops"],
     pdfUrl: "/impact/tv/emb-client-dashboard.pdf?v=4",
     logoSrc: "/experience/logos/emb.png",
@@ -68,4 +73,40 @@ export const IMPACT_ITEMS = [
     themeAccent: "#e878a8",
     order: 3,
   },
-] as const;
+];
+
+const prisma = new PrismaClient();
+
+for (const item of IMPACT_ITEMS) {
+  const existing = await prisma.impactItem.findFirst({
+    where: { logoAlt: item.logoAlt },
+  });
+  if (existing) {
+    await prisma.impactItem.update({
+      where: { id: existing.id },
+      data: { ...item, published: true },
+    });
+    console.log("updated", item.logoAlt, "order", item.order);
+  } else {
+    await prisma.impactItem.create({ data: { ...item, published: true } });
+    console.log("created", item.logoAlt, "order", item.order);
+  }
+}
+
+const items = await prisma.impactItem.findMany({
+  where: { published: true },
+  orderBy: { order: "asc" },
+});
+console.log(
+  JSON.stringify(
+    items.map((i) => ({
+      order: i.order,
+      logoAlt: i.logoAlt,
+      title: i.title.slice(0, 80),
+      pdfUrl: i.pdfUrl,
+    })),
+    null,
+    2,
+  ),
+);
+await prisma.$disconnect();

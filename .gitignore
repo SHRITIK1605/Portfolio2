@@ -10,3 +10,5 @@ packages/database/prisma/dev.db-journal
 .DS_Store
 .vscode/
 packages/database/prisma/prisma/dev.db
+.tmp-pdf-opt/
+.tmp-asset-backup/
