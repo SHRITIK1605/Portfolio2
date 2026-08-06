@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { Send, X, ExternalLink } from "lucide-react";
+import { Send, X, ExternalLink, SquarePen } from "lucide-react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -129,6 +129,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
   const {
     isOpen,
     closeChat,
+    newChat,
     messages,
     setMessages,
     isStreaming,
@@ -166,6 +167,14 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
   const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>(SUGGESTED_PROMPTS);
   const [projects, setProjects] = useState<{ title: string; slug: string }[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  const handleNewChat = useCallback(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    newChat();
+    setInput("");
+  }, [newChat]);
 
   useEffect(() => {
     fetch("/api/suggested-questions")
@@ -203,6 +212,10 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
       const trimmed = text.trim();
       if (!trimmed || isStreaming) return;
 
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       setInput("");
       setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
       setIsStreaming(true);
@@ -217,6 +230,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
             projectId,
             projectTitle,
           }),
+          signal: controller.signal,
         });
 
         if (!res.ok) {
@@ -268,6 +282,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
           });
         }
       } catch (err) {
+        if (controller.signal.aborted) return;
         const detail =
           err instanceof Error && err.message !== "Chat request failed"
             ? err.message
@@ -280,7 +295,12 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
           },
         ]);
       } finally {
-        setIsStreaming(false);
+        if (abortRef.current === controller) {
+          abortRef.current = null;
+        }
+        if (!controller.signal.aborted) {
+          setIsStreaming(false);
+        }
       }
     },
     [isStreaming, projectId, projectTitle, sessionId, setMessages, setIsStreaming, setSessionId, projects]
@@ -319,14 +339,25 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
                 <SparkleIcon size={24} />
                 <span className="text-[15px] font-semibold">Virtual Me</span>
               </div>
-              <button
-                type="button"
-                onClick={closeChat}
-                className="flex h-[44px] w-[44px] items-center justify-center rounded-full border border-forest/20 bg-white sm:h-[36px] sm:w-[36px]"
-                aria-label="Close chat"
-              >
-                <X className="h-[16px] w-[16px]" />
-              </button>
+              <div className="flex items-center gap-[6px]">
+                <button
+                  type="button"
+                  onClick={handleNewChat}
+                  className="flex h-[44px] w-[44px] items-center justify-center rounded-full border border-forest/20 bg-white text-forest transition hover:bg-forest/[0.04] sm:h-[36px] sm:w-[36px]"
+                  aria-label="New chat"
+                  title="New chat"
+                >
+                  <SquarePen className="h-[16px] w-[16px]" strokeWidth={2} />
+                </button>
+                <button
+                  type="button"
+                  onClick={closeChat}
+                  className="flex h-[44px] w-[44px] items-center justify-center rounded-full border border-forest/20 bg-white sm:h-[36px] sm:w-[36px]"
+                  aria-label="Close chat"
+                >
+                  <X className="h-[16px] w-[16px]" />
+                </button>
+              </div>
             </header>
 
             <div className="flex-1 overflow-y-auto overscroll-contain px-[16px] py-[20px] sm:px-[20px] sm:py-[24px]">

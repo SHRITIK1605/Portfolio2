@@ -30,6 +30,7 @@ interface ChatContextValue {
   isResizing: boolean;
   openChat: () => void;
   closeChat: () => void;
+  newChat: () => void;
   setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
   setIsStreaming: (v: boolean) => void;
   setSessionId: (v: string | null) => void;
@@ -49,6 +50,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   const openChat = useCallback(() => setIsOpen(true), []);
   const closeChat = useCallback(() => setIsOpen(false), []);
+  const newChat = useCallback(() => {
+    setMessages([]);
+    setSessionId(null);
+    setIsStreaming(false);
+  }, []);
 
   const setPanelWidth = useCallback((v: number) => {
     setPanelWidthState(
@@ -66,6 +72,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       isResizing,
       openChat,
       closeChat,
+      newChat,
       setMessages,
       setIsStreaming,
       setSessionId,
@@ -81,6 +88,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       isResizing,
       openChat,
       closeChat,
+      newChat,
       setPanelWidth,
     ]
   );
