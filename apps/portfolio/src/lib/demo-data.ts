@@ -89,7 +89,7 @@ export const SUGGESTED_PROMPTS = [
 export const RESUME_URL = "#";
 
 export const CONTACT = {
-  linkedin: "https://www.linkedin.com/in/shritikjaiswal",
+  linkedin: "https://www.linkedin.com/in/shritik-jaiswal-71279a223/",
   linkedinLabel: "Visit Linkedin",
   email: "shritik1234j@gmail.com",
   mailLabel: "Mail",
