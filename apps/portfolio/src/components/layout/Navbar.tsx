@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useChatContext } from "@/context/ChatContext";
-import MenuButton from "@/components/layout/MenuButton";
 import type { HomepageSettings } from "@/types";
 
 const ResumeOverlay = dynamic(
@@ -135,8 +134,6 @@ export default function Navbar({ homepage }: NavbarProps) {
               </span>
             </span>
           </button>
-
-          <MenuButton homepage={homepage} />
         </div>
       </div>
 
