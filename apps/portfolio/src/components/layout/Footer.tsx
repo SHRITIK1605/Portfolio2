@@ -145,8 +145,20 @@ export default function Footer({ homepage }: FooterProps) {
             </div>
           </nav>
 
-          <p className="m-0 max-w-full text-[12px] leading-snug opacity-80 sm:text-[13px] md:text-right">
-            © Shritik Jaiswal . made with cursor . curiosity . love
+          <p className="m-0 inline-flex max-w-full flex-wrap items-center gap-x-[0.35em] text-[12px] leading-snug opacity-80 sm:text-[13px] md:justify-end">
+            <span>© Shritik Jaiswal</span>
+            <span className="inline-flex items-center text-[1.15em] leading-none" aria-hidden>
+              ·
+            </span>
+            <span>made with cursor</span>
+            <span className="inline-flex items-center text-[1.15em] leading-none" aria-hidden>
+              ·
+            </span>
+            <span>curiosity</span>
+            <span className="inline-flex items-center text-[1.15em] leading-none" aria-hidden>
+              ·
+            </span>
+            <span>love</span>
           </p>
         </div>
       </footer>
