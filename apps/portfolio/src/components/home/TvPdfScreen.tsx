@@ -13,8 +13,6 @@ const PAGE_PARALLAX = 0.28;
 /** Ignore page-driven motion briefly after the user wheels the screen. */
 const USER_SCROLL_LOCK_MS = 850;
 const MAX_TV_PAGES = 12;
-/** First paint: fewer pages, then expand once the first page is ready. */
-const INITIAL_TV_PAGES = 2;
 /** Lower = slower, creamier glide. */
 const SCROLL_SMOOTH = 4.2;
 
@@ -40,15 +38,17 @@ export default function TvPdfScreen({
   const lastFrame = useRef(0);
   const [visible, setVisible] = useState(false);
   const [numPages, setNumPages] = useState(0);
-  const [pagesToRender, setPagesToRender] = useState(INITIAL_TV_PAGES);
+  /** Mounted Page count — grows 1 → N so the appearing page paints before the rest. */
+  const [pagesToRender, setPagesToRender] = useState(0);
   const [pageWidth, setPageWidth] = useState(220);
   const [error, setError] = useState(false);
   const [ready, setReady] = useState(false);
   const fullPdfUrl = toFullImpactPdfUrl(url) || url;
+  const pageCap = Math.min(numPages || 0, MAX_TV_PAGES);
 
   useEffect(() => {
     setNumPages(0);
-    setPagesToRender(INITIAL_TV_PAGES);
+    setPagesToRender(0);
     setError(false);
     setReady(false);
     targetY.current = 0;
@@ -73,14 +73,16 @@ export default function TvPdfScreen({
     return () => io.disconnect();
   }, []);
 
-  // After first paint is ready, expand toward the rest of the deck
-  useEffect(() => {
-    if (!ready || !visible || numPages <= INITIAL_TV_PAGES) return;
-    const id = window.setTimeout(() => {
-      setPagesToRender(Math.min(numPages, MAX_TV_PAGES));
-    }, 120);
-    return () => window.clearTimeout(id);
-  }, [ready, visible, numPages]);
+  /** Unlock the next TV page only after the frontier page has painted. */
+  const advanceAfterPage = useCallback(
+    (pageNumber: number) => {
+      setPagesToRender((prev) => {
+        if (pageNumber !== prev || prev >= pageCap) return prev;
+        return prev + 1;
+      });
+    },
+    [pageCap]
+  );
 
   const measure = useCallback(() => {
     const viewport = viewportRef.current;
@@ -265,6 +267,8 @@ export default function TvPdfScreen({
                         file={url}
                         onLoadSuccess={({ numPages: pages }) => {
                           setNumPages(pages);
+                          // Appearing page first; later pages unlock one-by-one after each paint.
+                          setPagesToRender(pages > 0 ? 1 : 0);
                           setReady(true);
                           requestAnimationFrame(measure);
                         }}
@@ -276,25 +280,26 @@ export default function TvPdfScreen({
                         }
                         className="flex flex-col items-center"
                       >
-                        {Array.from(
-                          {
-                            length: Math.min(
-                              numPages,
-                              pagesToRender,
-                              MAX_TV_PAGES
-                            ),
-                          },
-                          (_, i) => (
+                        {Array.from({ length: Math.min(pagesToRender, pageCap) }, (_, i) => {
+                          const pageNumber = i + 1;
+                          return (
                             <Page
-                              key={`tv-page-${i + 1}`}
-                              pageNumber={i + 1}
+                              key={`tv-page-${pageNumber}`}
+                              pageNumber={pageNumber}
                               width={pageWidth}
                               renderTextLayer={false}
                               renderAnnotationLayer={false}
-                              onRenderSuccess={measure}
+                              onRenderSuccess={() => {
+                                measure();
+                                advanceAfterPage(pageNumber);
+                              }}
+                              onRenderError={() => {
+                                // Skip a failed page so the rest of the TV deck can still load.
+                                advanceAfterPage(pageNumber);
+                              }}
                             />
-                          )
-                        )}
+                          );
+                        })}
                       </Document>
                     </div>
                   )}
