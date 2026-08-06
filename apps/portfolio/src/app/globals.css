@@ -175,6 +175,14 @@ html.intro-boot body {
   }
 }
 
+/* Mobile: kill IMPACT card tilt so shadows don't force horizontal scroll */
+@media (max-width: 767px) {
+  .projects-card {
+    transform: none !important;
+    box-shadow: 6px 6px 0 #000 !important;
+  }
+}
+
 .projects-card--active .projects-scrap--tape {
   animation: projects-scrap-float 3.6s ease-in-out infinite;
 }

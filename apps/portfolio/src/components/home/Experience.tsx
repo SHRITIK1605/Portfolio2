@@ -166,7 +166,7 @@ function CompanyBlock({
     >
       <div className="px-[2px] py-[2px]">
         <header className="mb-[12px] sm:mb-[14px]">
-          <div className="flex min-w-0 items-start justify-between gap-[12px]">
+          <div className="flex min-w-0 flex-col gap-[8px] sm:flex-row sm:items-start sm:justify-between sm:gap-[12px]">
             <div className="flex min-w-0 items-start gap-[12px]">
               <div
                 className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
@@ -186,10 +186,10 @@ function CompanyBlock({
                 />
               </div>
               <div className="min-w-0 pt-[1px]">
-                <h3 className="m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
+                <h3 className="m-0 break-words text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
                   {item.company}
                 </h3>
-                <p className="m-0 mt-[4px] text-[12px] font-semibold uppercase tracking-[0.03em] text-forest/85 sm:text-[13px]">
+                <p className="m-0 mt-[4px] break-words text-[12px] font-semibold uppercase tracking-[0.03em] text-forest/85 sm:text-[13px]">
                   {item.role}
                 </p>
               </div>
@@ -940,7 +940,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
 
   return (
     <section
-      className="relative mx-auto -mt-[80px] max-w-[1320px] overflow-visible rounded-[28px] bg-[#EAECE2] px-[16px] pb-[56px] pt-[28px] sm:px-[28px] sm:pb-[72px] sm:pt-[32px] md:px-[36px] md:pb-[88px] lg:px-[40px]"
+      className="relative mx-auto -mt-[48px] max-w-[1320px] overflow-x-clip rounded-[24px] bg-[#EAECE2] px-[16px] pb-[56px] pt-[28px] sm:-mt-[64px] sm:rounded-[28px] sm:px-[28px] sm:pb-[72px] sm:pt-[32px] md:-mt-[80px] md:overflow-visible md:px-[36px] md:pb-[88px] lg:px-[40px]"
       aria-labelledby="experience-heading"
     >
       <motion.div
@@ -1004,7 +1004,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
             style={
               panelHeight
                 ? { height: panelHeight, maxHeight: panelHeight }
-                : { minHeight: 420 }
+                : { minHeight: "min(420px, 70vh)" }
             }
           >
             <div
@@ -1026,7 +1026,7 @@ export default function Experience({ craftImages }: ExperienceProps) {
           </div>
 
           {/* Pin + two polaroids only (no big photo card) */}
-          <div className="min-w-0 lg:w-[45%]">
+          <div className="min-w-0 overflow-x-clip px-[4px] sm:px-[8px] lg:w-[45%] lg:overflow-visible lg:px-0">
             {activeItem ? (
               <PolaroidClip
                 item={activeItem}

@@ -65,7 +65,7 @@ export default function ImpactPageShell({
   }));
 
   return (
-    <div className="min-h-screen bg-cream pb-[32px] sm:pb-[48px]">
+    <div className="min-h-screen overflow-x-clip bg-cream pb-[32px] sm:pb-[48px]">
       <Navbar homepage={homepage} />
       <main className="mx-auto max-w-[1100px] px-[16px] pt-[24px] sm:px-[24px] sm:pt-[32px] md:px-[48px] md:pt-[40px]">
         <AnimatePresence mode="wait" initial={false}>
@@ -75,12 +75,13 @@ export default function ImpactPageShell({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="min-w-0"
           >
-            <h1 className="m-0 text-[28px] font-bold leading-[1.1] tracking-[-0.02em] text-black sm:text-[36px] md:font-serif md:text-[48px] md:leading-[1.08]">
+            <h1 className="m-0 break-words text-[24px] font-bold leading-[1.15] tracking-[-0.02em] text-black sm:text-[36px] sm:leading-[1.1] md:font-serif md:text-[48px] md:leading-[1.08]">
               {item.title}
             </h1>
 
-            <p className="mt-[18px] m-0 max-w-[900px] text-[14px] leading-[1.5] text-forest sm:mt-[24px] sm:text-[15.5px] sm:leading-[1.45]">
+            <p className="mt-[18px] m-0 max-w-[900px] break-words text-[14px] leading-[1.5] text-forest sm:mt-[24px] sm:text-[15.5px] sm:leading-[1.45]">
               <strong className="font-bold not-italic">Project Overview:</strong>{" "}
               <em>{item.body}</em>
             </p>

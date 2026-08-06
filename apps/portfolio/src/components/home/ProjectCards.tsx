@@ -71,12 +71,12 @@ export default function ProjectCards({ projects }: ProjectCardsProps) {
             </div>
 
             <div className="flex items-start justify-between gap-2 bg-white px-3 py-3 sm:gap-2.5 sm:px-3.5 sm:py-3.5">
-              <h3 className="m-0 min-w-0 flex-1 line-clamp-2 text-[13px] font-bold leading-[1.3] tracking-[-0.02em] text-black sm:text-[14px]">
+              <h3 className="m-0 min-w-0 flex-1 break-words line-clamp-2 text-[13px] font-bold leading-[1.3] tracking-[-0.02em] text-black sm:text-[14px]">
                 {project.title}
               </h3>
 
               <span
-                className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-forest text-[#fffbf1] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:size-8"
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-forest text-[#fffbf1] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 aria-hidden
               >
                 <ArrowUpRight className="h-[13px] w-[13px]" strokeWidth={2.25} />

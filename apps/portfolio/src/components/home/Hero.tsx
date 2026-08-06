@@ -20,16 +20,16 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
 
   return (
     <section
-      className="relative mx-auto w-full max-w-[1310px] overflow-visible px-[clamp(16px,6.5vw,84px)] pb-[clamp(40px,5vw,64px)] pt-[clamp(4px,1vw,12px)]"
+      className="relative mx-auto w-full max-w-[1310px] overflow-x-clip px-[clamp(16px,6.5vw,84px)] pb-[clamp(32px,5vw,64px)] pt-[clamp(4px,1vw,12px)] md:overflow-visible"
       aria-label="Introduction"
     >
-      <div className="relative mx-auto aspect-[1310/860] w-full min-h-[500px] max-h-[min(860px,88vw)] sm:min-h-[600px]">
+      <div className="relative mx-auto aspect-[1310/860] w-full min-h-[460px] max-h-[min(860px,125vw)] sm:min-h-[600px] sm:max-h-[min(860px,88vw)]">
         {/* Giant forest-green name — behind paint + portrait */}
         <div
-          className="pointer-events-none absolute inset-x-[-4%] top-[calc(6%-15px)] z-0 select-none overflow-visible text-center"
+          className="pointer-events-none absolute inset-x-0 top-[calc(6%-15px)] z-0 select-none overflow-visible text-center sm:inset-x-[-4%]"
           aria-hidden
         >
-          <span className="block text-[clamp(80px,19vw,300px)] font-bold leading-[0.82] tracking-[-0.05em] text-[#016146]">
+          <span className="block text-[clamp(48px,14.5vw,300px)] font-bold leading-[0.82] tracking-[-0.05em] text-[#016146] sm:text-[clamp(80px,19vw,300px)]">
             SHRITIK
           </span>
         </div>
@@ -39,7 +39,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.08 }}
-          className="absolute left-1/2 top-[calc(14%+60px)] z-[2] w-[clamp(200px,34.5%,450px)] -translate-x-1/2"
+          className="absolute left-1/2 top-[calc(14%+28px)] z-[2] w-[clamp(160px,42%,450px)] -translate-x-1/2 sm:top-[calc(14%+60px)] sm:w-[clamp(200px,34.5%,450px)]"
         >
           <div className="relative mx-auto w-full">
             <div
@@ -81,13 +81,13 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           className="absolute left-1/2 top-[calc(4.5%-15px)] z-[5] -translate-x-1/2"
         >
           <div
-            className="px-[clamp(16px,1.8vw,24px)] py-[clamp(7px,0.75vw,10px)] shadow-[1px_2px_3px_rgba(0,75,64,0.1)]"
+            className="px-[clamp(12px,1.8vw,24px)] py-[clamp(6px,0.75vw,10px)] shadow-[1px_2px_3px_rgba(0,75,64,0.1)]"
             style={{
               background: "#F5D978",
               clipPath: "polygon(1% 12%, 99% 0%, 100% 88%, 0% 100%)",
             }}
           >
-            <p className="m-0 whitespace-nowrap font-[family-name:var(--font-caveat)] text-[clamp(18px,1.8vw,24px)] font-semibold leading-none text-[#016146]">
+            <p className="m-0 whitespace-nowrap font-[family-name:var(--font-caveat)] text-[clamp(15px,1.8vw,24px)] font-semibold leading-none text-[#016146]">
               Welcome to my Portfolio..
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
             y: { ...floatTransition, delay: 0.4 },
             rotate: { ...floatTransition, delay: 0.4, duration: 4.2 },
           }}
-          className="absolute bottom-[calc(1%+88px)] left-[calc(-2%-20px)] z-[3] w-[clamp(171px,28.8%,369px)] sm:bottom-[calc(3%+88px)] sm:left-[calc(-1%-20px)]"
+          className="absolute bottom-[calc(2%+72px)] left-[0%] z-[3] w-[clamp(120px,34%,369px)] sm:bottom-[calc(3%+88px)] sm:left-[calc(-1%-20px)] sm:w-[clamp(171px,28.8%,369px)]"
         >
           <Image
             src="/hero/definition-scrap-clear.png"
@@ -142,7 +142,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
             y: { ...floatTransition, delay: 1.1, duration: 3.9 },
             rotate: { ...floatTransition, delay: 1.1, duration: 4.5 },
           }}
-          className="absolute bottom-[calc(5%+38px)] right-[-3%] z-[3] w-[clamp(148px,24.5%,318px)] sm:bottom-[calc(8%+38px)] sm:right-[-1%] md:right-[1%]"
+          className="absolute bottom-[calc(4%+28px)] right-[0%] z-[3] w-[clamp(100px,30%,318px)] sm:bottom-[calc(8%+38px)] sm:right-[-1%] sm:w-[clamp(148px,24.5%,318px)] md:right-[1%]"
         >
           <Image
             src="/hero/sticky-note.svg"
@@ -156,7 +156,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
         </motion.div>
       </div>
 
-      <p className="mt-[-4px] whitespace-nowrap text-center font-[family-name:var(--font-caveat)] text-[20px] text-[#C4A035] sm:hidden">
+      <p className="mt-[-4px] px-[4px] text-center font-[family-name:var(--font-caveat)] text-[16px] leading-snug text-[#C4A035] sm:hidden">
         — {tagline}
       </p>
     </section>

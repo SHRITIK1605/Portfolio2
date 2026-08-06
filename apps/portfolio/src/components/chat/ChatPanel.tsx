@@ -87,9 +87,14 @@ const markdownComponents: Components = {
   ),
   li: ({ children }) => <li className="leading-[1.5]">{children}</li>,
   code: ({ children }) => (
-    <code className="break-all rounded bg-forest/[0.08] px-[4px] py-[1px] text-[13px]">
+    <code className="break-all rounded bg-forest/[0.08] px-[4px] py-[1px] text-[13px] [overflow-wrap:anywhere]">
       {children}
     </code>
+  ),
+  pre: ({ children }) => (
+    <pre className="mb-[8px] max-w-full overflow-x-auto whitespace-pre-wrap break-words rounded-[10px] bg-forest/[0.06] p-[10px] text-[13px] last:mb-0">
+      {children}
+    </pre>
   ),
   h1: ({ children }) => (
     <h1 className="m-0 mb-[6px] text-[16px] font-bold">{children}</h1>
@@ -323,7 +328,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 340 }}
             style={{ "--chat-w": `${panelWidth}%` } as React.CSSProperties}
-            className="fixed inset-y-0 right-0 z-50 flex w-full flex-col bg-cream pb-[env(safe-area-inset-bottom)] shadow-[-8px_0_32px_rgba(0,75,64,0.12)] md:w-[max(var(--chat-w),300px)] md:border-l md:border-forest/10"
+            className="fixed inset-y-0 right-0 z-50 flex h-[100dvh] w-full max-w-[100vw] min-w-0 flex-col overflow-hidden bg-cream pb-[env(safe-area-inset-bottom)] shadow-[-8px_0_32px_rgba(0,75,64,0.12)] md:h-auto md:max-w-none md:w-[max(var(--chat-w),300px)] md:border-l md:border-forest/10"
             role="dialog"
             aria-label="AI chat"
           >
@@ -360,9 +365,9 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
               </div>
             </header>
 
-            <div className="flex-1 overflow-y-auto overscroll-contain px-[16px] py-[20px] sm:px-[20px] sm:py-[24px]">
+            <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-[16px] py-[20px] sm:px-[20px] sm:py-[24px]">
               {messages.length === 0 ? (
-                <div className="animate-fade-in">
+                <div className="animate-fade-in min-w-0">
                   <h2 className="m-0 text-[18px] font-semibold text-forest sm:text-[20px]">
                     Hi! How can I help you?
                   </h2>
@@ -375,7 +380,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
                         key={prompt}
                         type="button"
                         onClick={() => sendMessage(prompt)}
-                        className="min-h-[48px] rounded-[16px] border border-forest/15 bg-white px-[16px] py-[12px] text-left text-[14px] text-forest transition hover:border-forest/30"
+                        className="min-h-[48px] max-w-full break-words rounded-[16px] border border-forest/15 bg-white px-[16px] py-[12px] text-left text-[14px] text-forest transition hover:border-forest/30 [overflow-wrap:anywhere]"
                       >
                         {prompt}
                       </button>
@@ -383,14 +388,14 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
                   </div>
                 </div>
               ) : (
-                <div className="space-y-[16px]">
+                <div className="min-w-0 space-y-[16px]">
                   {messages.map((msg, i) => (
                     <div
                       key={`${msg.role}-${i}`}
                       className={
                         msg.role === "user"
-                          ? "flex justify-end"
-                          : "flex items-start gap-[8px]"
+                          ? "flex min-w-0 justify-end"
+                          : "flex min-w-0 items-start gap-[8px]"
                       }
                     >
                       {msg.role === "assistant" ? (
@@ -406,8 +411,8 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
                       <div
                         className={
                           msg.role === "user"
-                            ? "max-w-[85%] overflow-hidden rounded-[16px] bg-forest px-[16px] py-[12px] text-[14px] text-white break-words"
-                            : "max-w-[85%] overflow-hidden rounded-[16px] bg-white px-[16px] py-[12px] text-[14px] text-forest shadow-[0_1px_4px_rgba(0,75,64,0.06)] break-words"
+                            ? "max-w-[min(85%,100%)] min-w-0 overflow-hidden rounded-[16px] bg-forest px-[14px] py-[12px] text-[14px] text-white break-words [overflow-wrap:anywhere] sm:px-[16px]"
+                            : "max-w-[min(85%,100%)] min-w-0 overflow-hidden rounded-[16px] bg-white px-[14px] py-[12px] text-[14px] text-forest shadow-[0_1px_4px_rgba(0,75,64,0.06)] break-words [overflow-wrap:anywhere] sm:px-[16px]"
                         }
                       >
                         {msg.role === "assistant" ? (
@@ -420,22 +425,22 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
                             </ReactMarkdown>
                           ) : null
                         ) : (
-                          <p className="m-0 whitespace-pre-wrap break-words">
+                          <p className="m-0 whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                             {msg.content}
                           </p>
                         )}
 
                         {msg.ctas && msg.ctas.length > 0 ? (
-                          <div className="mt-[10px] flex flex-wrap gap-[8px]">
+                          <div className="mt-[10px] flex max-w-full flex-wrap gap-[8px]">
                             {msg.ctas.map((cta, ci) => (
                               <button
                                 key={ci}
                                 type="button"
                                 onClick={() => handleCtaClick(cta)}
-                                className="inline-flex items-center gap-[6px] rounded-full border-[1.5px] border-forest bg-btn-cream px-[14px] py-[7px] text-[13px] font-medium text-forest transition hover:bg-forest/10"
+                                className="inline-flex max-w-full items-center gap-[6px] rounded-full border-[1.5px] border-forest bg-btn-cream px-[14px] py-[7px] text-left text-[13px] font-medium text-forest transition hover:bg-forest/10"
                               >
-                                <ExternalLink className="h-[12px] w-[12px]" strokeWidth={2} />
-                                {`View ${cta.title}`}
+                                <ExternalLink className="h-[12px] w-[12px] shrink-0" strokeWidth={2} />
+                                <span className="min-w-0 break-words [overflow-wrap:anywhere]">{`View ${cta.title}`}</span>
                               </button>
                             ))}
                           </div>
@@ -456,13 +461,13 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
             </div>
 
             <form
-              className="border-t border-forest/10 p-[12px] pb-[max(12px,env(safe-area-inset-bottom))] sm:p-[16px]"
+              className="shrink-0 border-t border-forest/10 p-[12px] pb-[max(12px,env(safe-area-inset-bottom))] sm:p-[16px]"
               onSubmit={(e) => {
                 e.preventDefault();
                 sendMessage(input);
               }}
             >
-              <div className="flex items-end gap-[8px]">
+              <div className="flex min-w-0 items-end gap-[8px]">
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -475,7 +480,7 @@ export default function ChatPanel({ projectId, projectTitle }: ChatPanelProps) {
                   placeholder="Ask anything…"
                   rows={1}
                   disabled={isStreaming}
-                  className="max-h-[112px] min-h-[44px] flex-1 resize-none rounded-[16px] border border-forest/15 bg-white px-[16px] py-[12px] text-[14px] outline-none focus:border-forest/35"
+                  className="max-h-[112px] min-h-[44px] min-w-0 flex-1 resize-none rounded-[16px] border border-forest/15 bg-white px-[16px] py-[12px] text-[14px] outline-none focus:border-forest/35"
                 />
                 <button
                   type="submit"

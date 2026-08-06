@@ -73,13 +73,13 @@ export default function Footer({ homepage }: FooterProps) {
         <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-[18px] px-[16px] sm:px-[28px] md:flex-row md:items-end md:justify-between md:gap-[24px] md:px-[36px] lg:px-[40px]">
           <nav
             aria-label="Footer"
-            className="flex flex-wrap items-center gap-x-[22px] gap-y-[12px] sm:gap-x-[28px] md:gap-x-[32px]"
+            className="flex max-w-full flex-wrap items-center gap-x-[18px] gap-y-[10px] sm:gap-x-[28px] sm:gap-y-[12px] md:gap-x-[32px]"
           >
             <a
               href={linkedin}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-[5px] text-[13px] transition hover:opacity-70 sm:text-[14px]"
+              className="inline-flex min-h-[40px] items-center gap-[5px] text-[13px] transition hover:opacity-70 sm:min-h-0 sm:text-[14px]"
             >
               LinkedIn
               <ArrowUpRight
@@ -92,7 +92,7 @@ export default function Footer({ homepage }: FooterProps) {
             <button
               type="button"
               onClick={() => setResumeOpen(true)}
-              className="inline-flex items-center gap-[5px] text-[13px] transition hover:opacity-70 sm:text-[14px]"
+              className="inline-flex min-h-[40px] items-center gap-[5px] text-[13px] transition hover:opacity-70 sm:min-h-0 sm:text-[14px]"
             >
               Resume
               <ArrowUpRight
@@ -102,10 +102,10 @@ export default function Footer({ homepage }: FooterProps) {
               />
             </button>
 
-            <div className="inline-flex min-w-0 items-center gap-[6px]">
+            <div className="inline-flex max-w-full min-w-0 items-center gap-[6px]">
               <a
                 href={`mailto:${email}`}
-                className="min-w-0 truncate text-[13px] transition hover:opacity-70 sm:text-[14px]"
+                className="min-w-0 max-w-[min(100%,220px)] truncate text-[13px] transition hover:opacity-70 sm:max-w-none sm:text-[14px]"
               >
                 {email}
               </a>
@@ -113,7 +113,7 @@ export default function Footer({ homepage }: FooterProps) {
                 type="button"
                 onClick={() => copyValue("email", email)}
                 aria-label="Copy email"
-                className="inline-flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded-[6px] transition hover:bg-forest/10"
+                className="inline-flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[6px] transition hover:bg-forest/10 sm:h-[28px] sm:w-[28px]"
               >
                 {copiedField === "email" ? (
                   <Check className="h-[14px] w-[14px]" strokeWidth={2} />
@@ -134,7 +134,7 @@ export default function Footer({ homepage }: FooterProps) {
                 type="button"
                 onClick={() => copyValue("phone", PHONE_DISPLAY)}
                 aria-label="Copy phone number"
-                className="inline-flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded-[6px] transition hover:bg-forest/10"
+                className="inline-flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[6px] transition hover:bg-forest/10 sm:h-[28px] sm:w-[28px]"
               >
                 {copiedField === "phone" ? (
                   <Check className="h-[14px] w-[14px]" strokeWidth={2} />
@@ -145,7 +145,7 @@ export default function Footer({ homepage }: FooterProps) {
             </div>
           </nav>
 
-          <p className="m-0 text-[12px] leading-snug opacity-80 sm:text-[13px] md:text-right">
+          <p className="m-0 max-w-full text-[12px] leading-snug opacity-80 sm:text-[13px] md:text-right">
             © Shritik Jaiswal . made with cursor . curiosity . love
           </p>
         </div>

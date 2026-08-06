@@ -33,32 +33,31 @@ function ProjectCard({
 
   return (
     <article
-      className="projects-card projects-card--active relative mx-auto flex w-full max-w-[min(1040px,100%)] overflow-visible border-[2.5px] border-black bg-white"
+      className="projects-card projects-card--active relative mx-auto flex w-full max-w-[min(1040px,100%)] overflow-visible border-[2.5px] border-black bg-white max-md:h-auto md:h-[min(420px,58vh)]"
       style={{
         transform: `rotate(${tilt}deg)`,
         boxShadow: "10px 10px 0 #000",
-        height: "min(420px, 58vh)",
       }}
     >
       <span
-        className="projects-scrap projects-scrap--tape pointer-events-none absolute -left-[18px] -top-[14px] z-[2] h-[18px] w-[56px] rotate-[-18deg] opacity-80"
+        className="projects-scrap projects-scrap--tape pointer-events-none absolute -left-[10px] -top-[10px] z-[2] h-[14px] w-[44px] rotate-[-18deg] opacity-80 sm:-left-[18px] sm:-top-[14px] sm:h-[18px] sm:w-[56px]"
         style={{ backgroundColor: theme.accent }}
         aria-hidden
       />
       <span
-        className="projects-scrap projects-scrap--dot pointer-events-none absolute -right-[10px] top-[18%] z-[2] h-[12px] w-[12px] rounded-full border-2 border-black"
+        className="projects-scrap projects-scrap--dot pointer-events-none absolute -right-[8px] top-[18%] z-[2] h-[10px] w-[10px] rounded-full border-2 border-black sm:-right-[10px] sm:h-[12px] sm:w-[12px]"
         style={{ backgroundColor: theme.panel }}
         aria-hidden
       />
       <span
-        className="projects-scrap projects-scrap--chip pointer-events-none absolute -bottom-[12px] left-[12%] z-[2] h-[10px] w-[42px] rotate-[8deg] border border-black"
+        className="projects-scrap projects-scrap--chip pointer-events-none absolute -bottom-[10px] left-[12%] z-[2] h-[8px] w-[36px] rotate-[8deg] border border-black sm:-bottom-[12px] sm:h-[10px] sm:w-[42px]"
         style={{ backgroundColor: theme.tag }}
         aria-hidden
       />
 
-      <div className="relative flex h-full w-full overflow-hidden">
+      <div className="relative flex h-full w-full flex-col overflow-hidden md:flex-row">
         <div
-          className="relative flex w-[42%] items-center justify-center p-[3%] sm:w-[44%] sm:p-[4%] md:w-[46%]"
+          className="relative flex aspect-[5/4] w-full max-h-[220px] items-center justify-center p-[4%] sm:max-h-[260px] sm:p-[4%] md:aspect-auto md:h-full md:max-h-none md:w-[46%] md:p-[4%]"
           style={{
             backgroundColor: theme.panel,
             backgroundImage: `radial-gradient(${theme.dot} 1.4px, transparent 1.4px)`,
@@ -74,7 +73,7 @@ function ProjectCard({
           </div>
         </div>
 
-        <div className="relative flex w-[58%] flex-col bg-white px-[20px] py-[20px] sm:w-[56%] sm:px-[24px] sm:py-[24px] md:w-[54%] md:px-[28px] md:py-[28px]">
+        <div className="relative flex w-full flex-col bg-white px-[16px] py-[16px] sm:px-[24px] sm:py-[24px] md:w-[54%] md:px-[28px] md:py-[28px]">
           <div className="relative z-[1] flex items-start gap-3">
             <div
               className={`relative shrink-0 overflow-hidden border border-black ${
@@ -97,7 +96,7 @@ function ProjectCard({
             </h3>
           </div>
 
-          <p className="relative z-[1] mt-4 line-clamp-4 text-[11px] leading-[1.55] text-black/85 sm:line-clamp-5 sm:text-[12.5px] md:line-clamp-6 md:text-[13.5px]">
+          <p className="relative z-[1] mt-3 line-clamp-4 text-[12px] leading-[1.55] text-black/85 sm:mt-4 sm:line-clamp-5 sm:text-[12.5px] md:line-clamp-6 md:text-[13.5px]">
             {project.body}
           </p>
 
@@ -115,7 +114,7 @@ function ProjectCard({
 
           <Link
             href={detailHref}
-            className="projects-cta relative z-[1] mt-auto inline-flex w-full max-w-[240px] items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px]"
+            className="projects-cta relative z-[1] mt-4 inline-flex min-h-[44px] w-full max-w-none items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black sm:mt-auto sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px] md:max-w-[260px]"
             style={
               {
                 boxShadow: "4px 4px 0 #000",
@@ -205,7 +204,7 @@ export default function CreationsScroll({
           IMPACT CREATED
         </h2>
 
-        <div className="flex flex-col items-center gap-[56px] sm:gap-[72px] md:gap-[88px]">
+        <div className="flex flex-col items-center gap-[40px] px-[2px] sm:gap-[72px] sm:px-0 md:gap-[88px]">
           {projects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}
