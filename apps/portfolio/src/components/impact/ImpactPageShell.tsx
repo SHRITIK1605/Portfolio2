@@ -76,7 +76,7 @@ export default function ImpactPageShell({
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
           >
-            <h1 className="m-0 text-[28px] font-normal leading-[1.1] tracking-[-0.02em] text-forest sm:text-[36px] md:font-serif md:text-[48px] md:leading-[1.08]">
+            <h1 className="m-0 text-[28px] font-bold leading-[1.1] tracking-[-0.02em] text-black sm:text-[36px] md:font-serif md:text-[48px] md:leading-[1.08]">
               {item.title}
             </h1>
 
