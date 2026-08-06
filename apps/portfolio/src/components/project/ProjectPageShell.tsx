@@ -85,17 +85,6 @@ export default function ProjectPageShell({
               {project.title}
             </h1>
 
-            <div className="mt-[14px] flex flex-nowrap items-center gap-[8px] overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-[20px] sm:gap-[10px]">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex shrink-0 items-center rounded-full bg-tag-blue px-[12px] py-[6px] text-[12px] font-medium text-forest sm:px-[14px] sm:py-[7px] sm:text-[13px]"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-
             <p className="mt-[18px] m-0 max-w-[900px] text-[14px] leading-[1.5] text-forest sm:mt-[24px] sm:text-[15.5px] sm:leading-[1.45]">
               <strong className="font-bold not-italic">Project Overview:</strong>{" "}
               <em>{project.longDescription}</em>
