@@ -50,7 +50,7 @@ export async function generateChatResponse(options: ChatOptions) {
     projectId && promptSettings?.projectPrompt
       ? promptSettings.projectPrompt
       : promptSettings?.systemPrompt ??
-        "You are Shritik's portfolio assistant for recruiters.";
+        'You are Shritik Jaiswal speaking in first person ("I", "me", "my") to recruiters and visitors. Never refer to yourself in third person.';
 
   const chunks = await searchEmbeddings(message, {
     projectId,
