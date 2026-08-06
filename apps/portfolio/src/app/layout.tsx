@@ -16,9 +16,50 @@ const caveat = Caveat({
   weight: ["400", "500", "600", "700"],
 });
 
+const SITE_URL = "https://shritikportfolio.vercel.app";
+const OG_TITLE = "Shritik Jaiswal | Portfolio";
+const OG_DESCRIPTION =
+  "AI & digital product enthusiast. Product work across fashion, fintech, and marketplaces.";
+const OG_IMAGE = `${SITE_URL}/og-image.png?v=2`;
+
 export const metadata: Metadata = {
-  title: "Shritik Portfolio",
-  description: "AI-powered portfolio by Shritik",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: OG_TITLE,
+    template: "%s | Shritik Jaiswal",
+  },
+  description: OG_DESCRIPTION,
+  applicationName: "Shritik Jaiswal",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", type: "image/png", sizes: "257x257" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/favicon.ico",
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Shritik Jaiswal",
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Shritik Jaiswal",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
 };
 
 export const viewport: Viewport = {
