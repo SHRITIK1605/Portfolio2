@@ -13,6 +13,9 @@ import type { HomepageSettings, ImpactItem } from "@/types";
 
 export const dynamic = "force-dynamic";
 
+/** Don't stall the shell on a cold Neon connection — demo data paints instantly. */
+const DB_BUDGET_MS = 700;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -45,6 +48,30 @@ function demoDetailItems(): ImpactDetailItem[] {
   }));
 }
 
+async function loadImpactData(): Promise<{
+  items: ImpactDetailItem[];
+  homepage: Awaited<ReturnType<typeof getHomepageSettings>>;
+} | null> {
+  try {
+    const dbWork = Promise.all([
+      getPublishedImpactItems(),
+      getHomepageSettings(),
+    ]).then(([impactResult, homepageResult]) => ({
+      items: dbItemsToDetail(impactResult),
+      homepage: homepageResult,
+    }));
+
+    const timedOut = new Promise<null>((resolve) => {
+      setTimeout(() => resolve(null), DB_BUDGET_MS);
+    });
+
+    return await Promise.race([dbWork, timedOut]);
+  } catch (error) {
+    console.error("Impact detail page DB error, using demo fallback:", error);
+    return null;
+  }
+}
+
 export default async function ImpactDetailPage({ params }: PageProps) {
   const { slug: rawSlug } = await params;
   const slug = decodeSlugParam(rawSlug);
@@ -52,27 +79,17 @@ export default async function ImpactDetailPage({ params }: PageProps) {
   // Static PDF assets live under /impact/*.pdf — never treat those as detail pages.
   if (slug.includes(".")) notFound();
 
-  let items: ImpactDetailItem[] = [];
-  let homepage = null;
+  const fromDb = await loadImpactData();
+  let items = fromDb?.items?.length ? fromDb.items : demoDetailItems();
+  const homepage = fromDb?.homepage ?? null;
 
-  try {
-    const [impactResult, homepageResult] = await Promise.all([
-      getPublishedImpactItems(),
-      getHomepageSettings(),
-    ]);
-    homepage = homepageResult;
-    items = dbItemsToDetail(impactResult);
-  } catch (error) {
-    console.error("Impact detail page DB error, using demo fallback:", error);
+  let resolved = items.find((item) => item.slug === slug);
+  // Cold Neon timed out — demo shell still covers known showcase slugs.
+  if (!resolved && fromDb === null) {
     items = demoDetailItems();
+    resolved = items.find((item) => item.slug === slug);
   }
-
-  if (items.length === 0) {
-    items = demoDetailItems();
-  }
-
-  const active = items.find((item) => item.slug === slug);
-  if (!active) notFound();
+  if (!resolved) notFound();
 
   const settings: HomepageSettings = homepage
     ? {
@@ -87,7 +104,7 @@ export default async function ImpactDetailPage({ params }: PageProps) {
   return (
     <ImpactPageShell
       items={items}
-      initialSlug={active.slug}
+      initialSlug={resolved.slug}
       homepage={settings}
     />
   );

@@ -1,15 +1,31 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "@/components/layout/Navbar";
 import ChatPanel from "@/components/chat/ChatPanel";
-import PdfFrame from "@/components/project/PdfFrame";
 import ProjectCarousel from "@/components/project/ProjectCarousel";
 import type { ImpactDetailItem } from "@/lib/impact-data";
 import { toFullImpactPdfUrl } from "@/lib/tv-pdf";
 import { decodeSlugParam, impactPath } from "@/lib/slug";
 import type { HomepageSettings } from "@/types";
+
+const PdfFrame = dynamic(() => import("@/components/project/PdfFrame"), {
+  ssr: false,
+  loading: () => <PdfPlaceholder label="Loading PDF…" />,
+});
+
+function PdfPlaceholder({ label }: { label?: string }) {
+  return (
+    <div
+      className="flex min-h-[420px] animate-pulse items-center justify-center rounded-[20px] border border-forest/[0.08] bg-white text-[14px] text-forest/45 shadow-[0_2px_16px_rgba(0,75,64,0.06)]"
+      aria-label={label}
+    >
+      {label ?? "Loading PDF…"}
+    </div>
+  );
+}
 
 interface ImpactPageShellProps {
   items: ImpactDetailItem[];
@@ -23,10 +39,34 @@ export default function ImpactPageShell({
   homepage,
 }: ImpactPageShellProps) {
   const [activeSlug, setActiveSlug] = useState(initialSlug);
+  /** Defer heavy react-pdf until after shell paint so nav feels instant. */
+  const [pdfReady, setPdfReady] = useState(false);
 
   useEffect(() => {
     setActiveSlug(initialSlug);
   }, [initialSlug]);
+
+  useEffect(() => {
+    setPdfReady(false);
+    let cancelled = false;
+    const enable = () => {
+      if (!cancelled) setPdfReady(true);
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(enable, { timeout: 280 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback(id);
+      };
+    }
+
+    const t = window.setTimeout(enable, 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t);
+    };
+  }, [activeSlug]);
 
   const item = useMemo(
     () => items.find((entry) => entry.slug === activeSlug) ?? items[0],
@@ -88,7 +128,11 @@ export default function ImpactPageShell({
 
             <div className="mt-[24px] sm:mt-[32px]">
               {pdfUrl ? (
-                <PdfFrame url={pdfUrl} />
+                pdfReady ? (
+                  <PdfFrame url={pdfUrl} />
+                ) : (
+                  <PdfPlaceholder label="Loading PDF…" />
+                )
               ) : (
                 <div className="flex min-h-[420px] flex-col items-center justify-center gap-[10px] rounded-[20px] border border-forest/10 bg-white px-[24px] text-center text-[14px] text-forest/55">
                   <span className="font-medium text-forest/70">

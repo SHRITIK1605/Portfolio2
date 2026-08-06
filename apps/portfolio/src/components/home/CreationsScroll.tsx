@@ -114,6 +114,7 @@ function ProjectCard({
 
           <Link
             href={detailHref}
+            prefetch
             className="projects-cta relative z-[1] mt-4 inline-flex min-h-[44px] w-full max-w-none items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black sm:mt-auto sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px] md:max-w-[260px]"
             style={
               {
