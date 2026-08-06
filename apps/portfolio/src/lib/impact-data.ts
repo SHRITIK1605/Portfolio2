@@ -56,7 +56,7 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
       "Fixed ~97% of fashion thumbnails to 0.75 — CV pipeline for 150k+ listings",
     body: "Drove 8%+ PLP CVR by auto-fixing vendor aspect ratios, framing, and whitespace that broke catalog trust. Two-stage CV pipeline (HF fashion parser + Meta SAM → safe crop → BG stretch) keeps the product mask immutable while hitting a 0.75 container ratio.",
     tags: ["Computer Vision", "Catalog QA", "Aspect Ratio"],
-    pdfUrl: "/impact/tv/slikk-aspect-ratio-fix.pdf?v=4",
+    pdfUrl: "/impact/tv/slikk-aspect-ratio-fix.pdf?v=5",
     detailUrl: impactDetailPathFromLogoAlt("Slikk"),
     logo: {
       src: "/experience/logos/slikk.png",
