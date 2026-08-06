@@ -53,8 +53,8 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
   {
     id: "showcase-1",
     title:
-      "Slikk Aspect Ratio Fix — CV Pipeline Standardizing Fashion Catalog Thumbnails to 0.75",
-    body: "Slikk’s fashion catalog images arrive from many vendors with inconsistent aspect ratios, backgrounds, framing, and positioning — hurting PLP scanability and trust. Built a two-stage computer-vision pipeline (product/background segmentation, safe crop, then background stretch) targeting a 0.75 container ratio, with hard constraints that keep the product mask immutable. MVP model fixes ~97% of images while cutting cropped/whitespace thumbnails that suppressed conversion.",
+      "Fixed ~97% of fashion thumbnails to 0.75 — CV pipeline for 150k+ listings",
+    body: "Drove 8%+ PLP CVR by auto-fixing vendor aspect ratios, framing, and whitespace that broke catalog trust. Two-stage CV pipeline (HF fashion parser + Meta SAM → safe crop → BG stretch) keeps the product mask immutable while hitting a 0.75 container ratio.",
     tags: ["Computer Vision", "Catalog QA", "Aspect Ratio"],
     pdfUrl: "/impact/tv/slikk-aspect-ratio-fix.pdf?v=4",
     detailUrl: impactDetailPathFromLogoAlt("Slikk"),
@@ -74,8 +74,8 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
   {
     id: "showcase-2",
     title:
-      "Automation & Analytical Enhancement of Free Float Factor & BSE Sector Rotation Index (BSRI)",
-    body: "At BSE Index Services, automated Free Float Factor shareholder classification with an Excel–SQL rule engine (Promoter / Strategic / Doubtful / Public), cutting quarterly work from 20 days × 3 FTEs to 1 day × 1 FTE (~80× faster), eliminating 1–5% free-float errors on 300 of 4,800+ stocks, and supporting ~₹700 Cr daily trade-volume lift. Also automated branded sales PDFs across 101 indices — 90% less manual prep, 30+ hrs/month saved, and 20% faster client turnaround.",
+      "₹700 Cr/day (+0.7%) liquidity lift — Free Float automation 80× faster",
+    body: "Cut quarterly FFF work from 20 days × 3 FTEs to 1 day × 1 FTE with an Excel–SQL rule engine, eliminating 1–5% free-float errors on 300 of 4,800+ stocks. Also automated branded sales PDFs across 101 indices — 90% less prep, 30+ hrs/month saved, 20% faster client TAT.",
     tags: ["Index Analytics", "Automation", "Free Float"],
     pdfUrl: "/impact/tv/bse-intern-work.pdf?v=4",
     detailUrl: impactDetailPathFromLogoAlt("BSE"),
@@ -96,8 +96,8 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
   {
     id: "showcase-3",
     title:
-      "EMB Global Client Dashboard — Projects, Commercials & Staff Augmentation Portal",
-    body: "Designed and shipped EMB Global’s client-facing dashboard: landing feed with meetings and tasks, company/team/compliance profiles, project list & delivery views with milestones, account-level commercials (collaboration value, paid, outstanding), past-project deliverables, and staff-augmentation views covering attendance, leave, timesheets, and invoicing — so clients can track delivery, money, and resources in one place.",
+      "Unified Zoho–Excel–calls into one client dashboard — +40% feature adoption",
+    body: "Shipped EMB’s client portal for projects, commercials, and staff augmentation so clients track delivery, money, and resources in one place. API integrations collapsed fragmented journeys across Zoho, Excel, and calls, lifting adoption 40%.",
     tags: ["Client Portal", "Dashboard UX", "Project Ops"],
     pdfUrl: "/impact/tv/emb-client-dashboard.pdf?v=4",
     detailUrl: impactDetailPathFromLogoAlt("EMB Global"),
@@ -117,8 +117,8 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
   {
     id: "showcase-4",
     title:
-      "Digital Infrastructure for Aarya Stays — OTA Booking, Listings & Check-in Portal",
-    body: "Built digital infrastructure for a homestay chain from scratch across product, design, and tech: 20+ high-fidelity booking flows to deepen brand story and lift OTA/organic revenue, OTA Manager SaaS research and integration saving 50+ hrs/month, plus a no-code property listing hub and check-in portal that cut approval time by ~70%. Case PDF pending — TV preview will appear once the deck is attached.",
+      "Boosted OTA & organic bookings 25% — 20+ flows + OTA Manager SaaS",
+    body: "Designed 20+ high-fidelity booking flows to deepen brand story and lift OTA/organic revenue, and integrated OTA Manager SaaS to save 50+ hrs/month. Built a no-code listing hub and guest check-in portal that removed the tech bottleneck (case PDF pending).",
     tags: ["Homestay", "OTA", "Product Design"],
     pdfUrl: "",
     detailUrl: impactDetailPathFromLogoAlt("Aarya Stays"),
