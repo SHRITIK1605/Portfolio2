@@ -53,11 +53,17 @@ export default function ImpactPageShell({
       if (!cancelled) setPdfReady(true);
     };
 
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(enable, { timeout: 280 });
+    const w = window as Window &
+      Partial<{
+        requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+        cancelIdleCallback: (id: number) => void;
+      }>;
+
+    if (typeof w.requestIdleCallback === "function") {
+      const id = w.requestIdleCallback(enable, { timeout: 280 });
       return () => {
         cancelled = true;
-        window.cancelIdleCallback(id);
+        w.cancelIdleCallback?.(id);
       };
     }
 
