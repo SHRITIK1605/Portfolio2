@@ -16,14 +16,14 @@ export const PROJECTS: ProjectSeedData[] = [
     title: "Slikk AI Catalog",
     slug: "slikk-ai-catalog",
     shortDescription:
-      "AI-powered image standardization for fashion quick-commerce product listings — fixing aspect ratio inconsistency at catalog scale.",
+      "AI-powered image standardization for fashion quick-commerce product listings: fixing aspect ratio inconsistency at catalog scale.",
     longDescription:
-      "Slikk operates in fashion quick commerce, where product listing pages live or die on visual consistency. Shritik built an AI-driven pipeline to detect and normalize inconsistent product image aspect ratios across the catalog — reducing visual clutter on PLPs, improving scanability, and making listings feel trustworthy at scroll speed. The work spans computer-vision classification, batch processing workflows, and product decisions around where automation should override manual QA.",
-    aiContext: `Slikk AI Catalog — Aspect Ratio Fix for Fashion Quick Commerce
+      "Slikk operates in fashion quick commerce, where product listing pages live or die on visual consistency. Shritik built an AI-driven pipeline to detect and normalize inconsistent product image aspect ratios across the catalog, reducing visual clutter on PLPs, improving scanability, and making listings feel trustworthy at scroll speed. The work spans computer-vision classification, batch processing workflows, and product decisions around where automation should override manual QA.",
+    aiContext: `Slikk AI Catalog: Aspect Ratio Fix for Fashion Quick Commerce
 
-Problem: Product listing pages showed inconsistent image aspect ratios — some portrait, some landscape, some cropped awkwardly. This broke visual rhythm on PLPs, reduced trust, and made the catalog feel unpolished compared to competitors.
+Problem: Product listing pages showed inconsistent image aspect ratios (some portrait, some landscape, some cropped awkwardly). This broke visual rhythm on PLPs, reduced trust, and made the catalog feel unpolished compared to competitors.
 
-Shritik's role: Product + AI — owned the problem framing, solution design, and implementation direction for an AI-assisted catalog consistency tool.
+Shritik's role: Product + AI. Owned the problem framing, solution design, and implementation direction for an AI-assisted catalog consistency tool.
 
 Approach:
 - Mapped failure modes in existing catalog images (wrong crop, mixed ratios, background inconsistency)
@@ -51,23 +51,23 @@ Skills: AI product management, computer vision applications, quick commerce, cat
     title: "Flipkart APM",
     slug: "flipkart-apm",
     shortDescription:
-      "Flipkart APM challenge — reimagining Google Maps for an extreme data-scarce world with device-to-device mesh networks and offline-first navigation.",
+      "Flipkart APM challenge: reimagining Google Maps for an extreme data-scarce world with device-to-device mesh networks and offline-first navigation.",
     longDescription:
-      "For Flipkart's APM challenge, Shritik tackled a moonshot prompt: redesign a popular product for a world where internet data is extremely scarce. He chose Google Maps — a non-negotiable utility for 2B+ users — and proposed a G-Mesh network where nearby devices share location data peer-to-peer, combined with Device-Cache for offline map tiles and the traditional human wisdom of asking locals. The solution keeps navigation alive in offline zones while cutting data consumption per user, backed by market analysis, competitive mapping capability benchmarks, and clear success metrics.",
-    aiContext: `Flipkart APM Challenge — Reimagining Google Maps for a Data-Scarce World
+      "For Flipkart's APM challenge, Shritik tackled a moonshot prompt: redesign a popular product for a world where internet data is extremely scarce. He chose Google Maps (a non-negotiable utility for 2B+ users) and proposed a G-Mesh network where nearby devices share location data peer-to-peer, combined with Device-Cache for offline map tiles and the traditional human wisdom of asking locals. The solution keeps navigation alive in offline zones while cutting data consumption per user, backed by market analysis, competitive mapping capability benchmarks, and clear success metrics.",
+    aiContext: `Flipkart APM Challenge: Reimagining Google Maps for a Data-Scarce World
 
 Prompt: Imagine a world where data is extremely scarce. Pick a popular product and re-think it without losing its core value proposition.
 
-Product chosen: Google Maps — non-negotiable utility, data-hungry core engine, critical infrastructure for 100M+ businesses, 2 billion monthly active users.
+Product chosen: Google Maps, a non-negotiable utility with a data-hungry core engine and critical infrastructure for 100M+ businesses and 2 billion monthly active users.
 
 Key assumptions of the imagined world: governments enforce data consumption limits (500 MB/month), 2G/3G speeds (~0.1–1 MBPS), same device behavior as today.
 
-Solution — G-Mesh network:
+Solution: G-Mesh network:
 - Device-to-device mesh network for sharing location data locally between nearby phones
 - Device-Cache: offline map tiles cached and shared while travelling
 - Blends traditional human wisdom of asking locals for directions with tech
 - In-app data optimizations for seamless navigation in offline zones
-- Self-sustaining cooperative network — every device keeps the map moving even when the internet slows down
+- Self-sustaining cooperative network: every device keeps the map moving even when the internet slows down
 
 Analysis included:
 - Why Google Maps: data consumed per user (~23 MB/month), 1.4B active map users, ~30.3 petabytes/month total
@@ -87,14 +87,14 @@ Skills demonstrated: first-principles product thinking, moonshot solution design
     title: "RISA APM",
     slug: "risa-apm",
     shortDescription:
-      "JARVIS — conceptualizing an AI-native desktop browser for RISA Labs, backed by 178 surveys and 21 interviews on how users really browse.",
+      "JARVIS: conceptualizing an AI-native desktop browser for RISA Labs, backed by 178 surveys and 21 interviews on how users really browse.",
     longDescription:
-      "For RISA Labs' AI Browser assignment, Shritik conceptualized JARVIS — an AI-native, task-aware desktop browser for an AI-driven world. Grounded in primary research (178 surveys, 21 interviews), the work maps why traditional browsers fail modern workflows: no grasp of user intent, manual tab chaos, and zero content intelligence. JARVIS proposes AI summaries before reading, intelligent tab grouping, cross-session continuity, and a reading companion — with full user journey mapping, wireframes, GTM, and a revenue model.",
-    aiContext: `RISA APM — JARVIS: AI-Native Desktop Browser (RISA Labs, IIT Kharagpur)
+      "For RISA Labs' AI Browser assignment, Shritik conceptualized JARVIS, an AI-native, task-aware desktop browser for an AI-driven world. Grounded in primary research (178 surveys, 21 interviews), the work maps why traditional browsers fail modern workflows: no grasp of user intent, manual tab chaos, and zero content intelligence. JARVIS proposes AI summaries before reading, intelligent tab grouping, cross-session continuity, and a reading companion, with full user journey mapping, wireframes, GTM, and a revenue model.",
+    aiContext: `RISA APM / JARVIS: AI-Native Desktop Browser (RISA Labs, IIT Kharagpur)
 
-Assignment: Conceptualizing the Future of Browsing — reimagining the desktop browser for an AI-driven world.
+Assignment: Conceptualizing the Future of Browsing, reimagining the desktop browser for an AI-driven world.
 
-Product concept: JARVIS — an AI-native, task-aware browsing experience that closes the gap between static browsers and AI-assisted workflows.
+Product concept: JARVIS, an AI-native, task-aware browsing experience that closes the gap between static browsers and AI-assisted workflows.
 
 Primary research:
 - 178 surveys, 21 interviews (72% undergraduates, 18% employees)
@@ -105,7 +105,7 @@ Primary research:
 
 Why now: browser-influenced value ~275B/yr, AI browser segment ~87B by 2030, 30% AI browsers CAGR, no dominant AI-native browser category; Atlas and Comet launches signal a strategic shift toward AI-powered browsers. Traditional browser share 93% vs AI-based 7%.
 
-Problems with traditional browsers: built for page rendering only — no user intent detection, no grasp of complex content, meaning extracted manually, no tab intelligence or grouping, no continuity across sessions.
+Problems with traditional browsers: built for page rendering only (no user intent detection, no grasp of complex content, meaning extracted manually, no tab intelligence or grouping, no continuity across sessions).
 
 Core users: college students (14–25, highest AI adoption), postgrads/researchers, multi-tab navigators, workflow users. Personas: multitasking fast-switching B.Tech learner; detail-oriented evidence-driven PhD researcher.
 
@@ -125,12 +125,12 @@ Skills: AI product conceptualization, primary user research, persona development
     title: "Paytm UX Improvement",
     slug: "paytm-ux-improvement",
     shortDescription:
-      "Redesigning Paytm's homepage and payment flows — simplifying navigation, reducing clutter, and improving new-user onboarding for India's leading fintech app.",
+      "Redesigning Paytm's homepage and payment flows: simplifying navigation, reducing clutter, and improving new-user onboarding for India's leading fintech app.",
     longDescription:
-      "As part of an IIT Kharagpur product team, Shritik worked on improving Paytm's user experience — one of India's largest fintech platforms with 90M+ monthly transacting users. The project analyzed Paytm's cluttered homepage, simplified the payment section to four core features, redesigned bottom navigation, and proposed AARRR-driven improvements for both new and returning users. Competitive benchmarking against PhonePe, Google Pay, and others informed the redesign strategy.",
-    aiContext: `Paytm UX Improvement — IIT Kharagpur Product Case
+      "As part of an IIT Kharagpur product team, Shritik worked on improving Paytm's user experience, one of India's largest fintech platforms with 90M+ monthly transacting users. The project analyzed Paytm's cluttered homepage, simplified the payment section to four core features, redesigned bottom navigation, and proposed AARRR-driven improvements for both new and returning users. Competitive benchmarking against PhonePe, Google Pay, and others informed the redesign strategy.",
+    aiContext: `Paytm UX Improvement: IIT Kharagpur Product Case
 
-Platform context: Paytm — Indian digital payments and financial services platform. 90M average monthly transacting users. Competes with PhonePe, Google Pay, Amazon Pay, and others in UPI and merchant payments.
+Platform context: Paytm is an Indian digital payments and financial services platform. 90M average monthly transacting users. Competes with PhonePe, Google Pay, Amazon Pay, and others in UPI and merchant payments.
 
 Problem: Cluttered homepage with too many features on one screen. Confusing navigation for new users. Payment section overloaded. Poor first impressions hurting retention.
 
@@ -158,22 +158,22 @@ Skills: UX research, fintech product, information architecture, competitive anal
     title: "NoBroker Rental Space",
     slug: "nobroker-rental",
     shortDescription:
-      "PropTech case study on improving NoBroker's rental marketplace — owner/tenant research, competitive benchmarking, and subscription model fixes.",
+      "PropTech case study on improving NoBroker's rental marketplace: owner/tenant research, competitive benchmarking, and subscription model fixes.",
     longDescription:
-      "Shritik analyzed NoBroker's rental space product against competitors like MagicBricks, 99acres, and emerging PropTech startups. Through owner and tenant interviews, the team uncovered pain points in subscription pricing, listing quality, and tenant matching — proposing targeted improvements to NoBroker's rental segment in a market growing from $94B to $251B (2019–2021).",
-    aiContext: `NoBroker Rental Space Improvement — PropTech Case Study
+      "Shritik analyzed NoBroker's rental space product against competitors like MagicBricks, 99acres, and emerging PropTech startups. Through owner and tenant interviews, the team uncovered pain points in subscription pricing, listing quality, and tenant matching, proposing targeted improvements to NoBroker's rental segment in a market growing from $94B to $251B (2019–2021).",
+    aiContext: `NoBroker Rental Space Improvement: PropTech Case Study
 
 Market context: Indian PropTech market grew from USD 94B to USD 251B (2019–2021). PropTech startups are 6% of recognized Indian startups. Total PropTech funding: USD 1.4B.
 
 NoBroker context: Leading broker-free real estate platform. Competes with MagicBricks, 99acres, Housing.com across 6–600+ cities.
 
-Research findings — Owner behavior:
+Research findings: Owner behavior:
 - 60% of homeowners found subscription prices too high
 - 40% said free listings were good enough
 - 55% still use traditional To-Let boards; 45% use real-estate websites
 - Pain: continuous annoying calls from platforms, few genuine tenant leads
 
-Research findings — Tenant behavior:
+Research findings: Tenant behavior:
 - 45% prefer families over bachelors
 - Most rental listings in low-rental segments
 - 70% of interviewees in low rental segment; only 10% bought subscription plans
@@ -194,12 +194,12 @@ Skills: PropTech, user research, competitive analysis, marketplace design, renta
     title: "ICC Truck Logistics",
     slug: "icc-truck-logistics",
     shortDescription:
-      "Digitizing India's unorganized trucking sector — telematics, route optimization, and GTM strategy for a logistics platform case competition.",
+      "Digitizing India's unorganized trucking sector: telematics, route optimization, and GTM strategy for a logistics platform case competition.",
     longDescription:
-      "For the ICC case competition finals, Shritik's team tackled digitizing the 86% unorganized Indian trucking sector. The solution proposed telematics, AI-driven route optimization, real-time tracking, and a structured go-to-market roadmap — addressing driver welfare, operational efficiency, and financial feasibility for a logistics platform.",
-    aiContext: `ICC Finals — Digitalization of Truck Logistics Industry
+      "For the ICC case competition finals, Shritik's team tackled digitizing the 86% unorganized Indian trucking sector. The solution proposed telematics, AI-driven route optimization, real-time tracking, and a structured go-to-market roadmap, addressing driver welfare, operational efficiency, and financial feasibility for a logistics platform.",
+    aiContext: `ICC Finals: Digitalization of Truck Logistics Industry
 
-Problem: 86% of Indian truck drivers operate in the unorganized sector — overworked, underpaid, no healthcare. Logistics costs are high as a percentage of GDP. Hit-and-run laws create financial risk for drivers.
+Problem: 86% of Indian truck drivers operate in the unorganized sector (overworked, underpaid, no healthcare). Logistics costs are high as a percentage of GDP. Hit-and-run laws create financial risk for drivers.
 
 Solution framework:
 - Digitize unorganized truck drivers onto a structured logistics platform
@@ -209,7 +209,7 @@ Solution framework:
 - Financial feasibility analysis for sustainable platform economics
 - GTM strategy for onboarding drivers and fleet operators
 
-Industry context: Trucks are India's supply chain backbone — job creation, export value chain, multimodal integration, cost/time efficiency.
+Industry context: Trucks are India's supply chain backbone (job creation, export value chain, multimodal integration, cost/time efficiency).
 
 Team: ICC case competition finals submission. Includes user personas, industry analysis, optimization models, and sustainability planning.
 
@@ -225,10 +225,10 @@ Skills: Strategy, operations research, logistics, GTM, financial feasibility, ca
     title: "OpenAI GPT Store",
     slug: "openai-gpt-store",
     shortDescription:
-      "Revenue model and GTM strategy for OpenAI's GPT Store — monetization analysis, quality control, and creator economics in the AI marketplace.",
+      "Revenue model and GTM strategy for OpenAI's GPT Store: monetization analysis, quality control, and creator economics in the AI marketplace.",
     longDescription:
-      "Team Case Ace analyzed OpenAI's GPT Store launch — exploring revenue models, pricing strategies, and go-to-market plans for a marketplace with 100M+ weekly ChatGPT users. The case covers creator monetization debates, quality control against low-quality bot saturation, financial feasibility, and competitive differentiation in the crowded AI tools market.",
-    aiContext: `Case Ace — OpenAI GPT Store Revenue Model & Strategy
+      "Team Case Ace analyzed OpenAI's GPT Store launch, exploring revenue models, pricing strategies, and go-to-market plans for a marketplace with 100M+ weekly ChatGPT users. The case covers creator monetization debates, quality control against low-quality bot saturation, financial feasibility, and competitive differentiation in the crowded AI tools market.",
+    aiContext: `Case Ace: OpenAI GPT Store Revenue Model & Strategy
 
 Context: OpenAI launched the GPT Store for custom GPT bots. 100M+ weekly active ChatGPT users. 10M+ daily queries. 79% of people have used generative AI; 22% use it regularly at work. 92% of Fortune 500 companies build on OpenAI products.
 

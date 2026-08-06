@@ -140,7 +140,7 @@ export default function ImpactPageShell({
                   </span>
                   <span>
                     The deck for {item.label} is still being prepared. Check back
-                    shortly — you can switch to other IMPACT projects below.
+                    shortly. You can switch to other IMPACT projects below.
                   </span>
                 </div>
               )}

@@ -100,7 +100,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           transition={{ duration: 0.5, delay: 0.18 }}
           className="pointer-events-none absolute right-[0%] top-[40%] z-[4] hidden whitespace-nowrap text-left font-[family-name:var(--font-caveat)] text-[clamp(18px,1.95vw,28px)] leading-none text-[#C4A035] sm:block md:right-[2%] lg:right-[4%]"
         >
-          — {tagline}
+          {tagline}
         </motion.p>
 
         {/* Definition scrap — float */}
@@ -157,7 +157,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
       </div>
 
       <p className="mt-[-4px] px-[4px] text-center font-[family-name:var(--font-caveat)] text-[16px] leading-snug text-[#C4A035] sm:hidden">
-        — {tagline}
+        {tagline}
       </p>
     </section>
   );

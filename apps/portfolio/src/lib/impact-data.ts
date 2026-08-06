@@ -53,7 +53,7 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
   {
     id: "showcase-1",
     title:
-      "Fixed ~97% of fashion thumbnails to 0.75 — CV pipeline for 150k+ listings",
+      "Fixed ~97% of fashion thumbnails to 0.75: CV pipeline for 150k+ listings",
     body: "Drove 8%+ PLP CVR by auto-fixing vendor aspect ratios, framing, and whitespace that broke catalog trust. Two-stage CV pipeline (HF fashion parser + Meta SAM → safe crop → BG stretch) keeps the product mask immutable while hitting a 0.75 container ratio.",
     tags: ["Computer Vision", "Catalog QA", "Aspect Ratio"],
     pdfUrl: "/impact/tv/slikk-aspect-ratio-fix.pdf?v=5",
@@ -74,8 +74,8 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
   {
     id: "showcase-2",
     title:
-      "₹700 Cr/day (+0.7%) liquidity lift — Free Float automation 80× faster",
-    body: "Cut quarterly FFF work from 20 days × 3 FTEs to 1 day × 1 FTE with an Excel–SQL rule engine, eliminating 1–5% free-float errors on 300 of 4,800+ stocks. Also automated branded sales PDFs across 101 indices — 90% less prep, 30+ hrs/month saved, 20% faster client TAT.",
+      "₹700 Cr/day (+0.7%) liquidity lift: Free Float automation 80× faster",
+    body: "Cut quarterly FFF work from 20 days × 3 FTEs to 1 day × 1 FTE with an Excel–SQL rule engine, eliminating 1–5% free-float errors on 300 of 4,800+ stocks. Also automated branded sales PDFs across 101 indices: 90% less prep, 30+ hrs/month saved, 20% faster client TAT.",
     tags: ["Index Analytics", "Automation", "Free Float"],
     pdfUrl: "/impact/tv/bse-intern-work.pdf?v=4",
     detailUrl: impactDetailPathFromLogoAlt("BSE"),
@@ -96,7 +96,7 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
   {
     id: "showcase-3",
     title:
-      "Unified Zoho–Excel–calls into one client dashboard — +40% feature adoption",
+      "Unified Zoho–Excel–calls into one client dashboard (+40% feature adoption)",
     body: "Shipped EMB’s client portal for projects, commercials, and staff augmentation so clients track delivery, money, and resources in one place. API integrations collapsed fragmented journeys across Zoho, Excel, and calls, lifting adoption 40%.",
     tags: ["Client Portal", "Dashboard UX", "Project Ops"],
     pdfUrl: "/impact/tv/emb-client-dashboard.pdf?v=4",
@@ -117,7 +117,7 @@ export const DEMO_IMPACT_ITEMS: ImpactShowcaseItem[] = [
   {
     id: "showcase-4",
     title:
-      "Boosted OTA & organic bookings 25% — 20+ flows + OTA Manager SaaS",
+      "Boosted OTA & organic bookings 25% with 20+ flows + OTA Manager SaaS",
     body: "Designed 20+ high-fidelity booking flows to deepen brand story and lift OTA/organic revenue, and integrated OTA Manager SaaS to save 50+ hrs/month. Built a no-code listing hub and guest check-in portal that cut approval time ~70%.",
     tags: ["Homestay", "OTA", "Product Design"],
     pdfUrl: "/impact/aarya-stays-website-checkin.pdf",

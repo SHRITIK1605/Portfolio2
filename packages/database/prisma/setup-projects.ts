@@ -220,12 +220,12 @@ async function ingestResume() {
   if (doc) {
     doc = await prisma.document.update({
       where: { id: doc.id },
-      data: { title: "Shritik Jaiswal — Resume", extractedText: text },
+      data: { title: "Shritik Jaiswal Resume", extractedText: text },
     });
   } else {
     doc = await prisma.document.create({
       data: {
-        title: "Shritik Jaiswal — Resume",
+        title: "Shritik Jaiswal Resume",
         type: "RESUME",
         scope: "GLOBAL",
         fileUrl: "",
@@ -238,7 +238,7 @@ async function ingestResume() {
   const result = await ingestDocument({
     documentId: doc.id,
     text,
-    metadata: { source: "resume", title: "Shritik Jaiswal — Resume" },
+    metadata: { source: "resume", title: "Shritik Jaiswal Resume" },
   });
   console.log(`  ✓ resume: ${result.chunks} chunks`);
 }

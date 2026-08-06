@@ -41,7 +41,7 @@ export const DEMO_PROJECTS = [
     name: "NoBroker Rental Space: Marketplace Fixes from Owner & Tenant Research",
     tags: ["PropTech", "Marketplace", "User Research", "Real Estate"],
     overview: [
-      "PropTech case study to improve NoBroker’s rental marketplace. Combined owner and tenant research with competitive benchmarks vs MagicBricks, 99acres, and emerging startups — proposing fixes for subscription pricing, listing quality, and tenant–owner matching.",
+      "PropTech case study to improve NoBroker’s rental marketplace. Combined owner and tenant research with competitive benchmarks vs MagicBricks, 99acres, and emerging startups, proposing fixes for subscription pricing, listing quality, and tenant–owner matching.",
       "Competitive benchmarking against MagicBricks, 99acres, and emerging PropTech startups.",
       "Proposed fixes for subscription pricing, listing quality, and tenant-owner matching.",
     ],
@@ -53,7 +53,7 @@ export const DEMO_PROJECTS = [
     name: "ICC Truck Logistics: Digitizing India’s Unorganized Trucking Sector",
     tags: ["Strategy", "Logistics", "Case Competition", "GTM"],
     overview: [
-      "ICC case competition finals: a platform to digitize India’s unorganized trucking sector. Proposed telematics, AI route optimization, and structured GTM for driver onboarding — with financial feasibility and ops research for long-term sustainability.",
+      "ICC case competition finals: a platform to digitize India’s unorganized trucking sector. Proposed telematics, AI route optimization, and structured GTM for driver onboarding, with financial feasibility and ops research for long-term sustainability.",
       "Proposed telematics, AI route optimization, and structured GTM for driver onboarding.",
       "Financial feasibility and operational research for logistics platform sustainability.",
     ],
@@ -65,7 +65,7 @@ export const DEMO_PROJECTS = [
     name: "OpenAI GPT Store: Revenue Model & GTM for an AI Marketplace",
     tags: ["AI Strategy", "Monetization", "Case Competition", "Marketplace"],
     overview: [
-      "Revenue model and GTM strategy for OpenAI’s GPT Store. Analyzed creator monetization, quality control, and financial feasibility for 100M+ weekly ChatGPT users — plus competitive landscape and pricing for sustainable marketplace growth.",
+      "Revenue model and GTM strategy for OpenAI’s GPT Store. Analyzed creator monetization, quality control, and financial feasibility for 100M+ weekly ChatGPT users, plus competitive landscape and pricing for sustainable marketplace growth.",
       "Analyzed creator monetization, quality control, and financial feasibility for 100M+ weekly ChatGPT users.",
       "Competitive landscape and pricing strategy for sustainable AI marketplace growth.",
     ],

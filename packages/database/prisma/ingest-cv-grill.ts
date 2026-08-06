@@ -13,7 +13,7 @@ import {
   RECRUITER_SYSTEM_PROMPT,
 } from "./prompts";
 
-const DOC_TITLE = "Shritik Jaiswal — CV GRILL";
+const DOC_TITLE = "Shritik Jaiswal CV GRILL";
 const FILE_NAME = "cv-grill.pdf";
 const PDF_CANDIDATES = [
   path.join(__dirname, "knowledge", FILE_NAME),

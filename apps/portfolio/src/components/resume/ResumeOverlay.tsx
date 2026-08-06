@@ -145,7 +145,7 @@ export default function ResumeOverlay({
             <header className="flex items-center justify-between gap-[8px] border-b border-forest/10 px-[12px] py-[12px] sm:px-[20px] sm:py-[14px]">
               <span className="min-w-0 truncate text-[14px] font-semibold text-forest sm:text-[15px]">
                 <span className="sm:hidden">Resume</span>
-                <span className="hidden sm:inline">Shritik Jaiswal — Resume</span>
+                <span className="hidden sm:inline">Shritik Jaiswal Resume</span>
               </span>
 
               <div className="flex shrink-0 items-center gap-[6px] sm:gap-[8px]">
