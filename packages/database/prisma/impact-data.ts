@@ -54,9 +54,9 @@ export const IMPACT_ITEMS = [
   {
     title:
       "Boosted OTA & organic bookings 25% — 20+ flows + OTA Manager SaaS",
-    body: "Designed 20+ high-fidelity booking flows to deepen brand story and lift OTA/organic revenue, and integrated OTA Manager SaaS to save 50+ hrs/month. Built a no-code listing hub and guest check-in portal that removed the tech bottleneck (case PDF pending).",
+    body: "Designed 20+ high-fidelity booking flows to deepen brand story and lift OTA/organic revenue, and integrated OTA Manager SaaS to save 50+ hrs/month. Built a no-code listing hub and guest check-in portal that cut approval time ~70%.",
     tags: ["Homestay", "OTA", "Product Design"],
-    pdfUrl: null,
+    pdfUrl: "/impact/aarya-stays-website-checkin.pdf",
     logoSrc: "/experience/logos/aarya.png",
     logoAlt: "Aarya Stays",
     logoBg: "#ffffff",
