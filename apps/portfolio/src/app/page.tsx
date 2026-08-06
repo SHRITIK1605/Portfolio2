@@ -1,16 +1,21 @@
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import Hero from "@/components/home/Hero";
 import Experience from "@/components/home/Experience";
 import ProjectCards from "@/components/home/ProjectCards";
 import CreationsScroll from "@/components/home/CreationsScroll";
 import ChatPanel from "@/components/chat/ChatPanel";
 import LandingIntro from "@/components/home/LandingIntro";
-import { getHomepageSettings, getPublishedProjects } from "@/lib/data";
+import { getHomepageSettings, getPublishedImpactItems, getPublishedProjects } from "@/lib/data";
 import { getResumeUrlFromEnv } from "@/lib/env";
 import { resolveProjectCoverUrl } from "@/lib/pdf";
 import { DEMO_PROJECTS } from "@/lib/demo-data";
+import {
+  DEMO_IMPACT_ITEMS,
+  type ImpactShowcaseItem,
+} from "@/lib/impact-data";
 import type { CraftPolaroid } from "@/lib/experience-data";
-import type { HomepageSettings, Project } from "@/types";
+import type { HomepageSettings, ImpactItem, Project } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -42,18 +47,48 @@ function demoProjectsAsDb(): Project[] {
   }));
 }
 
+function toImpactShowcase(items: ImpactItem[]): ImpactShowcaseItem[] {
+  return items.map((item) => ({
+    id: item.id,
+    title: item.title,
+    body: item.body,
+    tags: item.tags,
+    pdfUrl: item.pdfUrl ?? "",
+    detailUrl: item.detailUrl,
+    logo: {
+      src: item.logoSrc,
+      bg: item.logoBg,
+      alt: item.logoAlt,
+      wide: item.logoWide || undefined,
+    },
+    theme: {
+      panel: item.themePanel,
+      dot: item.themeDot,
+      splash: item.themeSplash,
+      tag: item.themeTag,
+      accent: item.themeAccent,
+    },
+  }));
+}
+
 export default async function HomePage() {
   let homepage = null;
   let projects: Project[] = [];
+  let impactItems: ImpactShowcaseItem[] = [];
 
   try {
-    [homepage, projects] = await Promise.all([
+    const [homepageResult, projectsResult, impactResult] = await Promise.all([
       getHomepageSettings(),
       getPublishedProjects(),
+      getPublishedImpactItems(),
     ]);
+    homepage = homepageResult;
+    projects = projectsResult;
+    impactItems = toImpactShowcase(impactResult);
   } catch (error) {
     console.error("Homepage DB error, using demo fallback:", error);
     projects = demoProjectsAsDb();
+    impactItems = DEMO_IMPACT_ITEMS;
   }
 
   const settings: HomepageSettings = homepage
@@ -68,6 +103,10 @@ export default async function HomePage() {
 
   if (projects.length === 0) {
     projects = demoProjectsAsDb();
+  }
+
+  if (impactItems.length === 0) {
+    impactItems = DEMO_IMPACT_ITEMS;
   }
 
   projects = projects
@@ -106,7 +145,7 @@ export default async function HomePage() {
         <main>
           <Hero homepage={settings} />
           <Experience craftImages={craftImages} />
-          <CreationsScroll />
+          <CreationsScroll items={impactItems} />
           <section
             id="selected-product-cases"
             className="relative mx-auto max-w-[1320px] scroll-mt-[28px] overflow-x-clip bg-cream px-[16px] pb-[64px] pt-[48px] sm:px-[28px] sm:pb-[80px] sm:pt-[56px] md:px-[36px] md:pb-[96px] lg:px-[40px]"
@@ -120,6 +159,7 @@ export default async function HomePage() {
             <ProjectCards projects={projects} />
           </section>
         </main>
+        <Footer homepage={settings} />
         <ChatPanel />
       </div>
     </LandingIntro>

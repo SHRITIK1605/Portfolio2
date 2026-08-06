@@ -232,6 +232,23 @@ function CompanyBlock({
           <p className="m-0 mb-[10px] text-[13px] italic leading-relaxed text-forest/90 sm:text-[14px]">
             {item.overview}
           </p>
+          {item.priorPeriod ? (
+            <div className="relative mb-[10px] mt-[6px]">
+              {/* Filled stop circle — left of internship dates */}
+              <span
+                className="absolute -left-[24px] top-[3px] flex h-[14px] w-[14px] items-center justify-center rounded-full border-2 border-forest bg-forest sm:-left-[28px]"
+                aria-hidden
+              >
+                <span className="h-[4px] w-[4px] rounded-full bg-white" />
+              </span>
+              <p className="m-0 mb-[6px] text-[12px] font-semibold uppercase tracking-[0.04em] text-forest sm:text-[13px]">
+                {item.priorPeriod.dates}
+              </p>
+              <p className="m-0 text-[12px] font-semibold uppercase tracking-[0.03em] text-forest/85 sm:text-[13px]">
+                {item.priorPeriod.role}
+              </p>
+            </div>
+          ) : null}
           <ul className="m-0 flex list-disc flex-col gap-[7px] pl-[18px] text-[13px] leading-relaxed text-forest sm:gap-[9px] sm:text-[14px]">
             {item.bullets.map((bullet) => (
               <li key={bullet} className="pl-[2px]">

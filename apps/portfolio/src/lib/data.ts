@@ -30,3 +30,10 @@ export async function getSuggestedQuestions() {
     orderBy: { order: "asc" },
   });
 }
+
+export async function getPublishedImpactItems() {
+  return prisma.impactItem.findMany({
+    where: { published: true },
+    orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+  });
+}

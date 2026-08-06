@@ -23,6 +23,26 @@ export interface Project {
   published: boolean;
 }
 
+export interface ImpactItem {
+  id: string;
+  title: string;
+  body: string;
+  tags: string[];
+  pdfUrl: string | null;
+  detailUrl: string | null;
+  logoSrc: string;
+  logoAlt: string;
+  logoBg: string;
+  logoWide: boolean;
+  themePanel: string;
+  themeDot: string;
+  themeSplash: string;
+  themeTag: string;
+  themeAccent: string;
+  order: number;
+  published: boolean;
+}
+
 export interface SuggestedQuestion {
   id: string;
   text: string;

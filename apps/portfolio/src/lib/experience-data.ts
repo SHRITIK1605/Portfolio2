@@ -1,3 +1,9 @@
+/** Optional earlier tenure at the same company (shown under overview). */
+export interface ExperiencePriorPeriod {
+  dates: string;
+  role: string;
+}
+
 export interface ExperienceItem {
   id: string;
   slug: string;
@@ -8,6 +14,8 @@ export interface ExperienceItem {
   dates: string;
   overview: string;
   bullets: string[];
+  /** Earlier role at the same company — dates + title, then shared bullets. */
+  priorPeriod?: ExperiencePriorPeriod;
   /** Highlight phrases to bold in bullets (matched case-insensitively). */
   highlights?: string[];
   /** Original full-color company logo. */
@@ -39,11 +47,14 @@ export const EXPERIENCES: ExperienceItem[] = [
     id: "bse",
     slug: "bombay-stock-exchange",
     company: "BSE",
-    role: "Product Management and Data Modelling Intern",
+    role: "Deputy Manager",
     location: "Mumbai",
-    dates: "May 2025 – Jul 2025",
-    overview:
-      "Built FreeFloat Marketcap Identification model using Excel, SQL and automated Sales Deck PDF generation",
+    dates: "Jul 2026 – Present",
+    overview: "Building STAR MF 2.0",
+    priorPeriod: {
+      dates: "May 2025 – July 2025",
+      role: "PRODUCT MANAGEMENT INTERNSHIP",
+    },
     bullets: [
       "Boosted trade volume by INR 700 Cr/Day (+0.7%) by maximizing free float shares on BSE Indices (even Sensex)",
       "Reduced estimation time for SHP and freefloat MarketCap by 240x (80 days × 3 FTEs) with 4% more accuracy (99.5%)",
@@ -88,8 +99,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     sketchLogoUrl: "/experience/sketches/slikk.jpg?v=4",
     logoBg: "#111111",
     clipImages: [
-      "/experience/craft/polaroid-desk.jpg",
-      "/experience/craft/polaroid-craft.jpg",
+      "/experience/craft/slikk-team-back.jpg?v=1",
+      "/experience/craft/slikk-portrait-front.jpg?v=1",
     ],
   },
   {
@@ -158,8 +169,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     sketchLogoUrl: "/experience/sketches/aarya.jpg?v=4",
     logoBg: "#FFFFFF",
     clipImages: [
-      "/experience/craft/polaroid-notebook.jpg",
-      "/experience/craft/polaroid-books.jpg",
+      "/experience/craft/aarya-lounge-back.jpg?v=1",
+      "/experience/craft/aarya-warli-front.jpg?v=1",
     ],
   },
   {

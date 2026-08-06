@@ -222,7 +222,14 @@ export default function TvPdfScreen({
                   aria-label={label}
                   className="tv-screen relative h-full overflow-hidden rounded-[7px] bg-[#f7f3ea] sm:rounded-[9px]"
                 >
-                  {!visible ? (
+                  {!url?.trim() ? (
+                    <div className="flex h-full flex-col items-center justify-center gap-[6px] p-[12px] text-center text-[10px] leading-snug text-black/55">
+                      <span className="font-medium text-black/70">
+                        PDF coming soon
+                      </span>
+                      <span>Deck not attached yet</span>
+                    </div>
+                  ) : !visible ? (
                     <div className="flex h-full items-center justify-center text-[11px] text-black/45">
                       Warming up…
                     </div>

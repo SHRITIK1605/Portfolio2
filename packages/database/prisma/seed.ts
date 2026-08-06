@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../src/index";
+import { IMPACT_ITEMS } from "./impact-data";
 import { PROJECTS } from "./projects-data";
 import {
   DEFAULT_RESUME_URL,
@@ -114,6 +115,23 @@ async function main() {
     where: { slug: { notIn: [...validSlugs] } },
     data: { published: false },
   });
+
+  for (const item of IMPACT_ITEMS) {
+    const existing = await prisma.impactItem.findFirst({
+      where: { logoAlt: item.logoAlt },
+    });
+    const data = {
+      ...item,
+      tags: [...item.tags],
+      pdfUrl: item.pdfUrl ?? null,
+      published: true,
+    };
+    if (existing) {
+      await prisma.impactItem.update({ where: { id: existing.id }, data });
+    } else {
+      await prisma.impactItem.create({ data });
+    }
+  }
 
   console.log("Seed complete.");
   console.log(`Admin login: ${email} / ${password}`);

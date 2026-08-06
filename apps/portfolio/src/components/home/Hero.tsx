@@ -39,7 +39,7 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.08 }}
-          className="absolute left-1/2 top-[14%] z-[2] w-[clamp(200px,34.5%,450px)] -translate-x-1/2"
+          className="absolute left-1/2 top-[calc(14%+60px)] z-[2] w-[clamp(200px,34.5%,450px)] -translate-x-1/2"
         >
           <div className="relative mx-auto w-full">
             <div
@@ -60,10 +60,10 @@ export default function Hero({ homepage: _homepage }: HeroProps) {
 
             <div className="relative z-[1] w-full">
               <Image
-                src="/hero/portrait.png"
+                src="/hero/portrait.png?v=cream-shirt-fade-5"
                 alt="Shritik"
                 width={450}
-                height={602}
+                height={675}
                 priority
                 unoptimized
                 quality={100}

@@ -4,135 +4,21 @@ import { type CSSProperties } from "react";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import TvPdfScreen from "@/components/home/TvPdfScreen";
-
-/** Static showcase projects — design mock content, not DB/demo cases. */
-const SHOWCASE_PROJECTS = [
-  {
-    id: "showcase-1",
-    title:
-      "AI Image Computer Vision Standardizer for 150,000+ Slikk Fashion Catalogues",
-    body: "Slikk operates in fashion quick commerce, where product listing pages live or die on visual consistency. Shritik built an AI-driven pipeline to detect and normalize inconsistent product image aspect ratios across the catalog — reducing visual clutter on PLPs, improving scanability, and making listings feel trustworthy at scroll speed. The work spans computer-vision classification, batch processing workflows, and product decisions around where automation should override manual QA.",
-    tags: ["Tag 1", "Tag 2", "Tag 3"],
-    pdfUrl: "/projects/paytm-ux-improvement.pdf",
-    logo: {
-      src: "/experience/logos/slikk.png",
-      bg: "#000000",
-      alt: "Slikk",
-    },
-    theme: {
-      panel: "#fdeba3",
-      dot: "#e0b84a",
-      splash: "#e8b410",
-      tag: "#f8f0d0",
-      accent: "#f0b800",
-    },
-  },
-  {
-    id: "showcase-2",
-    title:
-      "AI Image Computer Vision Standardizer for 150,000+ Slikk Fashion Catalogues",
-    body: "Slikk operates in fashion quick commerce, where product listing pages live or die on visual consistency. Shritik built an AI-driven pipeline to detect and normalize inconsistent product image aspect ratios across the catalog — reducing visual clutter on PLPs, improving scanability, and making listings feel trustworthy at scroll speed. The work spans computer-vision classification, batch processing workflows, and product decisions around where automation should override manual QA.",
-    tags: ["Tag 1", "Tag 2", "Tag 3"],
-    pdfUrl: "/projects/paytm-ux-improvement.pdf",
-    logo: {
-      src: "/experience/logos/emb.png",
-      bg: "#ffffff",
-      alt: "EMB Global",
-    },
-    theme: {
-      panel: "#ecf5d4",
-      dot: "#7aab4a",
-      splash: "#74c44a",
-      tag: "#eef6e0",
-      accent: "#6fbf48",
-    },
-  },
-  {
-    id: "showcase-3",
-    title:
-      "AI Image Computer Vision Standardizer for 150,000+ Slikk Fashion Catalogues",
-    body: "Slikk operates in fashion quick commerce, where product listing pages live or die on visual consistency. Shritik built an AI-driven pipeline to detect and normalize inconsistent product image aspect ratios across the catalog — reducing visual clutter on PLPs, improving scanability, and making listings feel trustworthy at scroll speed. The work spans computer-vision classification, batch processing workflows, and product decisions around where automation should override manual QA.",
-    tags: ["Tag 1", "Tag 2", "Tag 3"],
-    pdfUrl: "/projects/paytm-ux-improvement.pdf",
-    logo: {
-      src: "/experience/logos/bse.png",
-      bg: "#ffffff",
-      alt: "BSE",
-      wide: true,
-    },
-    theme: {
-      panel: "#ddeff5",
-      dot: "#5aa8c8",
-      splash: "#4fb0d8",
-      tag: "#eef6fa",
-      accent: "#4aa3d4",
-    },
-  },
-  {
-    id: "showcase-4",
-    title:
-      "AI Image Computer Vision Standardizer for 150,000+ Slikk Fashion Catalogues",
-    body: "Slikk operates in fashion quick commerce, where product listing pages live or die on visual consistency. Shritik built an AI-driven pipeline to detect and normalize inconsistent product image aspect ratios across the catalog — reducing visual clutter on PLPs, improving scanability, and making listings feel trustworthy at scroll speed. The work spans computer-vision classification, batch processing workflows, and product decisions around where automation should override manual QA.",
-    tags: ["Tag 1", "Tag 2", "Tag 3"],
-    pdfUrl: "/projects/paytm-ux-improvement.pdf",
-    logo: {
-      src: "/experience/logos/aarya.png",
-      bg: "#ffffff",
-      alt: "Aarya Stays",
-    },
-    theme: {
-      panel: "#f5d4e4",
-      dot: "#d478a0",
-      splash: "#e878a8",
-      tag: "#f8e8f0",
-      accent: "#e878a8",
-    },
-  },
-] as const;
-
-/**
- * True quarter-circle index mark (equal sides → no stretch).
- * Number sits on the quarter-disk centroid (~0.42R from the corner).
- */
-function PaintSplash({ color, n }: { color: string; n: number }) {
-  return (
-    <div
-      className="pointer-events-none absolute bottom-0 right-0 z-0 aspect-square w-[min(36%,148px)]"
-      aria-hidden
-    >
-      <div
-        className="absolute inset-0 rounded-tl-full"
-        style={{
-          backgroundColor: color,
-          /* soft chalk matte — not glossy, not muddy */
-          backgroundImage:
-            "linear-gradient(145deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 38%, rgba(0,0,0,0.06) 100%)",
-        }}
-      />
-      {/* Number center = quarter-circle centroid (~42% in from corner) */}
-      <span
-        className="absolute text-[clamp(52px,7.5vw,84px)] font-black leading-none tracking-[-0.06em] text-white"
-        style={{
-          right: "42%",
-          bottom: "42%",
-          transform: "translate(50%, 50%)",
-        }}
-      >
-        {n}
-      </span>
-    </div>
-  );
-}
+import {
+  DEMO_IMPACT_ITEMS,
+  type ImpactShowcaseItem,
+} from "@/lib/impact-data";
 
 function ProjectCard({
   project,
   index,
 }: {
-  project: (typeof SHOWCASE_PROJECTS)[number];
+  project: ImpactShowcaseItem;
   index: number;
 }) {
   const tilt = index % 2 === 0 ? 2.4 : -2.4;
   const { theme, logo } = project;
+  const detailHref = project.detailUrl?.trim() || null;
 
   return (
     <article
@@ -181,7 +67,7 @@ function ProjectCard({
           <div className="relative z-[1] flex items-start gap-3">
             <div
               className={`relative shrink-0 overflow-hidden border border-black ${
-                "wide" in logo && logo.wide
+                logo.wide
                   ? "h-[36px] w-[58px] sm:h-[40px] sm:w-[64px]"
                   : "h-[40px] w-[40px] sm:h-[44px] sm:w-[44px]"
               }`}
@@ -192,7 +78,7 @@ function ProjectCard({
                 alt={logo.alt}
                 fill
                 className="object-contain p-[3px]"
-                sizes={"wide" in logo && logo.wide ? "64px" : "44px"}
+                sizes={logo.wide ? "64px" : "44px"}
               />
             </div>
             <h3 className="m-0 text-[13px] font-bold leading-[1.3] tracking-[-0.02em] text-black sm:text-[15px] md:text-[17px]">
@@ -216,26 +102,47 @@ function ProjectCard({
             ))}
           </div>
 
-          <a
-            href="#"
-            className="projects-cta relative z-[1] mt-auto inline-flex w-full max-w-[240px] items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px]"
-            style={
-              {
-                boxShadow: "4px 4px 0 #000",
-                ["--cta-accent" as string]: theme.accent,
-                ["--cta-panel" as string]: theme.panel,
-              } as CSSProperties
-            }
-            onClick={(e) => e.preventDefault()}
-          >
-            <span className="relative z-[1]">View Detailed Project</span>
-            <ExternalLink
-              className="projects-cta-icon relative z-[1] h-[14px] w-[14px] shrink-0"
-              strokeWidth={2.25}
-            />
-            <span className="projects-cta-burst" aria-hidden />
-            <span className="projects-cta-shine" aria-hidden />
-          </a>
+          {detailHref ? (
+            <a
+              href={detailHref}
+              className="projects-cta relative z-[1] mt-auto inline-flex w-full max-w-[240px] items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px]"
+              style={
+                {
+                  boxShadow: "4px 4px 0 #000",
+                  ["--cta-accent" as string]: theme.accent,
+                  ["--cta-panel" as string]: theme.panel,
+                } as CSSProperties
+              }
+            >
+              <span className="relative z-[1]">View Detailed Project</span>
+              <ExternalLink
+                className="projects-cta-icon relative z-[1] h-[14px] w-[14px] shrink-0"
+                strokeWidth={2.25}
+              />
+              <span className="projects-cta-burst" aria-hidden />
+              <span className="projects-cta-shine" aria-hidden />
+            </a>
+          ) : (
+            <span
+              className="projects-cta relative z-[1] mt-auto inline-flex w-full max-w-[240px] cursor-default items-center justify-between border-[2px] border-black bg-white px-4 py-2.5 text-[12px] font-semibold text-black opacity-70 sm:max-w-[260px] sm:px-[16px] sm:py-[10px] sm:text-[13px]"
+              style={
+                {
+                  boxShadow: "4px 4px 0 #000",
+                  ["--cta-accent" as string]: theme.accent,
+                  ["--cta-panel" as string]: theme.panel,
+                } as CSSProperties
+              }
+              aria-disabled
+            >
+              <span className="relative z-[1]">View Detailed Project</span>
+              <ExternalLink
+                className="projects-cta-icon relative z-[1] h-[14px] w-[14px] shrink-0"
+                strokeWidth={2.25}
+              />
+              <span className="projects-cta-burst" aria-hidden />
+              <span className="projects-cta-shine" aria-hidden />
+            </span>
+          )}
 
           <PaintSplash color={theme.splash} n={index + 1} />
         </div>
@@ -245,10 +152,49 @@ function ProjectCard({
 }
 
 /**
+ * True quarter-circle index mark (equal sides → no stretch).
+ * Number sits on the quarter-disk centroid (~0.42R from the corner).
+ */
+function PaintSplash({ color, n }: { color: string; n: number }) {
+  return (
+    <div
+      className="pointer-events-none absolute bottom-0 right-0 z-0 aspect-square w-[min(36%,148px)]"
+      aria-hidden
+    >
+      <div
+        className="absolute inset-0 rounded-tl-full"
+        style={{
+          backgroundColor: color,
+          backgroundImage:
+            "linear-gradient(145deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 38%, rgba(0,0,0,0.06) 100%)",
+        }}
+      />
+      <span
+        className="absolute text-[clamp(52px,7.5vw,84px)] font-black leading-none tracking-[-0.06em] text-white"
+        style={{
+          right: "42%",
+          bottom: "42%",
+          transform: "translate(50%, 50%)",
+        }}
+      >
+        {n}
+      </span>
+    </div>
+  );
+}
+
+/**
  * IMPACT CREATED — vertical stack, alternating left/right tilt (no horizontal scroll).
  * Horizontal padding/max-width match Experience above.
  */
-export default function CreationsScroll() {
+export default function CreationsScroll({
+  items,
+}: {
+  items?: ImpactShowcaseItem[] | null;
+}) {
+  const projects =
+    items && items.length > 0 ? items : DEMO_IMPACT_ITEMS;
+
   return (
     <section
       className="relative w-full overflow-x-clip py-[48px] sm:py-[64px] md:py-[80px]"
@@ -271,7 +217,7 @@ export default function CreationsScroll() {
         </h2>
 
         <div className="flex flex-col items-center gap-[56px] sm:gap-[72px] md:gap-[88px]">
-          {SHOWCASE_PROJECTS.map((project, i) => (
+          {projects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}
         </div>
