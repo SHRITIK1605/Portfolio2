@@ -10,6 +10,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.1;
+/** Cap DPR so off-path retina phones don't rasterize at 3× unnecessarily. */
+const MAX_DEVICE_PIXEL_RATIO = 2;
+/** Skeleton placeholders below the live render frontier (does not block page 1). */
+const SKELETON_AHEAD = 2;
 
 function clampZoom(value: number) {
   return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
@@ -24,23 +28,61 @@ function touchDistance(touches: React.TouchList) {
   return Math.hypot(dx, dy);
 }
 
+function pageSkeletonHeight(width: number) {
+  // Landscape case-study decks are common; keep placeholders compact.
+  return Math.round(width * 0.62);
+}
+
+function PageSkeleton({ width, label }: { width: number; label?: string }) {
+  return (
+    <div
+      className="flex animate-pulse items-center justify-center rounded-[4px] bg-forest/[0.04]"
+      style={{ width, height: pageSkeletonHeight(width) }}
+      aria-hidden={!label}
+      aria-label={label}
+    >
+      {label ? (
+        <span className="text-[13px] text-forest/35">{label}</span>
+      ) : null}
+    </div>
+  );
+}
+
 interface PdfFrameProps {
   url: string;
 }
 
 export default function PdfFrame({ url }: PdfFrameProps) {
   const [numPages, setNumPages] = useState(0);
+  /** How many pages are mounted for react-pdf to render (grows 1 → N). */
+  const [visiblePages, setVisiblePages] = useState(0);
   const [baseWidth, setBaseWidth] = useState(680);
   const [contentHeight, setContentHeight] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [error, setError] = useState(false);
+  const [devicePixelRatio, setDevicePixelRatio] = useState(1);
 
   useEffect(() => {
     setNumPages(0);
+    setVisiblePages(0);
     setContentHeight(0);
     setZoom(1);
     setError(false);
   }, [url]);
+
+  useEffect(() => {
+    const updateDpr = () => {
+      setDevicePixelRatio(
+        Math.min(
+          MAX_DEVICE_PIXEL_RATIO,
+          typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1
+        )
+      );
+    };
+    updateDpr();
+    window.addEventListener("resize", updateDpr);
+    return () => window.removeEventListener("resize", updateDpr);
+  }, []);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -74,7 +116,7 @@ export default function PdfFrame({ url }: PdfFrameProps) {
     const observer = new ResizeObserver(measure);
     observer.observe(node);
     return () => observer.disconnect();
-  }, [numPages, baseWidth]);
+  }, [numPages, visiblePages, baseWidth]);
 
   const applyZoom = useCallback((next: number | ((prev: number) => number)) => {
     setZoom((prev) =>
@@ -97,6 +139,17 @@ export default function PdfFrame({ url }: PdfFrameProps) {
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
   }, [applyZoom]);
+
+  const advanceAfterPage = useCallback(
+    (pageNumber: number) => {
+      setVisiblePages((prev) => {
+        // Only the frontier page may unlock the next one (sequential load).
+        if (pageNumber !== prev || prev >= numPages) return prev;
+        return prev + 1;
+      });
+    },
+    [numPages]
+  );
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "+" || e.key === "=") {
@@ -148,6 +201,9 @@ export default function PdfFrame({ url }: PdfFrameProps) {
     );
   }
 
+  const remainingAfterVisible = Math.max(0, numPages - visiblePages);
+  const skeletonCount = Math.min(SKELETON_AHEAD, remainingAfterVisible);
+
   return (
     <div
       ref={containerRef}
@@ -182,7 +238,11 @@ export default function PdfFrame({ url }: PdfFrameProps) {
             <Document
               key={url}
               file={url}
-              onLoadSuccess={({ numPages: pages }) => setNumPages(pages)}
+              onLoadSuccess={({ numPages: pages }) => {
+                setNumPages(pages);
+                // Paint page 1 immediately; later pages unlock on each render success.
+                setVisiblePages(pages > 0 ? 1 : 0);
+              }}
               onLoadError={() => setError(true)}
               loading={
                 <div className="flex h-[420px] items-center justify-center text-[14px] text-forest/45">
@@ -191,14 +251,37 @@ export default function PdfFrame({ url }: PdfFrameProps) {
               }
               className="flex flex-col items-center gap-[16px]"
             >
-              {Array.from({ length: numPages }, (_, index) => (
-                <Page
-                  key={`page-${index + 1}`}
-                  pageNumber={index + 1}
+              {Array.from({ length: visiblePages }, (_, index) => {
+                const pageNumber = index + 1;
+                return (
+                  <Page
+                    key={`page-${pageNumber}`}
+                    pageNumber={pageNumber}
+                    width={baseWidth}
+                    devicePixelRatio={devicePixelRatio}
+                    className="shadow-[0_2px_12px_rgba(0,75,64,0.08)]"
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                    loading={
+                      <PageSkeleton
+                        width={baseWidth}
+                        label={
+                          pageNumber === 1 ? "Loading first page…" : undefined
+                        }
+                      />
+                    }
+                    onRenderSuccess={() => advanceAfterPage(pageNumber)}
+                    onRenderError={() => {
+                      // Skip a failed page so the rest of the deck can still load.
+                      advanceAfterPage(pageNumber);
+                    }}
+                  />
+                );
+              })}
+              {Array.from({ length: skeletonCount }, (_, index) => (
+                <PageSkeleton
+                  key={`skeleton-${visiblePages + index + 1}`}
                   width={baseWidth}
-                  className="shadow-[0_2px_12px_rgba(0,75,64,0.08)]"
-                  renderTextLayer={false}
-                  renderAnnotationLayer={false}
                 />
               ))}
             </Document>
