@@ -9,7 +9,6 @@ import {
   useState,
 } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { CalendarDays, MapPin } from "lucide-react";
 import {
   DEFAULT_CRAFT_POLAROIDS,
   EXPERIENCES,
@@ -165,7 +164,7 @@ function CompanyBlock({
       className="scroll-mt-[10px]"
     >
       <div className="px-[2px] py-[2px]">
-        <header className="mb-[12px] flex flex-col gap-[10px] sm:mb-[14px] sm:flex-row sm:items-start sm:justify-between sm:gap-[14px]">
+        <header className="mb-[12px] sm:mb-[14px]">
           <div className="flex min-w-0 items-start gap-[12px]">
             <div
               className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
@@ -188,27 +187,7 @@ function CompanyBlock({
               <h3 className="m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
                 {item.company}
               </h3>
-              <p className="m-0 mt-[3px] text-[12px] font-medium leading-snug text-forest/80 sm:text-[13px]">
-                {item.role}
-              </p>
             </div>
-          </div>
-
-          <div className="flex shrink-0 flex-col gap-[5px] text-[12px] text-forest/85 sm:items-end sm:text-[13px]">
-            <span className="inline-flex items-center gap-[6px]">
-              <CalendarDays
-                className="h-[13px] w-[13px] shrink-0 text-forest"
-                strokeWidth={2}
-              />
-              <span className="font-medium">{item.dates}</span>
-            </span>
-            <span className="inline-flex items-center gap-[6px] italic">
-              <MapPin
-                className="h-[13px] w-[13px] shrink-0 text-forest"
-                strokeWidth={2}
-              />
-              <span>{item.location}</span>
-            </span>
           </div>
         </header>
 
@@ -226,8 +205,11 @@ function CompanyBlock({
             <span className="h-[5px] w-[5px] rounded-full bg-forest" />
           </span>
 
-          <p className="m-0 mb-[8px] text-[12px] font-semibold uppercase tracking-[0.04em] text-forest sm:text-[13px]">
+          <p className="m-0 mb-[6px] text-[12px] font-semibold uppercase tracking-[0.04em] text-forest sm:text-[13px]">
             {item.dates}
+          </p>
+          <p className="m-0 mb-[8px] text-[12px] font-semibold uppercase tracking-[0.03em] text-forest/85 sm:text-[13px]">
+            {item.role}
           </p>
           <p className="m-0 mb-[10px] text-[13px] italic leading-relaxed text-forest/90 sm:text-[14px]">
             {item.overview}
