@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
+import { MapPin } from "lucide-react";
 import {
   DEFAULT_CRAFT_POLAROIDS,
   EXPERIENCES,
@@ -165,29 +166,37 @@ function CompanyBlock({
     >
       <div className="px-[2px] py-[2px]">
         <header className="mb-[12px] sm:mb-[14px]">
-          <div className="flex min-w-0 items-start gap-[12px]">
-            <div
-              className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
-                item.logoWide
-                  ? "h-[48px] w-[88px] sm:h-[54px] sm:w-[100px]"
-                  : "h-[48px] w-[48px] sm:h-[54px] sm:w-[54px]"
-              }`}
-              style={{ backgroundColor: item.logoBg ?? "#ffffff" }}
-            >
-              <Image
-                src={item.logoUrl}
-                alt={`${item.company} logo`}
-                fill
-                className="object-contain p-[3px]"
-                sizes={item.logoWide ? "100px" : "54px"}
-                unoptimized
-              />
+          <div className="flex min-w-0 items-start justify-between gap-[12px]">
+            <div className="flex min-w-0 items-start gap-[12px]">
+              <div
+                className={`relative shrink-0 overflow-hidden rounded-[10px] border border-forest/10 ${
+                  item.logoWide
+                    ? "h-[48px] w-[88px] sm:h-[54px] sm:w-[100px]"
+                    : "h-[48px] w-[48px] sm:h-[54px] sm:w-[54px]"
+                }`}
+                style={{ backgroundColor: item.logoBg ?? "#ffffff" }}
+              >
+                <Image
+                  src={item.logoUrl}
+                  alt={`${item.company} logo`}
+                  fill
+                  className="object-contain p-[3px]"
+                  sizes={item.logoWide ? "100px" : "54px"}
+                  unoptimized
+                />
+              </div>
+              <div className="min-w-0 pt-[1px]">
+                <h3 className="m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
+                  {item.company}
+                </h3>
+              </div>
             </div>
-            <div className="min-w-0 pt-[1px]">
-              <h3 className="m-0 text-[14px] font-bold uppercase leading-tight tracking-[0.02em] text-forest sm:text-[16px] md:text-[17px]">
-                {item.company}
-              </h3>
-            </div>
+            {item.location ? (
+              <p className="m-0 flex shrink-0 items-center gap-[4px] pt-[2px] text-[11px] font-semibold uppercase tracking-[0.03em] text-forest/75 sm:text-[12px]">
+                <MapPin className="h-[12px] w-[12px] shrink-0" aria-hidden />
+                {item.location}
+              </p>
+            ) : null}
           </div>
         </header>
 
