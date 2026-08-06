@@ -21,6 +21,7 @@
     "push": "prisma db push",
     "seed": "tsx prisma/seed.ts",
     "setup:projects": "tsx prisma/setup-projects.ts",
+    "ingest:cv-grill": "tsx prisma/ingest-cv-grill.ts",
     "studio": "prisma studio",
     "build": "prisma generate && tsc"
   },
